@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Transcription factor classification</title>
+    </h:head>
+    <body>
+        <h:form id="tfForm">
+            <p:panel id="additional" style="float:right">
+            <p:autoComplete value="#{tfClassBean.searchedClass}" var="cls"
+                            itemValue="#{cls}" itemLabel="#{cls}"
+                            completeMethod="#{tfClassBean.search}"
+                            maxResults="12" converter="ontologyClassConverter">
+                <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
+                        update="tfTree" />
+            </p:autoComplete>
+                <p>
+                <h:commandButton id="expandClassBtn" value="Expand to class" action="#{tfClassBean.expandToClass}" />
+                </p>
+                <p:panel id="details" header="Details">
+                    <h:panelGrid columns="2">
+                        <h:outputText value="ID:"/>
+                        <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        <h:outputText value="Definition:"/>
+                        <h:outputText value="#{tfClassBean.selectedNode.data.definition}" rendered="#{tfClassBean.selectedNode != null}" />
+                         <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                         <h:outputText value="Subset:"/>
+                        <h:outputText value="#{tfClassBean.selectedNode.data.subsets}" rendered="#{tfClassBean.selectedNode != null}" />
+                         <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                    </h:panelGrid>
+                </p:panel>
+            </p:panel>
+            <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
+            <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
+                    selectionMode="single" selection="#{tfClassBean.selectedNode}">
+                 <p:ajax event="select" update=":tfForm:details" />
+                <p:treeNode>#{node}</p:treeNode>
+            </p:tree>
+        </h:form>
+    </body>
+</html>
