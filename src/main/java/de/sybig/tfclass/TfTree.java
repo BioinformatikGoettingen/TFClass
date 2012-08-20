@@ -1,7 +1,5 @@
 package de.sybig.tfclass;
 
-import com.sun.org.apache.bcel.internal.generic.LASTORE;
-import de.sybig.oba.client.GenericConnector;
 import de.sybig.oba.client.Obo2DClassList;
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
@@ -14,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import javax.ejb.Singleton;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
@@ -100,14 +97,17 @@ public class TfTree {
     public class TfTreeNode extends DefaultTreeNode {
 
         final Lock lock = new ReentrantLock();
-        private final OntologyClass oc;
+        private final OboClass oc;
         private volatile LinkedList<TreeNode> childnodes = null;
 
-        public TfTreeNode(OntologyClass oc, TreeNode parent) {
+        public TfTreeNode(OboClass oc, TreeNode parent) {
             super(oc, parent);
             this.oc = oc;
         }
-
+        public TfTreeNode(String type, OboClass oc, TreeNode parent){
+            super(type, oc, parent);
+            this.oc = oc;
+        }
         @Override
         public synchronized List<TreeNode> getChildren() {
             //
@@ -115,11 +115,11 @@ public class TfTree {
 //		synchronized (this) {
                 if (childnodes == null) {
                     childnodes = new LinkedList<TreeNode>();
-                    Set<OntologyClass> cs = (Set<OntologyClass>) oc
+                    Set<OboClass> cs = (Set<OboClass>) oc
                             .getChildren();
                     if (cs != null) {
-                        for (OntologyClass child : cs) {
-                            new TfTreeNode(child, this);
+                        for (OboClass child : cs) {
+                            new TfTreeNode(child.getSubsets(), child, this);
                             // the node is added to children by the super class
                             // do not add it here
                         }

@@ -1,11 +1,9 @@
 package de.sybig.tfclass;
 
-import com.sun.org.apache.regexp.internal.REUtil;
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.model.TreeNode;
@@ -73,6 +71,11 @@ public class TfClassBean {
         this.selectedNode = selectedNode;
     }
 
-    
+    public String getDefinition(){
+        if (selectedNode == null){
+            return null;
+        }
+        return ((OboClass)selectedNode.getData()).getDefinition();
+    }
 
 }

@@ -10,40 +10,88 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Transcription factor classification</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <h:outputStylesheet name="css/screen.css"/>
     </h:head>
     <body>
+        <h1>Classification of Human Transcription Factors</h1>
+        <p><b>TFClass</b> is a classification of (so far: human) transcription factors
+            based on the characteristics of their DNA-binding domains. It comprises
+            six levels (superclasses, classes, families, subfamilies, genera and
+            factor species), two of which are optional (subfamilies and factor
+            species). More detailed explanations about the classification scheme and
+            its criteria will be given here. The full classification can also be
+            obtained here as html document and as ontology in obo-format.</p>
         <h:form id="tfForm">
             <p:panel id="additional" style="float:right">
-            <p:autoComplete value="#{tfClassBean.searchedClass}" var="cls"
-                            itemValue="#{cls}" itemLabel="#{cls}"
-                            completeMethod="#{tfClassBean.search}"
-                            maxResults="12" converter="ontologyClassConverter">
-                <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
-                        update="tfTree" />
-            </p:autoComplete>
+                <h2>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h2>
+                <p:tooltip for="searchHelpButton"
+                           value="Search in the labels of the ontology and select an item from the list."
+                           styleClass="helpTooltip" showEvent="click"  />
+                <p:autoComplete value="#{tfClassBean.searchedClass}" var="cls"
+                                itemValue="#{cls}" itemLabel="#{cls}"
+                                completeMethod="#{tfClassBean.search}"
+                                maxResults="10" converter="ontologyClassConverter">
+                    <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
+                            update="tfTree" />
+                </p:autoComplete>
                 <p>
-                <h:commandButton id="expandClassBtn" value="Expand to class" action="#{tfClassBean.expandToClass}" />
+                    <h:commandButton id="expandClassBtn" value="Expand to class" action="#{tfClassBean.expandToClass}" />
                 </p>
-                <p:panel id="details" header="Details">
-                    <h:panelGrid columns="2">
-                        <h:outputText value="ID:"/>
-                        <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
-                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                        <h:outputText value="Definition:"/>
-                        <h:outputText value="#{tfClassBean.selectedNode.data.definition}" rendered="#{tfClassBean.selectedNode != null}" />
-                         <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                         <h:outputText value="Subset:"/>
-                        <h:outputText value="#{tfClassBean.selectedNode.data.subsets}" rendered="#{tfClassBean.selectedNode != null}" />
-                         <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                    </h:panelGrid>
-                </p:panel>
+                <p:tabView id="tabView">
+
+                    <p:tab id="details" title="Details">
+
+                        <h:panelGrid columns="2">
+                            <h:outputText value="ID:"/>
+                            <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                            <h:outputText value="Definition:"/>
+                            <h:outputText value="#{tfClassBean.definition}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                            <h:outputText value="Rank:"/>
+                            <h:outputText value="#{tfClassBean.selectedNode.data.subsets}" rendered="#{tfClassBean.selectedNode != null}" />
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Protein expression pattern">
+                        Comming soon ...
+                    </p:tab>
+                </p:tabView>
             </p:panel>
-            <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
-            <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
-                    selectionMode="single" selection="#{tfClassBean.selectedNode}">
-                 <p:ajax event="select" update=":tfForm:details" />
-                <p:treeNode>#{node}</p:treeNode>
-            </p:tree>
+            <p:panel id="ontologyPanel"><h2>Transcription factory classfication</h2>
+                <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
+                <p>
+                    Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
+                    Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,
+                    Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
+                    Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
+                    Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
+                    Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/></p>
+                <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
+                        selectionMode="single" selection="#{tfClassBean.selectedNode}">
+                    <p:ajax event="select" update=":tfForm:tabView:details" />
+                    <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                </p:tree></p:panel>
         </h:form>
     </body>
 </html>
