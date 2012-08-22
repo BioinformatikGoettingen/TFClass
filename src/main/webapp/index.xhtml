@@ -20,8 +20,13 @@ and open the template in the editor.
             six levels (superclasses, classes, families, subfamilies, genera and
             factor species), two of which are optional (subfamilies and factor
             species). More detailed explanations about the classification scheme and
-            its criteria will be given here. The full classification can also be
-            obtained here as html document and as ontology in obo-format.</p>
+            its criteria will be given 
+            <a href="http://www.edgar-wingender.de/TFClass_schema.html">here</a>.
+            The full classification can also be
+            obtained 
+            <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
+            as html document and as
+            <a href="http://tfclass.bioinf.med.uni-goettingen.de/TFClass.obo">ontology</a> in obo-format.</p>
         <h:form id="tfForm">
             <p:panel id="additional" style="float:right">
                 <h2>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h2>
@@ -35,10 +40,17 @@ and open the template in the editor.
                     <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
                             update="tfTree" />
                 </p:autoComplete>
-                <p>
-                    <h:commandButton id="expandClassBtn" value="Expand to class" action="#{tfClassBean.expandToClass}" />
+                <p><h:commandButton value="Exand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree"/><h:commandButton value="Collapse all" action="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/><br />
+
+                    Expand to:
+                    <h:commandButton id="expandSuperClassBtn" image="resources/superclass.gif" action="#{tfClassBean.expandToSuperClass}" update=":tfForm:tfTree"/>
+                    <h:commandButton id="expandClassBtn" image="resources/class.gif" action="#{tfClassBean.expandToClass}" update=":tfForm:tfTree"/>
+                    <h:commandButton id="expandFamilyBtn" image="resources/family.gif" action="#{tfClassBean.expandToFamily}" update=":tfForm:tfTree"/>
+                    <h:commandButton id="expandSubFamilyBtn" image="resources/subfamily.gif" action="#{tfClassBean.expandToSubfamily}" update=":tfForm:tfTree"/>
+                    <h:commandButton id="expandGenusBtn" image="resources/genus.gif" action="#{tfClassBean.expandToGenus}" update=":tfForm:tfTree"/>
+                    <h:commandButton id="expandFSpeciesBtn" image="resources/fspecies.gif" action="#{tfClassBean.expandToFactorSpecies}" update=":tfForm:tfTree"/>
                 </p>
-                <p:tabView id="tabView">
+                <p:tabView id="tabView" dynamic="true">
 
                     <p:tab id="details" title="Details">
 
@@ -52,6 +64,15 @@ and open the template in the editor.
                             <h:outputText value="Rank:"/>
                             <h:outputText value="#{tfClassBean.selectedNode.data.subsets}" rendered="#{tfClassBean.selectedNode != null}" />
                             <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                            <ui:remove>  <h:outputText value="ProteinAtlas:"/>
+                            <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                            <h:outputText value="Transfac:"/>
+                            <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                            <h:outputText value="Uniprot"/>
+                            <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" /></ui:remove>
                         </h:panelGrid>
                     </p:tab>
                     <p:tab title="Protein expression pattern">
@@ -70,7 +91,7 @@ and open the template in the editor.
                     Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/></p>
                 <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
                         selectionMode="single" selection="#{tfClassBean.selectedNode}">
-                    <p:ajax event="select" update=":tfForm:tabView:details" />
+                    <p:ajax event="select" update=":tfForm:tabView" />
                     <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                     </p:treeNode>
                     <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
