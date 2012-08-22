@@ -99,14 +99,14 @@ public class TfTree {
         }
     }
 
-    private void expandTree(TreeNode n) {
+    public void expandTree(TreeNode n) {
         n.setExpanded(true);
         for (TreeNode child : n.getChildren()) {
             expandTree(child);
         }
     }
 
-    private void collapseTree(TreeNode n) {
+    public void collapseTree(TreeNode n) {
         if (!n.isExpanded()) {
             return;
         }

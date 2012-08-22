@@ -10,10 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.net.www.content.audio.x_aiff;
 
 /**
  *
@@ -53,9 +53,15 @@ public class TfClassBean {
  public void expandAll() {
         getTfTree().expandTree();
     }
-
+ public void expandSelected(){
+//     System.out.println("expanding selected " + getSelectedNode());
+     getTfTree().expandTree(getSelectedNode());
+ }
     public void collapseAll() {
         getTfTree().collapseTree();
+    }
+      public void onNodeCollapse(NodeCollapseEvent event) {
+          getTfTree().collapseTree(event.getTreeNode());
     }
     public void expandToSuperClass() {
         getTfTree().expandToSubSet("Superclass");
@@ -86,7 +92,7 @@ public class TfClassBean {
     }
 
     public void setSearchedClass(OboClass searchedClass) {
-        System.out.println("searched " + searchedClass);
+//        System.out.println("searched " + searchedClass);
         this.searchedClass = searchedClass;
     }
 

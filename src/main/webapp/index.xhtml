@@ -40,7 +40,7 @@ and open the template in the editor.
                     <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
                             update="tfTree" />
                 </p:autoComplete>
-                <p><h:commandButton value="Exand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree"/><h:commandButton value="Collapse all" action="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/><br />
+                <p><h:commandButton value="Expand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree"/><h:commandButton value="Collapse all" action="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/><br />
 
                     Expand to:
                     <h:commandButton id="expandSuperClassBtn" image="resources/superclass.gif" action="#{tfClassBean.expandToSuperClass}" update=":tfForm:tfTree"/>
@@ -64,7 +64,7 @@ and open the template in the editor.
                             <h:outputText value="Rank:"/>
                             <h:outputText value="#{tfClassBean.selectedNode.data.subsets}" rendered="#{tfClassBean.selectedNode != null}" />
                             <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                            <ui:remove>  <h:outputText value="ProteinAtlas:"/>
+                            <h:outputText value="ProteinAtlas:"/>
                             <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
                             <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
                             <h:outputText value="Transfac:"/>
@@ -72,12 +72,12 @@ and open the template in the editor.
                             <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
                             <h:outputText value="Uniprot"/>
                             <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" /></ui:remove>
+                            <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
                         </h:panelGrid>
                     </p:tab>
-                    <p:tab title="Protein expression pattern">
-                        Comming soon ...
-                    </p:tab>
+                    <!--<p:tab title="Protein expression pattern">
+                        Coming soon ...
+                    </p:tab> -->
                 </p:tabView>
             </p:panel>
             <p:panel id="ontologyPanel"><h2>Transcription factory classfication</h2>
@@ -89,9 +89,13 @@ and open the template in the editor.
                     Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
                     Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
                     Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/></p>
+                     <p:contextMenu for="tfTree">
+                        <p:menuitem value="Expand from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                    </p:contextMenu>
                 <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
                         selectionMode="single" selection="#{tfClassBean.selectedNode}">
                     <p:ajax event="select" update=":tfForm:tabView" />
+                    <p:ajax event="collapse" listener="#{ontologyController.onNodeCollapse}" />
                     <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                     </p:treeNode>
                     <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
