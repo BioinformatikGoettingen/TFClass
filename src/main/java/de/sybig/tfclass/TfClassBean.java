@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.NormaltissueFacadeREST;
 
 /**
  *
@@ -24,9 +28,16 @@ import org.slf4j.LoggerFactory;
 public class TfClassBean {
 
     private static final Logger log = LoggerFactory.getLogger(TfClassBean.class);
+    @EJB
+    NormaltissueFacadeREST ntf;
     private TfTree tfTree;
     private OboClass searchedClass;
     private TreeNode selectedNode;
+
+    @PostConstruct
+    void initialiseSession() {
+        FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+    }
 
     public List<OboClass> search(String pattern) {
         System.out.println("searching for " + pattern);
@@ -46,23 +57,48 @@ public class TfClassBean {
         return getTfTree().getRoot();
     }
 
+    public List getExpressionTable() {
+        TreeNode selected = getSelectedNode();
+        if (selected == null) {
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
+                System.out.println(a.getValue());
+                Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
+                Matcher matcher = regex.matcher(a.getValue());
+                String ensid = matcher.replaceAll("$1");
+                return ntf.getWithEnsemblId(ensid);
+            }
+        }
+//        ntf.getWithEnsemblId(getSelectedNode().g
+
+        return null;
+    }
+
     public void selectSearched() {
         TreeNode last = getTfTree().expandNode(getSearchedClass());
         last.setSelected(true);
     }
- public void expandAll() {
+
+    public void expandAll() {
         getTfTree().expandTree();
     }
- public void expandSelected(){
+
+    public void expandSelected() {
 //     System.out.println("expanding selected " + getSelectedNode());
-     getTfTree().expandTree(getSelectedNode());
- }
+        getTfTree().expandTree(getSelectedNode());
+    }
+
     public void collapseAll() {
         getTfTree().collapseTree();
     }
-      public void onNodeCollapse(NodeCollapseEvent event) {
-          getTfTree().collapseTree(event.getTreeNode());
+
+    public void onNodeCollapse(NodeCollapseEvent event) {
+        getTfTree().collapseTree(event.getTreeNode());
     }
+
     public void expandToSuperClass() {
         getTfTree().expandToSubSet("Superclass");
     }

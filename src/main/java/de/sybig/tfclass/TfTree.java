@@ -1,6 +1,6 @@
 package de.sybig.tfclass;
 
-import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
+import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 import de.sybig.oba.client.Obo2DClassList;
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
@@ -153,7 +153,6 @@ public class TfTree {
                 if (childnodes == null) {
                     childnodes = new LinkedList<TreeNode>();
 
-
                     Set<OboClass> cs = (Set<OboClass>) oc
                             .getChildren();
                     if (cs != null) {
@@ -161,6 +160,7 @@ public class TfTree {
                         Collections.sort(oboChildren, new NodeComparator());
                         for (OboClass child : oboChildren) {
                             new TfTreeNode(child.getSubsets(), child, this);
+//                             new TfTreeNode( child, this);
                             // the node is added to children by the super class
                             // do not add it here
                         }
@@ -200,10 +200,26 @@ public class TfTree {
 
         @Override
         public int compare(OboClass t, OboClass t1) {
+//            return 0;
             if (t.getName().equals("0")) {
                 return 1;
             }
-            return t.getName().compareTo(t1.getName());
+            String[] tnames = t.getName().split("\\.");
+            String[] t1names = t1.getName().split("\\.");
+            for (int i = 0 ; i < tnames.length; i++){
+                if (t1names.length < i){
+                    return -1;
+                }
+                int a = Integer.parseInt(tnames[i]);
+                int b = Integer.parseInt(t1names[i]);
+                if (a == b){
+                    continue;
+                }
+                if (a > b){
+                    return 1;
+                }
+            }
+            return 0;
         }
     }
 }
