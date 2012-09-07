@@ -4,7 +4,12 @@ import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
+import de.sybig.palinker.NormalTissueCytomer;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +18,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
@@ -33,6 +39,8 @@ public class TfClassBean {
     private TfTree tfTree;
     private OboClass searchedClass;
     private TreeNode selectedNode;
+    private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
+    private List<NormalTissueCytomer> filteredTissues;
 
     @PostConstruct
     void initialiseSession() {
@@ -57,7 +65,7 @@ public class TfClassBean {
         return getTfTree().getRoot();
     }
 
-    public List getExpressionTable() {
+    public List<NormalTissueCytomer> getExpressionTable() {
         TreeNode selected = getSelectedNode();
         if (selected == null) {
             return null;
@@ -65,16 +73,46 @@ public class TfClassBean {
         Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
-                System.out.println(a.getValue());
                 Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
                 Matcher matcher = regex.matcher(a.getValue());
                 String ensid = matcher.replaceAll("$1");
-                return ntf.getWithEnsemblId(ensid);
+                if (!tissueMap.containsKey(ensid)) {
+                    tissueMap.put(ensid, ntf.getWithEnsemblId(ensid));
+                }
+                return tissueMap.get(ensid);
             }
         }
 //        ntf.getWithEnsemblId(getSelectedNode().g
 
         return null;
+    }
+
+    public List<NormalTissueCytomer> getFilteredTissues() {
+        return filteredTissues;
+    }
+
+    public void setFilteredTissues(List<NormalTissueCytomer> filteredTissues) {
+        this.filteredTissues = filteredTissues;
+    }
+
+    public SelectItem[] getLevelOptions() {
+        if (getExpressionTable() == null){
+            return null;
+        }
+        List<String> levels = new LinkedList<String>();
+        for (NormalTissueCytomer t : getExpressionTable()) {
+            if (!levels.contains(t.getLevel())) {
+                levels.add(t.getLevel());
+            }
+        }
+        Collections.sort(levels);
+        SelectItem[] options = new SelectItem[levels.size() + 1];
+        options[0] = new SelectItem("", "Select");
+        for (int i = 0; i < levels.size(); i++) {
+            options[i + 1] = new SelectItem(levels.get(i), levels.get(i));
+
+        }
+        return options;
     }
 
     public void selectSearched() {

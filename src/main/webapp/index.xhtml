@@ -77,10 +77,29 @@ and open the template in the editor.
                         </h:panelGrid>
                     </p:tab>
                     <p:tab title="Protein expression pattern">
-                        <p:dataTable value="#{tfClassBean.getExpressionTable()}" var="row">
-                            <p:column><f:facet name="header"></f:facet></p:column>
+                        <p:dataTable id="expressionTable" 
+                                     value="#{tfClassBean.getExpressionTable()}" var="row"
+                                     filteredValue="#{tfClassBean.filteredTissues}">
+                            <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains">
+                                <f:facet name="header">Tissue</f:facet>
+                                <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?cls=#{row.tissueClass}" title="link to Cytomer" target="_blank">
+                                <h:outputText value="#{row.tissueClass.replaceAll('_', ' ')}" />
+                                </h:outputLink>
+                            </p:column>
 
-                            
+                            <p:column sortBy="#{row.cellClass}"  filterBy="#{row.cellClass}" filterMatchMode="contains">
+                                <f:facet name="header">Cell type</f:facet>
+                                <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?cls=#{row.cellClass}" title="link to Cytomer" target="_blank">
+                                    <h:outputText value="#{row.cellClass.replaceAll('_', ' ')}" /></h:outputLink>
+                            </p:column>
+
+                            <p:column sortBy="#{row.getLevelAsInt()}" filterBy="#{row.level}"  filterOptions="#{tfClassBean.getLevelOptions()}">
+                                <f:facet name="header">Expression level</f:facet>#{row.level}</p:column>
+
+                            <p:column sortBy="#{row.type}">
+                                <f:facet name="header">Type</f:facet>#{row.type}</p:column>
+                            <p:column sortBy="#{row.getReliabilityAsInt()}">
+                                <f:facet name="header">Reliability</f:facet>#{row.reliability}</p:column>
                         </p:dataTable>
                     </p:tab> 
                 </p:tabView>
@@ -94,9 +113,9 @@ and open the template in the editor.
                     Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
                     Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
                     Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/></p>
-                     <p:contextMenu for="tfTree">
-                        <p:menuitem value="Expand from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                    </p:contextMenu>
+                <p:contextMenu for="tfTree">
+                    <p:menuitem value="Expand from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
                 <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
                         selectionMode="single" selection="#{tfClassBean.selectedNode}">
                     <p:ajax event="select" update=":tfForm:tabView" />

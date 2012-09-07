@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 //    @NamedQuery(name = "Normaltissue.findByType", query = "SELECT n FROM Normaltissue n WHERE n.type = :type"),
 //    @NamedQuery(name = "Normaltissue.findByReliability", query = "SELECT n FROM Normaltissue n WHERE n.reliability = :reliability")})
 public class NormalTissue implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -95,6 +96,50 @@ public class NormalTissue implements Serializable {
         this.level = level;
     }
 
+    public int getLevelAsInt() {
+//        mysql> select level, count(level) as c from NormalTissue group by level order by c desc;
+//+----------+--------+
+//| level    | c      |
+//+----------+--------+
+//| Moderate | 194076 |  3
+//| Negative | 189938 | -1
+//| Weak     | 116155 |  2
+//| Strong   |  95614 |  5
+//| Medium   |  67031 |  4
+//| None     |  57212 |  0
+//| Low      |  41444 |  1
+//| High     |  28549 |  6
+//+----------+--------+
+
+
+        if (level.equals("Moderate")) {
+            return 3;
+        }
+        if (level.equals("Negative")) {
+            return -1;
+        }
+        if (level.equals("Weak")) {
+            return 2;
+        }
+        if (level.equals("Strong")) {
+            return 5;
+        }
+        if (level.equals("Medium")) {
+            return 4;
+        }
+        if (level.equals("None")) {
+            return 0;
+        }
+        if (level.equals("Low")) {
+            return 1;
+        }
+        if (level.equals("High")) {
+            return 6;
+        }
+
+        return -2;
+    }
+
     public String getType() {
         return type;
     }
@@ -109,6 +154,39 @@ public class NormalTissue implements Serializable {
 
     public void setReliability(String reliability) {
         this.reliability = reliability;
+    }
+
+    public int getReliabilityAsInt() {
+//        select reliability, count(reliability) as c from NormalTissue group by reliability order by c desc;
+//+-------------+--------+
+//| reliability | c      |
+//+-------------+--------+
+//| Uncertain   | 499257 | 2
+//| Supportive  |  96526 | 6
+//| High        |  66164 | 5
+//| Medium      |  65313 | 4
+//| Low         |  42641 | 3
+//| Very low    |  20118 | 1
+//+-------------+--------+
+        if (reliability.equals("Uncertain")) {
+            return 2;
+        }
+        if (reliability.equals("Supportive")) {
+            return 6;
+        }
+        if (reliability.equals("High")) {
+            return 5;
+        }
+        if (reliability.equals("Medium")) {
+            return 4;
+        }
+        if (reliability.equals("Low")) {
+            return 3;
+        }
+        if (reliability.equals("Very low")) {
+            return 1;
+        }
+        return 0;
     }
 
     @Override
@@ -135,5 +213,4 @@ public class NormalTissue implements Serializable {
     public String toString() {
         return "de.sybig.palinker.Normaltissue[ id=" + id + " ]";
     }
-
 }
