@@ -5,6 +5,7 @@ import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.palinker.NormalTissueCytomer;
+import java.io.EOFException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -41,6 +42,7 @@ public class TfClassBean {
     private TreeNode selectedNode;
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private List<NormalTissueCytomer> filteredTissues;
+    private LinkedList<String> fieldList;
 
     @PostConstruct
     void initialiseSession() {
@@ -48,17 +50,31 @@ public class TfClassBean {
     }
 
     public List<OboClass> search(String pattern) {
-        System.out.println("searching for " + pattern);
+//        System.out.println("searching for " + pattern);
         String searchPattern = pattern;
         if (!searchPattern.endsWith("*")) {
             searchPattern = searchPattern + "*";
         }
-        OboConnector connector = ObaProvider.getInstance().getConnector();
-        OboClassList searchResult = connector.searchCls(searchPattern);
-        if (searchResult == null || searchResult.getEntities() == null) {
+        try {
+            OboConnector connector = ObaProvider.getInstance().getConnector();
+            OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
+            if (searchResult == null || searchResult.getEntities() == null) {
+                return null;
+            }
+            return searchResult.getEntities();
+        } catch (Exception ex) {
             return null;
         }
-        return searchResult.getEntities();
+    }
+
+    private List<String> getFieldList() {
+        if (fieldList == null) {
+            fieldList = new LinkedList<String>();
+            fieldList.add("className");
+            fieldList.add("label");
+            fieldList.add("xref");
+        }
+        return fieldList;
     }
 
     public TreeNode getTfRoot() {
@@ -96,7 +112,7 @@ public class TfClassBean {
     }
 
     public SelectItem[] getLevelOptions() {
-        if (getExpressionTable() == null){
+        if (getExpressionTable() == null) {
             return null;
         }
         List<String> levels = new LinkedList<String>();
@@ -118,6 +134,7 @@ public class TfClassBean {
     public void selectSearched() {
         TreeNode last = getTfTree().expandNode(getSearchedClass());
         last.setSelected(true);
+        selectedNode = last;
     }
 
     public void expandAll() {
@@ -236,6 +253,19 @@ public class TfClassBean {
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("UNIPROT")) {
                 return parseUniprot(a.getValue());
+            }
+        }
+        return null;
+    }
+
+    public String getClassLink() {
+        if (selectedNode == null) {
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("CLASSLINK")) {
+                return a.getValue().substring(10).replace("\\", "");
             }
         }
         return null;
