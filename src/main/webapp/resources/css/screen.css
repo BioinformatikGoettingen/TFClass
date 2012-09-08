@@ -28,17 +28,67 @@ h2{
 #tfForm\:additional{
     width : 60%;
 }
+#tfForm\:tabView\:xrefTable  td{
+    vertical-align: top !important;
+}
+#tfForm\:tabView\:expressionTab{
+    font-size: 0.8em ;
+}
 .helpBtn{
     padding : 0px !important;
     font-size: 0.6em !important;
 }
 .helpTooltip{
-    border : 1px;
-    border-style: solid;
+    border : 1px !important;
+    border-style: solid !important;
+    background-color: #FFFFCC !important;
+    padding : 10px !important;
 }
 
 .ui-widget-content {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 0px solid #A8A8A8;
     color: #4F4F4F;
+}
+.ui-widget,
+.ui-widget .ui-widget {
+   /*font-size: 12px !important;*/
+}
+button{
+    font-size: 12px !important;
+}
+.expandBtn{
+    width : 1em !important;
+    height : 1em !important;
+    vertical-align: middle;
+}
+.smallBtn{
+/*    margin : 0px !important;
+    padding : 0px !important;
+    font-weight: normal !important;
+    font-size : 1em !important;*/
+}
+.superclass-icon {
+ background-image: url('#{request.contextPath}/resources/superclass.gif') !important;
+    background-position: 0px 0px;
+}
+.class-icon {
+ background-image: url('#{request.contextPath}/resources/class.gif') !important;
+    background-position: 0px 0px;
+}
+.subfamily-icon {
+ background-image: url('#{request.contextPath}/resources/subfamily.gif') !important;
+    background-position: 0px 0px;
+}
+.family-icon {
+ background-image: url('#{request.contextPath}/resources/family.gif') !important;
+    background-position: 0px 0px;
+}
+.genus-icon {
+ background-image: url('#{request.contextPath}/resources/genus.gif') !important;
+    background-position: 0px 0px;
+}
+.fspecies-icon {
+ background-image: url('#{request.contextPath}/resources/fspecies.gif') !important;
+    background-position: 0px 0px;
 }
