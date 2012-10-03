@@ -58,8 +58,8 @@ button{
     font-size: 12px !important;
 }
 .expandBtn{
-    width : 1em !important;
-    height : 1em !important;
+    width : 24px !important;
+    height : 24px !important;
     vertical-align: middle;
 }
 .smallBtn{
@@ -76,6 +76,12 @@ button{
  background-image: url('#{request.contextPath}/resources/class.gif') !important;
     background-position: 0px 0px;
 }
+.class-icon24 {
+ background-image: url('#{request.contextPath}/resources/class.gif') !important;
+    background-position: 0px 0px;
+    width: 24px;
+    height: 24px;
+}
 .subfamily-icon {
  background-image: url('#{request.contextPath}/resources/subfamily.gif') !important;
     background-position: 0px 0px;
@@ -91,4 +97,13 @@ button{
 .fspecies-icon {
  background-image: url('#{request.contextPath}/resources/fspecies.gif') !important;
     background-position: 0px 0px;
+}
+body{
+  font-size:  14px ;
+    font-family: sans-serif;
+    color: #4F4F4F;
+    }
+.ui-widget{
+    font-size:  14px;
+    font-family: sans-serif;
 }

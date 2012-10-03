@@ -1,6 +1,6 @@
 package de.sybig.tfclass;
 
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import de.sybig.oba.client.Obo2DClassList;
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
@@ -48,10 +48,16 @@ public class TfTree {
     }
 
     public TreeNode expandNode(OboClass searchedClass) {
+//        System.out.println("expand to sereched class " + searchedClass);
         if (searchedClass == null) {
             return null;
         }
-        Obo2DClassList paths = getConnector().xDownstreamOfY(searchedClass, getConnector().getRoot());
+        Obo2DClassList paths = null;
+        try {
+            paths = getConnector().xDownstreamOfY(searchedClass, getConnector().getRoot());
+        } catch (UniformInterfaceException ex) {
+            return null;
+        }
         if (paths == null || paths.getEntities() == null || paths.getEntities().size() < 1) {
             log.warn("no path to expand for {}", searchedClass);
             return null;
@@ -65,7 +71,13 @@ public class TfTree {
                 log.error("could not expand path");
                 return null;
             }
+//            TreeNode last = searchChildForObo(lastExpanded, cls);
+//            System.out.println(lastExpanded + " collapsing last " + last);
+//            collapseTree(last);
+//            collapseChildren(lastExpanded);
         }
+//        System.out.println("last expanded " +lastExpanded);
+        collapseTree(searchedClass);
         return searchChildForObo(lastExpanded, path.get(0));
 
     }
@@ -88,13 +100,32 @@ public class TfTree {
         return null;
     }
 
+    private TreeNode searchTreeNode(TreeNode parent, OboClass pattern) {
+        for (TreeNode child : parent.getChildren()) {
+            if (((OboClass) child.getData()).getName().equals(pattern.getName())) {
+                return child;
+            }
+            TreeNode tn = searchTreeNode(child, pattern);
+            if (tn != null) {
+                return tn;
+            }
+        }
+        return null;
+    }
+
     void expandTree() {
         expandTree(getRoot());
     }
 
+    private void collapseTree(OboClass oboClass) {
+        TreeNode treeNode = searchTreeNode(getRoot(), oboClass);
+//        System.out.println("collapsing " + treeNode);
+        treeNode.setExpanded(false);
+    }
+
     void collapseTree() {
 //        collapseTree(getRoot());
-        for (TreeNode child :  getRoot().getChildren() ){
+        for (TreeNode child : getRoot().getChildren()) {
             collapseTree(child);
         }
     }
@@ -107,26 +138,59 @@ public class TfTree {
     }
 
     public void collapseTree(TreeNode n) {
-        if (!n.isExpanded()) {
-            return;
-        }
+
         n.setExpanded(false);
         for (TreeNode child : n.getChildren()) {
-            collapseTree(child);
+            if (child.isExpanded()) {
+                collapseTree(child);
+            }
         }
     }
 
+    private void collapseChildren(TreeNode n) {
+        n.setExpanded(true);
+//        for (TreeNode c : n.getChildren()){
+//            System.out.println("collapsing " + c);
+////            c.setExpanded(false);
+//        }
+    }
+
     void expandToSubSet(String subset) {
-        System.out.println("expanding to subset " + subset);
+        long start = System.currentTimeMillis();
+        log.info("expanding to subset " + subset);
         LinkedList<String> fields = new LinkedList<String>();
         fields.add("subset");
-        OboClassList result = getConnector().searchCls(subset, fields);
+        OboClassList result = getConnector().searchCls(subset, fields, 2000);
+        System.out.println("from oba  " + ((System.currentTimeMillis() - start) / 1000));
         if (result == null || result.getEntities() == null) {
             return;
         }
+        log.info("terms " + result.size());
         for (OboClass cls : result.getEntities()) {
             expandNode(cls);
         }
+        log.info("done  " + ((System.currentTimeMillis() - start) / 1000));
+
+    }
+
+    public void expandToSubSet(String subset, TreeNode current) {
+        OboClassList descendants = getConnector().getDescendants((OboClass) current.getData());
+        if (descendants == null || descendants.getEntities() == null) {
+            return;
+        }
+        LinkedList<String> fields = new LinkedList<String>();
+        fields.add("subset");
+        OboClassList result = getConnector().searchCls(subset, fields, 2000);
+        if (result == null || result.getEntities() == null) {
+            return;
+        }
+        List<OboClass> list = result.getEntities();
+        list.retainAll(descendants.getEntities());
+        System.out.println("expanding " + list.size());
+        for (OboClass cls : list) {
+            expandNode(cls);
+        }
+
     }
 
     public class TfTreeNode extends DefaultTreeNode {
@@ -201,21 +265,24 @@ public class TfTree {
         @Override
         public int compare(OboClass t, OboClass t1) {
 //            return 0;
-            if (t.getName().equals("0")) {
-                return 1;
-            }
+//            if (t.getName().equals("0")) {
+//                return 1;
+//            }
             String[] tnames = t.getName().split("\\.");
             String[] t1names = t1.getName().split("\\.");
-            for (int i = 0 ; i < tnames.length; i++){
-                if (t1names.length < i){
+            for (int i = 0; i < tnames.length; i++) {
+                if (t1names.length < i) {
                     return -1;
                 }
                 int a = Integer.parseInt(tnames[i]);
                 int b = Integer.parseInt(t1names[i]);
-                if (a == b){
+                if (a == 0) {
+                    return 1;
+                }
+                if (a == b) {
                     continue;
                 }
-                if (a > b){
+                if (a > b) {
                     return 1;
                 }
             }

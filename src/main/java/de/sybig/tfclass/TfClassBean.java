@@ -5,7 +5,6 @@ import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.palinker.NormalTissueCytomer;
-import java.io.EOFException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -177,7 +176,36 @@ public class TfClassBean {
     public void expandToFactorSpecies() {
         getTfTree().expandToSubSet("Factor species");
     }
-
+    public void expandCurrentToClass(){
+        if (getSelectedNode() == null){
+            return;
+        }
+        getTfTree().expandToSubSet("Class", getSelectedNode());
+    }
+    public void expandCurrentToFamily(){
+        if (getSelectedNode() == null){
+            return;
+        }
+        getTfTree().expandToSubSet("Family", getSelectedNode());
+    }
+    public void expandCurrentToSubfamily(){
+        if (getSelectedNode() == null){
+            return;
+        }
+        getTfTree().expandToSubSet("Subfamily", getSelectedNode());
+    }
+    public void expandCurrentToGenus(){
+        if (getSelectedNode() == null){
+            return;
+        }
+        getTfTree().expandToSubSet("Genus", getSelectedNode());
+    }
+     public void expandCurrentToFactorSpecies(){
+        if (getSelectedNode() == null){
+            return;
+        }
+        getTfTree().expandToSubSet("Factor species", getSelectedNode());
+    }
     public OboClass getSearchedClass() {
         return searchedClass;
     }
@@ -231,6 +259,18 @@ public class TfClassBean {
         }
         return null;
     }
+     public String getBioGPS() {
+        if (selectedNode == null) {
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
+                return parseBioGPS(a.getValue());
+            }
+        }
+        return null;
+    }
 
     public String getTransfac() {
         if (selectedNode == null) {
@@ -274,7 +314,7 @@ public class TfClassBean {
     private String replacePubMed(String text) {
         Pattern regex = Pattern.compile("PMID (\\d{7})");
         Matcher matcher = regex.matcher(text);
-        String output = matcher.replaceAll("<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/$1\">PMID $1</a>");
+        String output = matcher.replaceAll("<a href=\"http://www.ncbi.nlm.nih.gov/pubmed/$1\" target=\"_blank\" >PMID $1</a>");
         return output;
     }
 
@@ -282,21 +322,27 @@ public class TfClassBean {
         Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)");
         Matcher matcher = regex.matcher(annoValue);
         if (matcher.groupCount() > 1) {
-            return matcher.replaceAll("<a href=\"http://www.proteinatlas.org/$1\">$1</a> ($2)");
+            return matcher.replaceAll("<a href=\"http://www.proteinatlas.org/$1\" target=\"_blank\" >$1</a> ($2)");
         }
-        return matcher.replaceAll("<a href=\"http://www.proteinatlas.org/$1\">$1</a> ($2)");
+        return matcher.replaceAll("<a href=\"http://www.proteinatlas.org/$1\" target=\"_blank\" >$1</a> ($2)");
 
     }
+ private String parseBioGPS(String annoValue) {
+        Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)");
+        Matcher matcher = regex.matcher(annoValue);
 
+        return matcher.replaceAll("<a href=\"http://biogps.org/#goto=genereport&id=$1\" target=\"_blank\" >$1</a>");
+
+    }
     private String parseTransfac(String annoValue) {
         Pattern regex = Pattern.compile("TRANSFAC:([\\w\\d]{11}).*");
         Matcher matcher = regex.matcher(annoValue);
-        return matcher.replaceAll("<a href=\"https://portal.biobase-international.com/cgi-bin/knowledgebase/pageview.cgi?view=LocusReport&protein_acc=$1\">$1</a>");
+        return matcher.replaceAll("<a href=\"https://portal.biobase-international.com/cgi-bin/knowledgebase/pageview.cgi?view=LocusReport&protein_acc=$1\" target=\"_blank\" >$1</a>");
     }
 
     private String parseUniprot(String annoValue) {
         Pattern regex = Pattern.compile("UNIPROT:([\\w\\d]{6})");
         Matcher matcher = regex.matcher(annoValue);
-        return matcher.replaceAll("<a href=\"http://www.uniprot.org/uniprot/$1\">$1</a>");
+        return matcher.replaceAll("<a href=\"http://www.uniprot.org/uniprot/$1\" target=\"_blank\" >$1</a>");
     }
 }

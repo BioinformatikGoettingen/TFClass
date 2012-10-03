@@ -14,7 +14,7 @@ public class ObaProvider {
     private ObaProvider(){
         // private because singleton
         connector = new OboConnector("TFClass");
-        connector.setBaseURI("http://localhost:9998/");
+//        connector.setBaseURI("http://speedy2:9997/");
     }
     public static ObaProvider getInstance(){
         if (instance == null){
