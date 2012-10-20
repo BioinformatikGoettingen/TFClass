@@ -21,12 +21,17 @@ h2{
     font-weight: bold;
     margin : 2px;
 }
-#tfForm\:tfTree{
+#leftTD{
+    vertical-align: top;
     width :39%;
 }
 
-#tfForm\:additional{
+#rightTD{
+    vertical-align : top;
     width : 60%;
+}
+#tfForm\:tfTree{
+    width: 100%;
 }
 #tfForm\:tabView\:xrefTable  td{
     vertical-align: top !important;

@@ -45,9 +45,13 @@ public class TfClassBean {
 
     @PostConstruct
     void initialiseSession() {
+//        System.out.println("init session");6
         FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        System.out.println("session ready");
     }
-
+    public String init(){
+        return "";
+    }
     public List<OboClass> search(String pattern) {
 //        System.out.println("searching for " + pattern);
         String searchPattern = pattern;
