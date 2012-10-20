@@ -151,6 +151,7 @@ public class TfClassBean {
 
     public void collapseAll() {
         getTfTree().collapseTree();
+        selectedNode = null;
     }
 
     public void onNodeCollapse(NodeCollapseEvent event) {
@@ -323,7 +324,7 @@ public class TfClassBean {
     }
 
     private String parseProteinAtlas(String annoValue) {
-        Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)");
+        Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)\"?");
         Matcher matcher = regex.matcher(annoValue);
         if (matcher.groupCount() > 1) {
             return matcher.replaceAll("<a href=\"http://www.proteinatlas.org/$1\" target=\"_blank\" >$1</a> ($2)");
@@ -332,7 +333,7 @@ public class TfClassBean {
 
     }
  private String parseBioGPS(String annoValue) {
-        Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)");
+        Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)\"?");
         Matcher matcher = regex.matcher(annoValue);
 
         return matcher.replaceAll("<a href=\"http://biogps.org/#goto=genereport&id=$1\" target=\"_blank\" >$1</a>");
