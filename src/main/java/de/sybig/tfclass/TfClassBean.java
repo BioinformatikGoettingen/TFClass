@@ -55,9 +55,9 @@ public class TfClassBean {
     public List<OboClass> search(String pattern) {
 //        System.out.println("searching for " + pattern);
         String searchPattern = pattern;
-        if (!searchPattern.endsWith("*")) {
-            searchPattern = searchPattern + "*";
-        }
+//        if (!searchPattern.endsWith("*")) {
+//            searchPattern = searchPattern + "*";
+//        }
         try {
             OboConnector connector = ObaProvider.getInstance().getConnector();
             OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
