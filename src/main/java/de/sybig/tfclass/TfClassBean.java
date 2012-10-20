@@ -45,11 +45,11 @@ public class TfClassBean {
 
     @PostConstruct
     void initialiseSession() {
-//        System.out.println("init session");6
         FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        System.out.println("session ready");
+//        System.out.println("session ready");
     }
     public String init(){
+        // used on the top of the page to init the bean
         return "";
     }
     public List<OboClass> search(String pattern) {
@@ -145,13 +145,12 @@ public class TfClassBean {
     }
 
     public void expandSelected() {
-//     System.out.println("expanding selected " + getSelectedNode());
         getTfTree().expandTree(getSelectedNode());
     }
 
     public void collapseAll() {
+        setSelectedNode(null);
         getTfTree().collapseTree();
-        selectedNode = null;
     }
 
     public void onNodeCollapse(NodeCollapseEvent event) {
@@ -228,6 +227,7 @@ public class TfClassBean {
     }
 
     public TreeNode getSelectedNode() {
+        System.out.println("selected node " + selectedNode);
         return selectedNode;
     }
 

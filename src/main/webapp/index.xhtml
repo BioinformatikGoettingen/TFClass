@@ -53,6 +53,8 @@ and open the template in the editor.
                             <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
                             as html document and as
                             <a href="http://tfclass.bioinf.med.uni-goettingen.de/TFClass.obo">ontology</a> in obo-format.</p>
+                        If you experience display errors wiht the Internet Explorer please use the
+                        <a href="http://tfclass.sybig.de">old version</a> of TFClass
                     </td></tr>
                 <tr><td id="leftTD">
                         <p:panel id="ontologyPanel"><h2>Transcription factory classfication</h2>
@@ -153,7 +155,9 @@ and open the template in the editor.
                                         update="tfTree :tfForm:tabView" />
                             </p:autoComplete>
                             <p><p:commandButton value="Expand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
-                                <p:commandButton value="Collapse all" action="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/>
+                                <p:commandButton value="Collapse all" actionListener="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/>
+
+
                                 <p:button value="?" title="Help" onclick="return false" id="expandHelpButton" styleClass="helpBtn"/>
                                 <p:tooltip for="expandHelpButton" styleClass="helpTooltip" showEvent="click" >
                                     <h:outputText

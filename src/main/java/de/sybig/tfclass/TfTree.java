@@ -138,7 +138,7 @@ public class TfTree {
     }
 
     public void collapseTree(TreeNode n) {
-
+        n.setSelected(false);
         n.setExpanded(false);
         for (TreeNode child : n.getChildren()) {
             if (child.isExpanded()) {
