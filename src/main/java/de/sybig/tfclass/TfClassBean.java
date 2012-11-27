@@ -48,16 +48,30 @@ public class TfClassBean {
         FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 //        System.out.println("session ready");
     }
-    public String init(){
+
+    public String init() {
         // used on the top of the page to init the bean
+        try {
+            String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
+            if (idString == null) {
+                return "";
+            }
+            OboClass cls = ObaProvider.getInstance().getConnector().getCls(idString, null);
+            if (cls == null) {
+                return "";
+            }
+            searchedClass = cls;
+            selectSearched();;
+            log.info("navigate to class {} by url parameter " + cls);
+        } catch (NumberFormatException e) {
+            log.error("The id '{}' parsed from the URL for the detail view is not valid");
+        }
+
         return "";
     }
+
     public List<OboClass> search(String pattern) {
-//        System.out.println("searching for " + pattern);
         String searchPattern = pattern;
-//        if (!searchPattern.endsWith("*")) {
-//            searchPattern = searchPattern + "*";
-//        }
         try {
             OboConnector connector = ObaProvider.getInstance().getConnector();
             OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
@@ -135,6 +149,7 @@ public class TfClassBean {
     }
 
     public void selectSearched() {
+        collapseAll();
         TreeNode last = getTfTree().expandNode(getSearchedClass());
         last.setSelected(true);
         selectedNode = last;
@@ -180,36 +195,42 @@ public class TfClassBean {
     public void expandToFactorSpecies() {
         getTfTree().expandToSubSet("Factor species");
     }
-    public void expandCurrentToClass(){
-        if (getSelectedNode() == null){
+
+    public void expandCurrentToClass() {
+        if (getSelectedNode() == null) {
             return;
         }
         getTfTree().expandToSubSet("Class", getSelectedNode());
     }
-    public void expandCurrentToFamily(){
-        if (getSelectedNode() == null){
+
+    public void expandCurrentToFamily() {
+        if (getSelectedNode() == null) {
             return;
         }
         getTfTree().expandToSubSet("Family", getSelectedNode());
     }
-    public void expandCurrentToSubfamily(){
-        if (getSelectedNode() == null){
+
+    public void expandCurrentToSubfamily() {
+        if (getSelectedNode() == null) {
             return;
         }
         getTfTree().expandToSubSet("Subfamily", getSelectedNode());
     }
-    public void expandCurrentToGenus(){
-        if (getSelectedNode() == null){
+
+    public void expandCurrentToGenus() {
+        if (getSelectedNode() == null) {
             return;
         }
         getTfTree().expandToSubSet("Genus", getSelectedNode());
     }
-     public void expandCurrentToFactorSpecies(){
-        if (getSelectedNode() == null){
+
+    public void expandCurrentToFactorSpecies() {
+        if (getSelectedNode() == null) {
             return;
         }
         getTfTree().expandToSubSet("Factor species", getSelectedNode());
     }
+
     public OboClass getSearchedClass() {
         return searchedClass;
     }
@@ -227,12 +248,10 @@ public class TfClassBean {
     }
 
     public TreeNode getSelectedNode() {
-        System.out.println("selected node " + selectedNode);
         return selectedNode;
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
-//        System.out.println("selected " + selectedNode);
         this.selectedNode = selectedNode;
     }
 
@@ -264,7 +283,8 @@ public class TfClassBean {
         }
         return null;
     }
-     public String getBioGPS() {
+
+    public String getBioGPS() {
         if (selectedNode == null) {
             return null;
         }
@@ -332,13 +352,15 @@ public class TfClassBean {
         return matcher.replaceAll("<a href=\"http://www.proteinatlas.org/$1\" target=\"_blank\" >$1</a> ($2)");
 
     }
- private String parseBioGPS(String annoValue) {
+
+    private String parseBioGPS(String annoValue) {
         Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*([\\w\\s]*)\"?");
         Matcher matcher = regex.matcher(annoValue);
 
         return matcher.replaceAll("<a href=\"http://biogps.org/#goto=genereport&id=$1\" target=\"_blank\" >$1</a>");
 
     }
+
     private String parseTransfac(String annoValue) {
         Pattern regex = Pattern.compile("TRANSFAC:([\\w\\d]{11}).*");
         Matcher matcher = regex.matcher(annoValue);

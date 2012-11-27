@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -12,6 +7,7 @@ and open the template in the editor.
     <h:head>
         <title>Transcription factor classification</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="EmulateIE8"/>
         <h:outputStylesheet name="css/screen.css"/>
         <script  language="JavaScript">var statusDlgTimer = null;
             function showStatusDlg() {
@@ -53,11 +49,17 @@ and open the template in the editor.
                             <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
                             as html document and as
                             <a href="http://tfclass.bioinf.med.uni-goettingen.de/TFClass.obo">ontology</a> in obo-format.</p>
-                        If you experience display errors wiht the Internet Explorer please use the
-                        <a href="http://tfclass.sybig.de">old version</a> of TFClass
+<!--                        If you experience display errors wiht the Internet Explorer please use the
+                        <a href="http://tfclass.sybig.de">old version</a> of TFClass-->
+<p>When referring to this classification, please cite: <br />
+Wingender, E., Schoeps, T. and Dönitz, J.: <br /><b>TFClass: An expandable
+hierarchical classification of human transcription factors</b><br /> Nucleic
+Acids Res. 2012,
+<a href="http://nar.oxfordjournals.org/content/early/2012/11/23/nar.gks1123.full" target="_blank">doi: 10.1093/nar/gks1123 (2012).</a> </p>
+
                     </td></tr>
                 <tr><td id="leftTD">
-                        <p:panel id="ontologyPanel"><h2>Transcription factory classfication</h2>
+                        <p:panel id="ontologyPanel"><h2>Transcription factor classification</h2>
                             <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
                             <p>
                                 Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
@@ -198,7 +200,8 @@ and open the template in the editor.
                                         <h:outputText value="ID:"/>
                                         <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
                                         <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                                        <h:outputText value="Definition:"/>
+                                        <h:outputText value="Definition:" rendered="#{tfClassBean.selectedNode.data.subsets!='Family' and tfClassBean.selectedNode.data.subsets!='Subfamily'}" />
+                                                                                <h:outputText value="Consensus sequence:" rendered="#{tfClassBean.selectedNode.data.subsets=='Family' or tfClassBean.selectedNode.data.subsets=='Subfamily'}" />
                                         <h:outputText value="#{tfClassBean.definition}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
                                         <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
 
@@ -235,10 +238,11 @@ and open the template in the editor.
                                         <p>
                                             <h:outputText value="The selected tree node is not linked to a gene, no expression data is available."
                                                           /></p></p:outputPanel>
-                                    <p:dataTable id="expressionTable"
+
+                                  <p:dataTable id="expressionTable"
                                                  value="#{tfClassBean.getExpressionTable()}" var="row"
                                                  filteredValue="#{tfClassBean.filteredTissues}">
-                                        <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains">
+                                      <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains" >
                                             <f:facet name="header">Tissue</f:facet>
                                             <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.tissueClass}" title="link to Cytomer" target="_blank">
                                                 <h:outputText value="#{row.tissueClass.replaceAll('_', ' ')}" />
