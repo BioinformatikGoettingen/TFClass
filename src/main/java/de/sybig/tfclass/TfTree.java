@@ -277,7 +277,13 @@ public class TfTree {
                 int a = Integer.parseInt(tnames[i]);
                 int b = Integer.parseInt(t1names[i]);
                 if (a == 0) {
+                    if (b == 0){
+                        continue;
+                    }
                     return 1;
+                }
+                if (b == 0){
+                    return -1;
                 }
                 if (a == b) {
                     continue;

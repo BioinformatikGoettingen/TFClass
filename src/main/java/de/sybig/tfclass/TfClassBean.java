@@ -61,7 +61,7 @@ public class TfClassBean {
                 return "";
             }
             searchedClass = cls;
-            selectSearched();;
+            selectSearched();
             log.info("navigate to class {} by url parameter " + cls);
         } catch (NumberFormatException e) {
             log.error("The id '{}' parsed from the URL for the detail view is not valid");
@@ -115,7 +115,6 @@ public class TfClassBean {
                 return tissueMap.get(ensid);
             }
         }
-//        ntf.getWithEnsemblId(getSelectedNode().g
 
         return null;
     }
@@ -236,7 +235,6 @@ public class TfClassBean {
     }
 
     public void setSearchedClass(OboClass searchedClass) {
-//        System.out.println("searched " + searchedClass);
         this.searchedClass = searchedClass;
     }
 
