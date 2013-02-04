@@ -5,6 +5,7 @@ import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.palinker.NormalTissueCytomer;
+import java.io.EOFException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -53,18 +55,44 @@ public class TfClassBean {
         // used on the top of the page to init the bean
         try {
             String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
-            if (idString == null) {
+            if (idString != null) {
+                OboClass cls = ObaProvider.getInstance().getConnector().getCls(idString, null);
+                if (cls == null) {
+                      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + idString, null));
+                    return "";
+                }
+                searchedClass = cls;
+                selectSearched();
+                log.info("navigate to class {} by url parameter tfclass=", cls);
                 return "";
             }
-            OboClass cls = ObaProvider.getInstance().getConnector().getCls(idString, null);
-            if (cls == null) {
-                return "";
+            String ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("ext");
+            if (ext == null || ext.length() < 1) {
+                ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uniprot");
             }
-            searchedClass = cls;
-            selectSearched();
-            log.info("navigate to class {} by url parameter " + cls);
+            if (ext != null) {
+                OboClassList resultList = ObaProvider.getInstance().getConnector().searchCls(ext);
+                if (resultList == null || resultList.size() != 1) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
+                    return "";
+                }
+                OboClass cls = resultList.getEntities().get(0);
+                if (cls == null) {
+  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
+                    return "";
+                }
+                searchedClass = cls;
+                selectSearched();
+                log.info("navigate to class {} specified in the url wiht ext parameter {}", cls, ext);
+                return "";
+
+            }
         } catch (NumberFormatException e) {
             log.error("The id '{}' parsed from the URL for the detail view is not valid");
+              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter " , null));
+        } catch (Exception e) {
+            log.error("Error while parsing URL parameter " + e);
+             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter " , null));
         }
 
         return "";
@@ -150,6 +178,10 @@ public class TfClassBean {
     public void selectSearched() {
         collapseAll();
         TreeNode last = getTfTree().expandNode(getSearchedClass());
+        if (last == null) {
+            System.out.println(last + " for " + getSearchedClass());
+            return;
+        }
         last.setSelected(true);
         selectedNode = last;
     }

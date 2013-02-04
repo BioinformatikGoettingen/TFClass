@@ -50,12 +50,14 @@ public class TfTree {
     public TreeNode expandNode(OboClass searchedClass) {
 //        System.out.println("expand to sereched class " + searchedClass);
         if (searchedClass == null) {
+            log.warn("can not expand tree, searched class is null");
             return null;
         }
         Obo2DClassList paths = null;
         try {
             paths = getConnector().xDownstreamOfY(searchedClass, getConnector().getRoot());
         } catch (UniformInterfaceException ex) {
+            log.warn("An error occured while getting the path to root for {}, {}", searchedClass, ex);
             return null;
         }
         if (paths == null || paths.getEntities() == null || paths.getEntities().size() < 1) {
@@ -68,7 +70,7 @@ public class TfTree {
             JsonCls cls = path.getEntities().get(i);
             lastExpanded = expandChild(lastExpanded, cls);
             if (lastExpanded == null) {
-                log.error("could not expand path");
+                log.warn("could not expand path");
                 return null;
             }
 //            TreeNode last = searchChildForObo(lastExpanded, cls);
@@ -91,9 +93,18 @@ public class TfTree {
         return child;
     }
 
+    /**
+     * Searches the child of the given tree node wiht the same name (tfclass id)
+     * like the given JsonCls. The matching child is returned, or
+     * <code>null</code> if there is no matching child.
+     *
+     * @param parent The parent class of the children to check
+     * @param cls The JsonCls to compare with
+     * @return The matching child from parent.
+     */
     private TreeNode searchChildForObo(TreeNode parent, JsonCls cls) {
         for (TreeNode child : parent.getChildren()) {
-            if (((OboClass) child.getData()).getName().contains(cls.getName())) {
+            if (((OboClass) child.getData()).getName().equals(cls.getName())) {
                 return child;
             }
         }
@@ -186,7 +197,6 @@ public class TfTree {
         }
         List<OboClass> list = result.getEntities();
         list.retainAll(descendants.getEntities());
-        System.out.println("expanding " + list.size());
         for (OboClass cls : list) {
             expandNode(cls);
         }
@@ -277,12 +287,12 @@ public class TfTree {
                 int a = Integer.parseInt(tnames[i]);
                 int b = Integer.parseInt(t1names[i]);
                 if (a == 0) {
-                    if (b == 0){
+                    if (b == 0) {
                         continue;
                     }
                     return 1;
                 }
-                if (b == 0){
+                if (b == 0) {
                     return -1;
                 }
                 if (a == b) {
