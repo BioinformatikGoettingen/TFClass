@@ -157,7 +157,9 @@ Nucleic Acids Res. 41, D165-D170 (2013).
                                 <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
                                         update="tfTree :tfForm:tabView" />
                             </p:autoComplete>
-                            <p><p:commandButton value="Expand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
+                           <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
+                            <p:defaultCommand target=":tfForm:voidBtn"/>
+                           <p><p:commandButton value="Expand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
                                 <p:commandButton value="Collapse all" actionListener="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/>
 
 
