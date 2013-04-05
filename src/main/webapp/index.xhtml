@@ -196,48 +196,57 @@
 
         </p>
         <p:tabView id="tabView" dynamic="true">
-
+            <p:ajax event="tabClose"  listener="#{tfClassBean.tabClose}" />
             <p:tab id="details" title="Details">
+                
+                    <h:panelGrid columns="2" id="xrefTable">
 
-                <h:panelGrid columns="2" id="xrefTable">
-                    <h:outputText value="ID:"/>
-                    <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                    <h:outputText value="Definition:" rendered="#{tfClassBean.selectedNode.data.subsets!='Family' and tfClassBean.selectedNode.data.subsets!='Subfamily'}" />
-                    <h:outputText value="Consensus sequence:" rendered="#{tfClassBean.selectedNode.data.subsets=='Family' or tfClassBean.selectedNode.data.subsets=='Subfamily'}" />
-                    <h:outputText value="#{tfClassBean.definition}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        <h:outputText value="ID:"/>
+                        <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+
+                        <h:outputText value="Alternative ID:" rendered="#{not empty tfClassBean.altID}"/>
+                        <p:commandLink value="#{tfClassBean.altID}"
+                                       actionListener="#{tfClassBean.jumpToAlternative(tfClassBean.altID)}"
+                                       update=":tfForm:tfTree :tfForm:tabView"
+                                       rendered="#{not empty tfClassBean.altID}"/>
+
+                        <h:outputText value="Definition:" rendered="#{tfClassBean.selectedNode.data.subsets!='Family' and tfClassBean.selectedNode.data.subsets!='Subfamily'}" />
+                        <h:outputText value="Consensus sequence:" rendered="#{tfClassBean.selectedNode.data.subsets=='Family' or tfClassBean.selectedNode.data.subsets=='Subfamily'}" />
+                        <h:outputText value="#{tfClassBean.definition}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
 
 
-                    <h:outputText value="Rank:"/>
-                    <p:outputPanel rendered="#{tfClassBean.selectedNode != null}" >
-                        <h:outputText value="#{tfClassBean.selectedNode.data.subsets} " />
-                        <h:outputLink value="#{tfClassBean.classLink}" target="_blank" rendered="#{tfClassBean.classLink != null}">
-                            (More)</h:outputLink>
-                    </p:outputPanel>
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        <h:outputText value="Rank:"/>
+                        <p:outputPanel rendered="#{tfClassBean.selectedNode != null}" >
+                            <h:outputText value="#{tfClassBean.selectedNode.data.subsets} " />
+                            <h:outputLink value="#{tfClassBean.classLink}" target="_blank" rendered="#{tfClassBean.classLink != null}">
+                                (More)</h:outputLink>
+                        </p:outputPanel>
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
 
-                    <h:outputText value="Logo plot"  rendered="#{not empty tfClassBean.logoAdress}"/>
-                    <p:outputPanel rendered="#{not empty tfClassBean.logoAdress}">
-                        <img src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/logos/#{tfClassBean.logoAdress}" alt="Logo plot"/>
-                    </p:outputPanel>
-                    <h:outputText value="ProteinAtlas:"/>
-                    <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        <h:outputText value="Logo plot:"  rendered="#{not empty tfClassBean.logoAdress}"/>
+                        <p:outputPanel rendered="#{not empty tfClassBean.logoAdress}">
+                            <img src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/logos/#{tfClassBean.logoAdress}" alt="Logo plot"/>
+                        </p:outputPanel>
+                        <h:outputText value="ProteinAtlas:"/>
+                        <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
 
-                    <h:outputText value="BioGPS:"/>
-                    <h:outputText value="#{tfClassBean.bioGPS}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        <h:outputText value="BioGPS:"/>
+                        <h:outputText value="#{tfClassBean.bioGPS}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
 
-                    <h:outputText value="Transfac:"/>
-                    <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                    <h:outputText value="Uniprot"/>
-                    <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                </h:panelGrid>
+                        <h:outputText value="Transfac:"/>
+                        <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                        <h:outputText value="Uniprot"/>
+                        <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                    </h:panelGrid>
+              
             </p:tab>
-            <p:tab id="expressionTab" title="Protein expression pattern">
+            <p:tab id="expressionTab" title="Protein expression pattern" rendered="#{not empty tfClassBean.expressionTable}">
                 The table below summarizes the protein expression data from the <a href="http://www.proteinatlas.org/">Protein Atlas</a>.
                 The tissues and cell types are
                 linked to the <a href="http://cytomer.bioinf.med.uni-goettingen.de">Cytomer ontology</a>.
@@ -272,11 +281,11 @@
                 </p:dataTable>
             </p:tab>
 
-            <p:tab id="logoTab" title="Library"  disabled="#{empty tfClassBean.logoDescription}">
+            <p:tab id="logoTab" title="Library"  rendered="#{not empty tfClassBean.logoDescription}">
                 <p:outputPanel rendered="#{not empty tfClassBean.logoDescription}">
-                <iframe src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/library#{tfClassBean.logoDescription}"  width="100%" height="600px"/>
+                    <iframe src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/library#{tfClassBean.logoDescription}"  width="100%" height="600px"/>
                 </p:outputPanel>
-                        <h:outputText value="No data available on this tab." rendered="#{empty tfClassBean.logoDescription}" />
+                <h:outputText value="No data available on this tab." rendered="#{empty tfClassBean.logoDescription}" />
             </p:tab>
         </p:tabView>
     </p:panel>

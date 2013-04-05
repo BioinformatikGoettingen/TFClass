@@ -172,7 +172,7 @@ public class TfTree {
         LinkedList<String> fields = new LinkedList<String>();
         fields.add("subset");
         OboClassList result = getConnector().searchCls(subset, fields, 2000);
-        System.out.println("from oba  " + ((System.currentTimeMillis() - start) / 1000));
+//        System.out.println("from oba  " + ((System.currentTimeMillis() - start) / 1000));
         if (result == null || result.getEntities() == null) {
             return;
         }

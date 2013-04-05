@@ -18,9 +18,12 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,9 @@ public class TfClassBean {
 
     private static final Logger log = LoggerFactory.getLogger(TfClassBean.class);
     @EJB
-    NormaltissueFacadeREST ntf;
+    private NormaltissueFacadeREST ntf;
+    private static final String LOGOTABID = "logoTab";
+    private static final String EXPRESSTABID = "expressionTab";
     private TfTree tfTree;
     private OboClass searchedClass;
     private TreeNode selectedNode;
@@ -57,7 +62,7 @@ public class TfClassBean {
             if (idString != null) {
                 OboClass cls = ObaProvider.getInstance().getConnector().getCls(idString, null);
                 if (cls == null) {
-                      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + idString, null));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + idString, null));
                     return "";
                 }
                 searchedClass = cls;
@@ -77,7 +82,7 @@ public class TfClassBean {
                 }
                 OboClass cls = resultList.getEntities().get(0);
                 if (cls == null) {
-  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
                     return "";
                 }
                 searchedClass = cls;
@@ -88,10 +93,10 @@ public class TfClassBean {
             }
         } catch (NumberFormatException e) {
             log.error("The id '{}' parsed from the URL for the detail view is not valid");
-              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter " , null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter ", null));
         } catch (Exception e) {
             log.error("Error while parsing URL parameter " + e);
-             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter " , null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter ", null));
         }
 
         return "";
@@ -142,7 +147,10 @@ public class TfClassBean {
                 return tissueMap.get(ensid);
             }
         }
-
+        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
+        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(EXPRESSTABID)) {
+            tabView.setActiveIndex(0);
+        }
         return null;
     }
 
@@ -299,7 +307,24 @@ public class TfClassBean {
         def = replacePubMed(def);
         return def;
     }
-
+    public String getAltID(){
+         if (selectedNode == null) {
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("alt_id")) {
+                return a.getValue();
+            }
+        }
+        return null;
+    }
+    public void jumpToAlternative(String id){
+         OboConnector connector = ObaProvider.getInstance().getConnector();
+        OboClass cls = connector.getCls(id, null);
+        setSearchedClass(cls);
+        selectSearched();
+    }
     public String getProteinAtlas() {
         if (selectedNode == null) {
             return null;
@@ -351,30 +376,41 @@ public class TfClassBean {
         }
         return null;
     }
-    public String getLogoAdress(){
-        if (selectedNode == null){
+
+    public String getLogoAdress() {
+        if (selectedNode == null) {
             return null;
         }
         Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("LOGOPNGLINK")) {
-               return a.getValue().replace("LOGOPNGLINK:http\\://www.edgar-wingender.de/logos", "");
+                return a.getValue().replace("LOGOPNGLINK:http\\://www.edgar-wingender.de/logos", "");
             }
         }
         return null;
     }
-    public String getLogoDescription(){
-        if (selectedNode == null){
+
+    public String getLogoDescription() {
+        if (selectedNode == null) {
             return null;
         }
         Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("LOGODESCRIPTIONLINK")) {
-               return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
+                return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
             }
+        }
+        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
+        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(LOGOTABID)) {
+            tabView.setActiveIndex(0);
         }
         return null;
     }
+
+    public void tabClose(TabChangeEvent event) {
+        System.out.println("closed " + event);
+    }
+
     public String getClassLink() {
         if (selectedNode == null) {
             return null;
