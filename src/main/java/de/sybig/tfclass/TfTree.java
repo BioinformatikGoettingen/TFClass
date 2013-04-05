@@ -274,10 +274,8 @@ public class TfTree {
 
         @Override
         public int compare(OboClass t, OboClass t1) {
-//            return 0;
-//            if (t.getName().equals("0")) {
-//                return 1;
-//            }
+//            System.out.println(t.getName() +" compare to " + t1.getName());
+
             String[] tnames = t.getName().split("\\.");
             String[] t1names = t1.getName().split("\\.");
             for (int i = 0; i < tnames.length; i++) {
@@ -301,6 +299,7 @@ public class TfTree {
                 if (a > b) {
                     return 1;
                 }
+                return -1;
             }
             return 0;
         }

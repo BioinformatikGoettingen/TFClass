@@ -11,13 +11,13 @@
         <h:outputStylesheet name="css/screen.css"/>
         <script  language="JavaScript">var statusDlgTimer = null;
             function showStatusDlg() {
-                if ( statusDlgTimer ==null)  {
-                    statusDlgTimer=setTimeout("statusDialog.show()", 400);
+                if (statusDlgTimer == null) {
+                    statusDlgTimer = setTimeout("statusDialog.show()", 400);
                 }
             }
 
             function hideStatusDlg() {
-                if ( statusDlgTimer !=null ) {
+                if (statusDlgTimer != null) {
                     clearTimeout(statusDlgTimer);
                     statusDialog.hide();
                     statusDlgTimer = null;
@@ -25,251 +25,262 @@
             }</script>
     </h:head>
     <body>
-        <p:ajaxStatus onstart="showStatusDlg();" onsuccess="hideStatusDlg();" />
-        <p:dialog modal="true" widgetVar="statusDialog" header="Status" showEffect="fade"
-                  draggable="false" closable="false">
-            Please wait ...
-        </p:dialog>
-        <h1>Classification of Human Transcription Factors</h1>
-        #{tfClassBean.init()}
-        <h:form id="tfForm">
-            <table border="0">
-                <tr>
-                    <td colspan="2">
+    <p:ajaxStatus onstart="showStatusDlg();" onsuccess="hideStatusDlg();" />
+    <p:dialog modal="true" widgetVar="statusDialog" header="Status" showEffect="fade"
+              draggable="false" closable="false">
+        Please wait ...
+    </p:dialog>
+    <h1>Classification of Human Transcription Factors</h1>
+    #{tfClassBean.init()}
+    <h:form id="tfForm">
+        <table border="0">
+            <tr>
+                <td colspan="2">
 
-                        <p><b>TFClass</b> is a classification of (so far: human) transcription factors
-                            based on the characteristics of their DNA-binding domains. It comprises
-                            six levels (superclasses, classes, families, subfamilies, genera and
-                            factor species), two of which are optional (subfamilies and factor
-                            species). More detailed explanations about the classification scheme and
-                            its criteria will be given
-                            <a href="http://www.edgar-wingender.de/TFClass_schema.html">here</a>.
-                            The full classification can also be
-                            obtained
-                            <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
-                            as html document and as
-                            <a href="http://tfclass.bioinf.med.uni-goettingen.de/TFClass.obo">ontology</a> in obo-format.</p>
-<!--                        If you experience display errors wiht the Internet Explorer please use the
-                        <a href="http://tfclass.sybig.de">old version</a> of TFClass-->
-<p>When referring to this classification, please cite: <br />
-Wingender, E., Schoeps, T. and Dönitz, J.: <br /><b>TFClass: An expandable
-hierarchical classification of human transcription factors</b><br /> 
-Nucleic Acids Res. 41, D165-D170 (2013).
-<a href="http://nar.oxfordjournals.org/content/41/D1/D165.long" target="_blank">link</a> </p>
+                    <p><b>TFClass</b> is a classification of (so far: human) transcription factors
+                        based on the characteristics of their DNA-binding domains. It comprises
+                        six levels (superclasses, classes, families, subfamilies, genera and
+                        factor species), two of which are optional (subfamilies and factor
+                        species). More detailed explanations about the classification scheme and
+                        its criteria will be given
+                        <a href="http://www.edgar-wingender.de/TFClass_schema.html">here</a>.
+                        The full classification can also be
+                        obtained
+                        <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
+                        as html document and as
+                        <a href="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/TFClass.obo">ontology</a> in obo-format.</p>
+                    <!--                        If you experience display errors wiht the Internet Explorer please use the
+                                            <a href="http://tfclass.sybig.de">old version</a> of TFClass-->
+                    <p>When referring to this classification, please cite: <br />
+                        Wingender, E., Schoeps, T. and Dönitz, J.: <br /><b>TFClass: An expandable
+                            hierarchical classification of human transcription factors</b><br />
+                        Nucleic Acids Res. 41, D165-D170 (2013).
+                        <a href="http://nar.oxfordjournals.org/content/41/D1/D165.long" target="_blank">link</a> </p>
 
-                    </td></tr>
-                <tr><td colspan="2"><p:messages /> </td></tr>
-                <tr><td id="leftTD">
-                        <p:panel id="ontologyPanel"><h2>Transcription factor classification</h2>
-                            <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
-                            <p>
-                                Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
-                                Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,
-                                Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
-                                Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
-                                Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
-                                Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/></p>
-                            <h:outputText id="treeHeader" value="Human TF" />
-                            <p:contextMenu for="tfTree" nodeType="Superclass" style="width:300px">
-                                <p:menuitem value="Expand from here to Class" icon="class-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToClass()}" />
-                                <p:menuitem value="Expand from here to Family" icon="family-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFamily()}" />
-                                <p:menuitem value="Expand from here to Subfamily" icon="subfamily-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToSubfamily()}" />
-                                <p:menuitem value="Expand from here to Genus" icon="genus-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
-                                <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
-                                <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                            </p:contextMenu>
-                            <p:contextMenu for="tfTree" nodeType="Class" style="width:300px">
-                                <p:menuitem value="Expand from here to Family" icon="family-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFamily()}" />
-                                <p:menuitem value="Expand from here to Subfamily" icon="subfamily-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToSubfamily()}" />
-                                <p:menuitem value="Expand from here to Genus" icon="genus-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
-                                <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
-                                <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                            </p:contextMenu>
-                            <p:contextMenu for="tfTree" nodeType="Family" style="width:300px">
-                                <p:menuitem value="Expand from here to Subfamily" icon="subfamily-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToSubfamily()}" />
-                                <p:menuitem value="Expand from here to Genus" icon="genus-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
-                                <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
-                                <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                            </p:contextMenu>
-                            <p:contextMenu for="tfTree" nodeType="Subfamily" style="width:300px">
-                                <p:menuitem value="Expand from here to Genus" icon="genus-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
-                                <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
-                                <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                            </p:contextMenu>
-                            <p:contextMenu for="tfTree" nodeType="Genus" style="width:300px">
-                                <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
-                                            update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
-                                <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                            </p:contextMenu>
-                            <p:contextMenu for="tfTree" nodeType="Factor species" >
-                                <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
-                            </p:contextMenu>
+                </td></tr>
+            <tr><td colspan="2"><p:messages /> </td></tr>
+            <tr><td id="leftTD">
+            <p:panel id="ontologyPanel"><h2>Transcription factor classification</h2>
+                <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
+                <p>
+                    Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
+                    Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,
+                    Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
+                    Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
+                    Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
+                    Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/></p>
+                <h:outputText id="treeHeader" value="Human TF" />
+                <p:contextMenu for="tfTree" nodeType="Superclass" style="width:300px">
+                    <p:menuitem value="Expand from here to Class" icon="class-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToClass()}" />
+                    <p:menuitem value="Expand from here to Family" icon="family-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFamily()}" />
+                    <p:menuitem value="Expand from here to Subfamily" icon="subfamily-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToSubfamily()}" />
+                    <p:menuitem value="Expand from here to Genus" icon="genus-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
+                    <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
+                    <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
+                <p:contextMenu for="tfTree" nodeType="Class" style="width:300px">
+                    <p:menuitem value="Expand from here to Family" icon="family-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFamily()}" />
+                    <p:menuitem value="Expand from here to Subfamily" icon="subfamily-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToSubfamily()}" />
+                    <p:menuitem value="Expand from here to Genus" icon="genus-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
+                    <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
+                    <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
+                <p:contextMenu for="tfTree" nodeType="Family" style="width:300px">
+                    <p:menuitem value="Expand from here to Subfamily" icon="subfamily-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToSubfamily()}" />
+                    <p:menuitem value="Expand from here to Genus" icon="genus-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
+                    <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
+                    <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
+                <p:contextMenu for="tfTree" nodeType="Subfamily" style="width:300px">
+                    <p:menuitem value="Expand from here to Genus" icon="genus-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToGenus()}" />
+                    <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
+                    <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
+                <p:contextMenu for="tfTree" nodeType="Genus" style="width:300px">
+                    <p:menuitem value="Expand from here to Factor species" icon="fspecies-icon"
+                                update=":tfForm:tfTree" actionListener="#{tfClassBean.expandCurrentToFactorSpecies()}" />
+                    <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
+                <p:contextMenu for="tfTree" nodeType="Factor species" >
+                    <p:menuitem value="Expand all from here" update=":tfForm:tfTree" actionListener="#{tfClassBean.expandSelected()}" />
+                </p:contextMenu>
 
-                            <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
-                                    selectionMode="single" selection="#{tfClassBean.selectedNode}">
-                                <p:ajax event="select" update=":tfForm:tabView" />
-                                <p:ajax event="collapse" listener="#{tfClassBean.onNodeCollapse}" />
-                                <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                                <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
-                                    <h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                                <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
-                                    <h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                                <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
-                                    <h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                                <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
-                                    <h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                                <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
-                                    <h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                                <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
-                                    <h:outputText value="#{node.name} #{node.label}" />
-                                </p:treeNode>
-                            </p:tree></p:panel>
-                    </td><td id="rightTD">
-                        <p:panel id="additional">
-                            <h2>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h2>
-                            <p:tooltip for="searchHelpButton"
-                                       value="Searches in the label, ID and external references."
-                                       styleClass="helpTooltip" showEvent="click"  />
-                            <p:autoComplete value="#{tfClassBean.searchedClass}" var="cls"
-                                            itemValue="#{cls}" itemLabel="#{cls}"
-                                            completeMethod="#{tfClassBean.search}"
-                                            scrollHeight="350" converter="ontologyClassConverter">
-                                <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
-                                        update="tfTree :tfForm:tabView" />
-                            </p:autoComplete>
-                           <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
-                            <p:defaultCommand target=":tfForm:voidBtn"/>
-                           <p><p:commandButton value="Expand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
-                                <p:commandButton value="Collapse all" actionListener="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/>
-
-
-                                <p:button value="?" title="Help" onclick="return false" id="expandHelpButton" styleClass="helpBtn"/>
-                                <p:tooltip for="expandHelpButton" styleClass="helpTooltip" showEvent="click" >
-                                    <h:outputText
-                                        value="Hint: Use the context menu of a tree node to expand all its children."/>
-                                </p:tooltip>
-                                <p>Expand to:
-                                    <p:commandButton id="expandSuperClassBtn" icon="superclass-icon" styleClass="expandBtn"
-                                                     action="#{tfClassBean.expandToSuperClass}"
-                                                     update=":tfForm:tfTree" title="Expand to super class level"/>
-
-                                    <p:commandButton id="expandClassBtn" icon="class-icon24" styleClass="expandBtn"
-                                                     action="#{tfClassBean.expandToClass}"
-                                                     update=":tfForm:tfTree" title="Expand do class level"/>
-
-                                    <p:commandButton id="expandFamilyBtn" icon="family-icon" styleClass="expandBtn"
-                                                     action="#{tfClassBean.expandToFamily}"
-                                                     update=":tfForm:tfTree" title="Expand to family level"/>
-
-                                    <p:commandButton id="expandSubFamilyBtn" icon="subfamily-icon" styleClass="expandBtn"
-                                                     action="#{tfClassBean.expandToSubfamily}"
-                                                     update=":tfForm:tfTree" title="Expand to subfamily level"/>
-
-                                    <p:commandButton id="expandGenusBtn" icon="genus-icon" styleClass="expandBtn"
-                                                     action="#{tfClassBean.expandToGenus}"
-                                                     update=":tfForm:tfTree" title="Expand to genus level"/>
-
-                                    <p:commandButton id="expandFSpeciesBtn" icon="fspecies-icon" styleClass="expandBtn"
-                                                     action="#{tfClassBean.expandToFactorSpecies}"
-                                                     update=":tfForm:tfTree" title="Expand to factor species level"/>
-                                </p>
-
-                            </p>
-                            <p:tabView id="tabView" dynamic="true">
-
-                                <p:tab id="details" title="Details">
-
-                                    <h:panelGrid columns="2" id="xrefTable">
-                                        <h:outputText value="ID:"/>
-                                        <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                                        <h:outputText value="Definition:" rendered="#{tfClassBean.selectedNode.data.subsets!='Family' and tfClassBean.selectedNode.data.subsets!='Subfamily'}" />
-                                                                                <h:outputText value="Consensus sequence:" rendered="#{tfClassBean.selectedNode.data.subsets=='Family' or tfClassBean.selectedNode.data.subsets=='Subfamily'}" />
-                                        <h:outputText value="#{tfClassBean.definition}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                <p:tree id="tfTree" value="#{tfClassBean.tfRoot}" var="node" dynamic="true" animate="true"
+                        selectionMode="single" selection="#{tfClassBean.selectedNode}">
+                    <p:ajax event="select" update=":tfForm:tabView" />
+                    <p:ajax event="collapse" listener="#{tfClassBean.onNodeCollapse}" />
+                    <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                </p:tree></p:panel>
+        </td><td id="rightTD">
+    <p:panel id="additional">
+        <h2>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h2>
+        <p:tooltip for="searchHelpButton"
+                   value="Searches in the label, ID and external references."
+                   styleClass="helpTooltip" showEvent="click"  />
+        <p:autoComplete value="#{tfClassBean.searchedClass}" var="cls"
+                        itemValue="#{cls}" itemLabel="#{cls}"
+                        completeMethod="#{tfClassBean.search}"
+                        scrollHeight="350" converter="ontologyClassConverter">
+            <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
+                    update="tfTree :tfForm:tabView" />
+        </p:autoComplete>
+        <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
+        <p:defaultCommand target=":tfForm:voidBtn"/>
+        <p><p:commandButton value="Expand all" action="#{tfClassBean.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
+        <p:commandButton value="Collapse all" actionListener="#{tfClassBean.collapseAll()}" update=":tfForm:tfTree"/>
 
 
-                                        <h:outputText value="Rank:"/>
-                                        <p:outputPanel rendered="#{tfClassBean.selectedNode != null}" >
-                                            <h:outputText value="#{tfClassBean.selectedNode.data.subsets} " />
-                                            <h:outputLink value="#{tfClassBean.classLink}" target="_blank" rendered="#{tfClassBean.classLink != null}">
-                                                (More)</h:outputLink>
-                                        </p:outputPanel>
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+        <p:button value="?" title="Help" onclick="return false" id="expandHelpButton" styleClass="helpBtn"/>
+        <p:tooltip for="expandHelpButton" styleClass="helpTooltip" showEvent="click" >
+            <h:outputText
+                value="Hint: Use the context menu of a tree node to expand all its children."/>
+        </p:tooltip>
+        <p>Expand to:
+        <p:commandButton id="expandSuperClassBtn" icon="superclass-icon" styleClass="expandBtn"
+                         action="#{tfClassBean.expandToSuperClass}"
+                         update=":tfForm:tfTree" title="Expand to super class level"/>
 
-                                        <h:outputText value="ProteinAtlas:"/>
-                                        <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+        <p:commandButton id="expandClassBtn" icon="class-icon24" styleClass="expandBtn"
+                         action="#{tfClassBean.expandToClass}"
+                         update=":tfForm:tfTree" title="Expand do class level"/>
 
-                                        <h:outputText value="BioGPS:"/>
-                                        <h:outputText value="#{tfClassBean.bioGPS}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+        <p:commandButton id="expandFamilyBtn" icon="family-icon" styleClass="expandBtn"
+                         action="#{tfClassBean.expandToFamily}"
+                         update=":tfForm:tfTree" title="Expand to family level"/>
 
-                                        <h:outputText value="Transfac:"/>
-                                        <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                                        <h:outputText value="Uniprot"/>
-                                        <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
-                                        <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
-                                    </h:panelGrid>
-                                </p:tab>
-                                <p:tab id="expressionTab" title="Protein expression pattern">
-                                    The table below summarizes the protein expression data from the <a href="http://www.proteinatlas.org/">Protein Atlas</a>.
-                                    The tissues and cell types are
-                                    linked to the <a href="http://cytomer.bioinf.med.uni-goettingen.de">Cytomer ontology</a>.
-                                    <p:outputPanel   rendered="#{tfClassBean.expressionTable == null}" >
-                                        <p>
-                                            <h:outputText value="The selected tree node is not linked to a gene, no expression data is available."
-                                                          /></p></p:outputPanel>
+        <p:commandButton id="expandSubFamilyBtn" icon="subfamily-icon" styleClass="expandBtn"
+                         action="#{tfClassBean.expandToSubfamily}"
+                         update=":tfForm:tfTree" title="Expand to subfamily level"/>
 
-                                  <p:dataTable id="expressionTable"
-                                                 value="#{tfClassBean.getExpressionTable()}" var="row"
-                                                 filteredValue="#{tfClassBean.filteredTissues}">
-                                      <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains" >
-                                            <f:facet name="header">Tissue</f:facet>
-                                            <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.tissueClass}" title="link to Cytomer" target="_blank">
-                                                <h:outputText value="#{row.tissueClass.replaceAll('_', ' ')}" />
-                                            </h:outputLink>
-                                        </p:column>
+        <p:commandButton id="expandGenusBtn" icon="genus-icon" styleClass="expandBtn"
+                         action="#{tfClassBean.expandToGenus}"
+                         update=":tfForm:tfTree" title="Expand to genus level"/>
 
-                                        <p:column sortBy="#{row.cellClass}"  filterBy="#{row.cellClass}" filterMatchMode="contains">
-                                            <f:facet name="header">Cell type</f:facet>
-                                            <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.cellClass}" title="link to Cytomer" target="_blank">
-                                                <h:outputText value="#{row.cellClass.replaceAll('_', ' ')}" /></h:outputLink>
-                                        </p:column>
+        <p:commandButton id="expandFSpeciesBtn" icon="fspecies-icon" styleClass="expandBtn"
+                         action="#{tfClassBean.expandToFactorSpecies}"
+                         update=":tfForm:tfTree" title="Expand to factor species level"/>
+        </p>
 
-                                        <p:column sortBy="#{row.getLevelAsInt()}" filterBy="#{row.level}"  filterOptions="#{tfClassBean.getLevelOptions()}">
-                                            <f:facet name="header">Expression level</f:facet>#{row.level}</p:column>
+        </p>
+        <p:tabView id="tabView" dynamic="true">
 
-                                        <p:column sortBy="#{row.type}">
-                                            <f:facet name="header">Type</f:facet>#{row.type}</p:column>
-                                        <p:column sortBy="#{row.getReliabilityAsInt()}">
-                                            <f:facet name="header">Reliability</f:facet>#{row.reliability}</p:column>
-                                    </p:dataTable>
-                                </p:tab>
-                            </p:tabView>
-                        </p:panel>
-                    </td></tr></table>
-        </h:form>
-    </body>
+            <p:tab id="details" title="Details">
+
+                <h:panelGrid columns="2" id="xrefTable">
+                    <h:outputText value="ID:"/>
+                    <h:outputText value="#{tfClassBean.selectedNode.data.name}" rendered="#{tfClassBean.selectedNode != null}" />
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                    <h:outputText value="Definition:" rendered="#{tfClassBean.selectedNode.data.subsets!='Family' and tfClassBean.selectedNode.data.subsets!='Subfamily'}" />
+                    <h:outputText value="Consensus sequence:" rendered="#{tfClassBean.selectedNode.data.subsets=='Family' or tfClassBean.selectedNode.data.subsets=='Subfamily'}" />
+                    <h:outputText value="#{tfClassBean.definition}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+
+
+                    <h:outputText value="Rank:"/>
+                    <p:outputPanel rendered="#{tfClassBean.selectedNode != null}" >
+                        <h:outputText value="#{tfClassBean.selectedNode.data.subsets} " />
+                        <h:outputLink value="#{tfClassBean.classLink}" target="_blank" rendered="#{tfClassBean.classLink != null}">
+                            (More)</h:outputLink>
+                    </p:outputPanel>
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+
+                    <h:outputText value="Logo plot"  rendered="#{not empty tfClassBean.logoAdress}"/>
+                    <p:outputPanel rendered="#{not empty tfClassBean.logoAdress}">
+                        <img src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/logos/#{tfClassBean.logoAdress}" alt="Logo plot"/>
+                    </p:outputPanel>
+                    <h:outputText value="ProteinAtlas:"/>
+                    <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+
+                    <h:outputText value="BioGPS:"/>
+                    <h:outputText value="#{tfClassBean.bioGPS}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+
+                    <h:outputText value="Transfac:"/>
+                    <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                    <h:outputText value="Uniprot"/>
+                    <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.selectedNode != null}" escape="false"/>
+                    <h:outputText value="-" rendered="#{tfClassBean.selectedNode == null}" />
+                </h:panelGrid>
+            </p:tab>
+            <p:tab id="expressionTab" title="Protein expression pattern">
+                The table below summarizes the protein expression data from the <a href="http://www.proteinatlas.org/">Protein Atlas</a>.
+                The tissues and cell types are
+                linked to the <a href="http://cytomer.bioinf.med.uni-goettingen.de">Cytomer ontology</a>.
+                <p:outputPanel   rendered="#{tfClassBean.expressionTable == null}" >
+                    <p>
+                    <h:outputText value="The selected tree node is not linked to a gene, no expression data is available."
+                                  /></p></p:outputPanel>
+
+                <p:dataTable id="expressionTable"
+                             value="#{tfClassBean.getExpressionTable()}" var="row"
+                             filteredValue="#{tfClassBean.filteredTissues}">
+                    <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains" >
+                        <f:facet name="header">Tissue</f:facet>
+                        <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.tissueClass}" title="link to Cytomer" target="_blank">
+                            <h:outputText value="#{row.tissueClass.replaceAll('_', ' ')}" />
+                        </h:outputLink>
+                    </p:column>
+
+                    <p:column sortBy="#{row.cellClass}"  filterBy="#{row.cellClass}" filterMatchMode="contains">
+                        <f:facet name="header">Cell type</f:facet>
+                        <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.cellClass}" title="link to Cytomer" target="_blank">
+                            <h:outputText value="#{row.cellClass.replaceAll('_', ' ')}" /></h:outputLink>
+                    </p:column>
+
+                    <p:column sortBy="#{row.getLevelAsInt()}" filterBy="#{row.level}"  filterOptions="#{tfClassBean.getLevelOptions()}">
+                        <f:facet name="header">Expression level</f:facet>#{row.level}</p:column>
+
+                    <p:column sortBy="#{row.type}">
+                        <f:facet name="header">Type</f:facet>#{row.type}</p:column>
+                    <p:column sortBy="#{row.getReliabilityAsInt()}">
+                        <f:facet name="header">Reliability</f:facet>#{row.reliability}</p:column>
+                </p:dataTable>
+            </p:tab>
+
+            <p:tab id="logoTab" title="Library"  disabled="#{empty tfClassBean.logoDescription}">
+                <p:outputPanel rendered="#{not empty tfClassBean.logoDescription}">
+                <iframe src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/library#{tfClassBean.logoDescription}"  width="100%" height="600px"/>
+                </p:outputPanel>
+                        <h:outputText value="No data available on this tab." rendered="#{empty tfClassBean.logoDescription}" />
+            </p:tab>
+        </p:tabView>
+    </p:panel>
+    </td></tr></table>
+</h:form>
+</body>
 </html>

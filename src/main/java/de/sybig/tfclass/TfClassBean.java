@@ -5,7 +5,6 @@ import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.palinker.NormalTissueCytomer;
-import java.io.EOFException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -352,7 +351,30 @@ public class TfClassBean {
         }
         return null;
     }
-
+    public String getLogoAdress(){
+        if (selectedNode == null){
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("LOGOPNGLINK")) {
+               return a.getValue().replace("LOGOPNGLINK:http\\://www.edgar-wingender.de/logos", "");
+            }
+        }
+        return null;
+    }
+    public String getLogoDescription(){
+        if (selectedNode == null){
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("LOGODESCRIPTIONLINK")) {
+               return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
+            }
+        }
+        return null;
+    }
     public String getClassLink() {
         if (selectedNode == null) {
             return null;
