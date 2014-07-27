@@ -8,6 +8,7 @@ import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.client.OntologyClass;
 import de.sybig.oba.server.JsonCls;
 import de.sybig.oba.server.JsonClsList;
+import java.net.ConnectException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
@@ -167,38 +169,48 @@ public class TfTree {
     }
 
     void expandToSubSet(String subset) {
-        long start = System.currentTimeMillis();
-        log.info("expanding to subset " + subset);
-        LinkedList<String> fields = new LinkedList<String>();
-        fields.add("subset");
-        OboClassList result = getConnector().searchCls(subset, fields, 2000);
+        try {
+            long start = System.currentTimeMillis();
+            log.info("expanding to subset " + subset);
+            LinkedList<String> fields = new LinkedList<String>();
+            fields.add("subset");
+            OboClassList result = getConnector().searchCls(subset, fields, 2000);
 //        System.out.println("from oba  " + ((System.currentTimeMillis() - start) / 1000));
-        if (result == null || result.getEntities() == null) {
+            if (result == null || result.getEntities() == null) {
+                return;
+            }
+            log.info("terms " + result.size());
+            for (OboClass cls : result.getEntities()) {
+                expandNode(cls);
+            }
+            log.info("done  " + ((System.currentTimeMillis() - start) / 1000));
+        } catch (ConnectException ex) {
+            java.util.logging.Logger.getLogger(TfTree.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
-        log.info("terms " + result.size());
-        for (OboClass cls : result.getEntities()) {
-            expandNode(cls);
-        }
-        log.info("done  " + ((System.currentTimeMillis() - start) / 1000));
 
     }
 
     public void expandToSubSet(String subset, TreeNode current) {
-        OboClassList descendants = getConnector().getDescendants((OboClass) current.getData());
-        if (descendants == null || descendants.getEntities() == null) {
+        try {
+            OboClassList descendants = getConnector().getDescendants((OboClass) current.getData());
+            if (descendants == null || descendants.getEntities() == null) {
+                return;
+            }
+            LinkedList<String> fields = new LinkedList<String>();
+            fields.add("subset");
+            OboClassList result = getConnector().searchCls(subset, fields, 2000);
+            if (result == null || result.getEntities() == null) {
+                return;
+            }
+            List<OboClass> list = result.getEntities();
+            list.retainAll(descendants.getEntities());
+            for (OboClass cls : list) {
+                expandNode(cls);
+            }
+        } catch (ConnectException ex) {
+            java.util.logging.Logger.getLogger(TfTree.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }
-        LinkedList<String> fields = new LinkedList<String>();
-        fields.add("subset");
-        OboClassList result = getConnector().searchCls(subset, fields, 2000);
-        if (result == null || result.getEntities() == null) {
-            return;
-        }
-        List<OboClass> list = result.getEntities();
-        list.retainAll(descendants.getEntities());
-        for (OboClass cls : list) {
-            expandNode(cls);
         }
 
     }

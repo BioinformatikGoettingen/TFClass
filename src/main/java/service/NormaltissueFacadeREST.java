@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package service;
 
 import de.sybig.palinker.CytomerCell;
@@ -17,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -25,7 +22,7 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author jdo
+ * @author juergen.doenitz@bioinf.med.uni-goettingen.de
  */
 @Stateless
 @Path("normaltissue")
@@ -69,6 +66,7 @@ public class NormaltissueFacadeREST extends AbstractFacade<NormalTissue> {
     @Path("ensembl/{ensid}")
     @Produces({"application/xml", "application/json"})
     public List<NormalTissueCytomer> getWithEnsemblId(@PathParam("ensid") String ensemblId) {
+        System.out.println("getting expression table for '"+ensemblId+"'");
         TypedQuery<NormalTissue> query = em.createQuery("SELECT nt FROM NormalTissue nt WHERE nt.ensembl = :eid", NormalTissue.class);
         query.setParameter("eid", ensemblId);
 
@@ -80,6 +78,10 @@ public class NormaltissueFacadeREST extends AbstractFacade<NormalTissue> {
     @Produces("text/html")
     public String getHtmlWithEnsemblId(@PathParam("ensid") String ensemblId) {
         List<NormalTissueCytomer> tissues = getWithEnsemblId(ensemblId);
+        if (tissues == null){
+            System.out.println("no tissues");
+            return null;
+        }
         Collections.sort(tissues, new TissueComparator());
         StringBuilder out = new StringBuilder();
         out.append("<html><head></head><body>");

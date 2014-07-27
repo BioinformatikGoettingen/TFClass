@@ -18,7 +18,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.primefaces.component.tabview.TabView;
@@ -135,6 +134,7 @@ public class TfClassBean {
         if (selected == null) {
             return null;
         }
+        try{
         Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
@@ -146,6 +146,9 @@ public class TfClassBean {
                 }
                 return tissueMap.get(ensid);
             }
+        }
+        }catch (Exception e){
+            log.error("An error occured while getting the expression table {}" , e.getMessage() );
         }
         TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
         if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(EXPRESSTABID)) {
