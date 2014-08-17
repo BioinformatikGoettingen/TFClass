@@ -146,6 +146,29 @@
                 </p:tree></p:panel>
         </td><td id="rightTD">
     <p:panel id="additional">
+               <p:tree id="tfTree2" value="#{tfClassBean.tfRoot2}" var="node" dynamic="true" animate="true"
+                       selectionMode="single" >
+                   <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                   <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+                    <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
+                        <h:outputText value="#{node.name} #{node.label}" />
+                    </p:treeNode>
+               </p:tree>
         <h2>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h2>
         <p:tooltip for="searchHelpButton"
                    value="Searches in the label, ID and external references."
@@ -198,7 +221,6 @@
         <p:tabView id="tabView" dynamic="true">
             <p:ajax event="tabClose"  listener="#{tfClassBean.tabClose}" />
             <p:tab id="details" title="Details">
-                  LOGO #{tfClassBean.logoDescription}
                     <h:panelGrid columns="2" id="xrefTable">
 
                         <h:outputText value="ID:"/>

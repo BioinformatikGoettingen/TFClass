@@ -47,6 +47,7 @@ public class TfClassBean {
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private List<NormalTissueCytomer> filteredTissues;
     private LinkedList<String> fieldList;
+    private TfTree tfTree2;
 
     @PostConstruct
     void initialiseSession() {
@@ -59,7 +60,7 @@ public class TfClassBean {
         try {
             String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
             if (idString != null) {
-                OboClass cls = ObaProvider.getInstance().getConnector().getCls(idString, null);
+                OboClass cls = ObaProvider.getInstance().getConnectorHuman().getCls(idString, null);
                 if (cls == null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + idString, null));
                     return "";
@@ -74,7 +75,7 @@ public class TfClassBean {
                 ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uniprot");
             }
             if (ext != null) {
-                OboClassList resultList = ObaProvider.getInstance().getConnector().searchCls(ext);
+                OboClassList resultList = ObaProvider.getInstance().getConnectorHuman().searchCls(ext);
                 if (resultList == null || resultList.size() != 1) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
                     return "";
@@ -104,7 +105,7 @@ public class TfClassBean {
     public List<OboClass> search(String pattern) {
         String searchPattern = pattern;
         try {
-            OboConnector connector = ObaProvider.getInstance().getConnector();
+            OboConnector connector = ObaProvider.getInstance().getConnectorHuman();
             OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
             if (searchResult == null || searchResult.getEntities() == null) {
                 return null;
@@ -129,26 +130,30 @@ public class TfClassBean {
         return getTfTree().getRoot();
     }
 
+    public TreeNode getTfRoot2(){
+        return getTfTree2().getRoot();
+    }
+
     public List<NormalTissueCytomer> getExpressionTable() {
         TreeNode selected = getSelectedNode();
         if (selected == null) {
             return null;
         }
-        try{
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
-        for (JsonAnnotation a : annotations) {
-            if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
-                Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
-                Matcher matcher = regex.matcher(a.getValue());
-                String ensid = matcher.replaceAll("$1");
-                if (!tissueMap.containsKey(ensid)) {
-                    tissueMap.put(ensid, ntf.getWithEnsemblId(ensid));
+        try {
+            Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+            for (JsonAnnotation a : annotations) {
+                if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
+                    Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
+                    Matcher matcher = regex.matcher(a.getValue());
+                    String ensid = matcher.replaceAll("$1");
+                    if (!tissueMap.containsKey(ensid)) {
+                        tissueMap.put(ensid, ntf.getWithEnsemblId(ensid));
+                    }
+                    return tissueMap.get(ensid);
                 }
-                return tissueMap.get(ensid);
             }
-        }
-        }catch (Exception e){
-            log.error("An error occured while getting the expression table {}" , e.getMessage() );
+        } catch (Exception e) {
+            log.error("An error occured while getting the expression table {}", e.getMessage());
         }
         TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
         if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(EXPRESSTABID)) {
@@ -282,16 +287,28 @@ public class TfClassBean {
 
     private TfTree getTfTree() {
         if (tfTree == null) {
-            tfTree = new TfTree();
+            tfTree = new TfTree(ObaProvider.getInstance().getConnectorHuman());
         }
         return tfTree;
     }
 
+    private TfTree getTfTree2(){
+        if (tfTree2 == null){
+            tfTree2 = new TfTree(ObaProvider.getInstance().getConnectorMouse());
+        }
+        return tfTree2;
+    }
     public TreeNode getSelectedNode() {
         return selectedNode;
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
+        OboClass selectedOba = (OboClass) selectedNode.getData();
+        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
+            OboConnector mc = ObaProvider.getInstance().getConnectorMouse();
+            OboClass mclass = mc.getCls(((OboClass) selectedNode.getData()).getName(), null);
+            System.out.println("selected " + mclass);
+        }
         this.selectedNode = selectedNode;
     }
 
@@ -310,8 +327,9 @@ public class TfClassBean {
         def = replacePubMed(def);
         return def;
     }
-    public String getAltID(){
-         if (selectedNode == null) {
+
+    public String getAltID() {
+        if (selectedNode == null) {
             return null;
         }
         Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
@@ -322,12 +340,14 @@ public class TfClassBean {
         }
         return null;
     }
-    public void jumpToAlternative(String id){
-         OboConnector connector = ObaProvider.getInstance().getConnector();
+
+    public void jumpToAlternative(String id) {
+        OboConnector connector = ObaProvider.getInstance().getConnectorHuman();
         OboClass cls = connector.getCls(id, null);
         setSearchedClass(cls);
         selectSearched();
     }
+
     public String getProteinAtlas() {
         if (selectedNode == null) {
             return null;

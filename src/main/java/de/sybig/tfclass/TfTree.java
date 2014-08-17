@@ -33,6 +33,10 @@ public class TfTree {
     private OboConnector connector;
     private TfTreeNode root;
 
+    public TfTree(OboConnector connector){
+        super();
+        this.connector = connector;
+    }
     public TreeNode getRoot() {
         if (root == null) {
             OboClass rootCls = getConnector().getRoot();
@@ -43,9 +47,9 @@ public class TfTree {
     }
 
     private OboConnector getConnector() {
-        if (connector == null) {
-            connector = ObaProvider.getInstance().getConnector();
-        }
+//        if (connector == null) {
+//            connector = ObaProvider.getInstance().getConnectorHuman();
+//        }
         return connector;
     }
 
