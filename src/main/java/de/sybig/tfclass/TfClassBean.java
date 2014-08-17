@@ -41,13 +41,17 @@ public class TfClassBean {
     private NormaltissueFacadeREST ntf;
     private static final String LOGOTABID = "logoTab";
     private static final String EXPRESSTABID = "expressionTab";
-    private TfTree tfTree;
+//    private TfTree tfTree;
     private OboClass searchedClass;
-    private TreeNode selectedNode;
+
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private List<NormalTissueCytomer> filteredTissues;
     private LinkedList<String> fieldList;
     private TfTree tfTree2;
+    private TreeBean firstTree;
+    private TreeBean humanTree;
+    private TreeBean secondTree;
+    private TreeBean mouseTree;
 
     @PostConstruct
     void initialiseSession() {
@@ -57,6 +61,8 @@ public class TfClassBean {
 
     public String init() {
         // used on the top of the page to init the bean
+        humanTree = firstTree = new TreeBean(ObaProvider.getInstance().getConnectorHuman());
+        mouseTree = secondTree = new TreeBean(ObaProvider.getInstance().getConnectorMouse());
         try {
             String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
             if (idString != null) {
@@ -102,18 +108,69 @@ public class TfClassBean {
         return "";
     }
 
+    /**
+     * Searches in the ontology mapped to the main tree for the search pattern.
+     * A list of matching {@see OboClass} is returned. If the search returns no hits
+     * <code>null</code> is returned.
+     *<br />
+     * This function is used for the autocomplete function, the search result is selected with {@see #selectSearched}
+     * @param pattern The pattern to search
+     * @return List of matching classes or <code>null</code>
+     */
     public List<OboClass> search(String pattern) {
         String searchPattern = pattern;
         try {
-            OboConnector connector = ObaProvider.getInstance().getConnectorHuman();
+            OboConnector connector = getFirstConnector();
             OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
             if (searchResult == null || searchResult.getEntities() == null) {
                 return null;
             }
             return searchResult.getEntities();
         } catch (Exception ex) {
+            log.warn("An error occured while searching in the ontology ", ex);
             return null;
         }
+    }
+
+    public TreeBean getFirstTree() {
+        return firstTree;
+    }
+
+    public void setFirstTree(TreeBean firstTree) {
+        this.firstTree = firstTree;
+    }
+
+    public TreeBean getHumanTree() {
+        return humanTree;
+    }
+
+    public void setHumanTree(TreeBean humanTree) {
+        this.humanTree = humanTree;
+    }
+
+    public TreeBean getSecondTree() {
+        return secondTree;
+    }
+
+    public void setSecondTree(TreeBean secondTree) {
+        this.secondTree = secondTree;
+    }
+
+    public TreeBean getMouseTree() {
+        return mouseTree;
+    }
+
+    public void setMouseTree(TreeBean mouseTree) {
+        this.mouseTree = mouseTree;
+    }
+
+    /**
+     * Get the Obo connector for the main tree.
+     *
+     * @return
+     */
+    private OboConnector getFirstConnector() {
+        return ObaProvider.getInstance().getConnectorHuman();
     }
 
     private List<String> getFieldList() {
@@ -126,21 +183,19 @@ public class TfClassBean {
         return fieldList;
     }
 
-    public TreeNode getTfRoot() {
-        return getTfTree().getRoot();
-    }
+   
 
-    public TreeNode getTfRoot2(){
-        return getTfTree2().getRoot();
-    }
+//    public TreeNode getTfRoot2() {
+//        return getTfTree2().getRoot();
+//    }
 
     public List<NormalTissueCytomer> getExpressionTable() {
-        TreeNode selected = getSelectedNode();
+        TreeNode selected = humanTree.getSelectedNode();
         if (selected == null) {
             return null;
         }
         try {
-            Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+            Set<JsonAnnotation> annotations = ((OboClass) selected.getData()).getAnnotations();
             for (JsonAnnotation a : annotations) {
                 if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
                     Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
@@ -190,92 +245,19 @@ public class TfClassBean {
         return options;
     }
 
+
     public void selectSearched() {
-        collapseAll();
-        TreeNode last = getTfTree().expandNode(getSearchedClass());
+        firstTree.collapseAll1();
+        TreeNode last = firstTree.getTfTree().expandNode(getSearchedClass());
         if (last == null) {
             System.out.println(last + " for " + getSearchedClass());
             return;
         }
         last.setSelected(true);
-        selectedNode = last;
+        firstTree.setSelectedNode (last);
     }
 
-    public void expandAll() {
-        getTfTree().expandTree();
-    }
-
-    public void expandSelected() {
-        getTfTree().expandTree(getSelectedNode());
-    }
-
-    public void collapseAll() {
-        setSelectedNode(null);
-        getTfTree().collapseTree();
-    }
-
-    public void onNodeCollapse(NodeCollapseEvent event) {
-        getTfTree().collapseTree(event.getTreeNode());
-    }
-
-    public void expandToSuperClass() {
-        getTfTree().expandToSubSet("Superclass");
-    }
-
-    public void expandToClass() {
-        getTfTree().expandToSubSet("Class");
-    }
-
-    public void expandToFamily() {
-        getTfTree().expandToSubSet("Family");
-    }
-
-    public void expandToSubfamily() {
-        getTfTree().expandToSubSet("Subfamily");
-    }
-
-    public void expandToGenus() {
-        getTfTree().expandToSubSet("Genus");
-    }
-
-    public void expandToFactorSpecies() {
-        getTfTree().expandToSubSet("Factor species");
-    }
-
-    public void expandCurrentToClass() {
-        if (getSelectedNode() == null) {
-            return;
-        }
-        getTfTree().expandToSubSet("Class", getSelectedNode());
-    }
-
-    public void expandCurrentToFamily() {
-        if (getSelectedNode() == null) {
-            return;
-        }
-        getTfTree().expandToSubSet("Family", getSelectedNode());
-    }
-
-    public void expandCurrentToSubfamily() {
-        if (getSelectedNode() == null) {
-            return;
-        }
-        getTfTree().expandToSubSet("Subfamily", getSelectedNode());
-    }
-
-    public void expandCurrentToGenus() {
-        if (getSelectedNode() == null) {
-            return;
-        }
-        getTfTree().expandToSubSet("Genus", getSelectedNode());
-    }
-
-    public void expandCurrentToFactorSpecies() {
-        if (getSelectedNode() == null) {
-            return;
-        }
-        getTfTree().expandToSubSet("Factor species", getSelectedNode());
-    }
+   
 
     public OboClass getSearchedClass() {
         return searchedClass;
@@ -285,38 +267,22 @@ public class TfClassBean {
         this.searchedClass = searchedClass;
     }
 
-    private TfTree getTfTree() {
-        if (tfTree == null) {
-            tfTree = new TfTree(ObaProvider.getInstance().getConnectorHuman());
-        }
-        return tfTree;
-    }
+   
 
-    private TfTree getTfTree2(){
-        if (tfTree2 == null){
+    private TfTree getTfTree2() {
+        if (tfTree2 == null) {
             tfTree2 = new TfTree(ObaProvider.getInstance().getConnectorMouse());
         }
         return tfTree2;
     }
-    public TreeNode getSelectedNode() {
-        return selectedNode;
-    }
 
-    public void setSelectedNode(TreeNode selectedNode) {
-        OboClass selectedOba = (OboClass) selectedNode.getData();
-        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
-            OboConnector mc = ObaProvider.getInstance().getConnectorMouse();
-            OboClass mclass = mc.getCls(((OboClass) selectedNode.getData()).getName(), null);
-            System.out.println("selected " + mclass);
-        }
-        this.selectedNode = selectedNode;
-    }
+  
 
     public String getDefinition() {
-        if (selectedNode == null) {
+        if (humanTree.getClass() == null) {
             return null;
         }
-        String def = ((OboClass) selectedNode.getData()).getDefinition();
+        String def = ((OboClass) humanTree.getSelectedNode().getData()).getDefinition();
         if (def == null) {
             return null;
         }
@@ -329,10 +295,10 @@ public class TfClassBean {
     }
 
     public String getAltID() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("alt_id")) {
                 return a.getValue();
@@ -349,10 +315,10 @@ public class TfClassBean {
     }
 
     public String getProteinAtlas() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
                 return parseProteinAtlas(a.getValue());
@@ -362,10 +328,10 @@ public class TfClassBean {
     }
 
     public String getBioGPS() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
                 return parseBioGPS(a.getValue());
@@ -375,10 +341,10 @@ public class TfClassBean {
     }
 
     public String getTransfac() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("TRANSFAC")) {
                 return parseTransfac(a.getValue());
@@ -388,10 +354,10 @@ public class TfClassBean {
     }
 
     public String getUniprot() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("UNIPROT")) {
                 return parseUniprot(a.getValue());
@@ -401,10 +367,10 @@ public class TfClassBean {
     }
 
     public String getLogoAdress() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("LOGOPNGLINK")) {
                 return a.getValue().replace("LOGOPNGLINK:http\\://www.edgar-wingender.de/logos", "");
@@ -414,10 +380,10 @@ public class TfClassBean {
     }
 
     public String getLogoDescription() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("LOGODESCRIPTIONLINK")) {
                 return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
@@ -435,16 +401,24 @@ public class TfClassBean {
     }
 
     public String getClassLink() {
-        if (selectedNode == null) {
+        if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) selectedNode.getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("CLASSLINK")) {
                 return a.getValue().substring(10).replace("\\", "");
             }
         }
         return null;
+    }
+
+    public void setSecondOntology(OboClass selectedOba) {
+        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
+            OboConnector mc = ObaProvider.getInstance().getConnectorMouse();
+//            OboClass mclass = mc.getCls(((OboClass) selectedNode.getData()).getName(), null);
+//            System.out.println("selected " + mclass);
+        }
     }
 
     private String replacePubMed(String text) {
