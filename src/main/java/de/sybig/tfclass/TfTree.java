@@ -54,7 +54,6 @@ public class TfTree {
     }
 
     public TreeNode expandNode(OboClass searchedClass) {
-//        System.out.println("expand to sereched class " + searchedClass);
         if (searchedClass == null) {
             log.warn("can not expand tree, searched class is null");
             return null;

@@ -52,6 +52,7 @@ public class TfClassBean {
     private TreeBean humanTree;
     private TreeBean secondTree;
     private TreeBean mouseTree;
+    private TreeNode selectedNode1;
 
     @PostConstruct
     void initialiseSession() {
@@ -164,6 +165,27 @@ public class TfClassBean {
         this.mouseTree = mouseTree;
     }
 
+    public TreeNode getSelectedNode1() {
+        return firstTree.getSelectedNode();
+//        return selectedNode1;
+    }
+   
+    public void setSelectedNode1(TreeNode selectedNode1) {
+        firstTree.setSelectedNode(selectedNode1);
+        OboClass selectedOba = (OboClass)selectedNode1.getData();
+        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
+            secondTree.setSelectedNode(selectedOba.getName());
+        }
+        this.selectedNode1 = selectedNode1;
+    }
+    public TreeNode getSelectedNode2(){
+        System.out.println("getting selected node 2" + secondTree.getSelectedNode());
+        return secondTree.getSelectedNode();
+    }
+    public void setSelectedNode2(TreeNode node){
+        secondTree.setSelectedNode(node);
+    }
+
     /**
      * Get the Obo connector for the main tree.
      *
@@ -247,7 +269,7 @@ public class TfClassBean {
 
 
     public void selectSearched() {
-        firstTree.collapseAll1();
+        firstTree.collapseAll();
         TreeNode last = firstTree.getTfTree().expandNode(getSearchedClass());
         if (last == null) {
             System.out.println(last + " for " + getSearchedClass());
@@ -413,13 +435,7 @@ public class TfClassBean {
         return null;
     }
 
-    public void setSecondOntology(OboClass selectedOba) {
-        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
-            OboConnector mc = ObaProvider.getInstance().getConnectorMouse();
-//            OboClass mclass = mc.getCls(((OboClass) selectedNode.getData()).getName(), null);
-//            System.out.println("selected " + mclass);
-        }
-    }
+ 
 
     private String replacePubMed(String text) {
         Pattern regex = Pattern.compile("PMID (\\d{7})");

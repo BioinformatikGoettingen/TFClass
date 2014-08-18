@@ -34,8 +34,9 @@ public class TreeBean{
     /**
      * Unsets the selected node and collapse all nodes in the tree object.
      */
-    public void collapseAll1() {
-        setSelectedNode(null);
+    public void collapseAll() {
+//        setSelectedNode((TreeNode)null);
+        selectedNode = null;
         getTfTree().collapseTree();
     }
 
@@ -111,9 +112,14 @@ public class TreeBean{
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
-        OboClass selectedOba = (OboClass) selectedNode.getData();
-//        setSecondOntology(selectedOba);
-        this.selectedNode = selectedNode;
+         this.selectedNode = selectedNode;
+    }
+    public void setSelectedNode(String name){
+        OboClass selectedCls = connector.getCls( name, null);
+        collapseAll();
+        selectedNode = tfTree.expandNode(selectedCls);
+selectedNode.setSelected(true);
+        System.out.println("expanded to " + selectedNode);
     }
     protected TfTree getTfTree() {
         if (tfTree == null) {

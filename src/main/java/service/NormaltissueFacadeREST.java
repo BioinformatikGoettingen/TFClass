@@ -66,7 +66,6 @@ public class NormaltissueFacadeREST extends AbstractFacade<NormalTissue> {
     @Path("ensembl/{ensid}")
     @Produces({"application/xml", "application/json"})
     public List<NormalTissueCytomer> getWithEnsemblId(@PathParam("ensid") String ensemblId) {
-        System.out.println("getting expression table for '"+ensemblId+"'");
         TypedQuery<NormalTissue> query = em.createQuery("SELECT nt FROM NormalTissue nt WHERE nt.ensembl = :eid", NormalTissue.class);
         query.setParameter("eid", ensemblId);
 

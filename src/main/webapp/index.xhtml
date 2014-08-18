@@ -120,8 +120,8 @@
                 </p:contextMenu>
 
                 <p:tree id="tfTree" value="#{tfClassBean.firstTree.tfRoot}" var="node" dynamic="true" animate="true"
-                        selectionMode="single" selection="#{tfClassBean.firstTree.selectedNode}">
-                    <p:ajax event="select" update=":tfForm:tabView" />
+                        selectionMode="single" selection="#{tfClassBean.selectedNode1}">
+                    <p:ajax event="select" update=":tfForm:tabView :tfForm:tfTree2" />
                     <p:ajax event="collapse" listener="#{tfClassBean.firstTree.onNodeCollapse}" />
                     <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                     </p:treeNode>
@@ -147,7 +147,7 @@
         </td><td id="rightTD">
     <p:panel id="additional">
         <p:tree id="tfTree2" value="#{tfClassBean.secondTree.tfRoot}" var="node" dynamic="true" animate="true"
-                       selectionMode="single" >
+                selectionMode="single" selection="#{tfClassBean.selectedNode2}" >
                    <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                     </p:treeNode>
                    <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
@@ -183,7 +183,7 @@
         <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
         <p:defaultCommand target=":tfForm:voidBtn"/>
         <p><p:commandButton value="Expand all" action="#{tfClassBean.firstTree.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
-        <p:commandButton value="Collapse all" actionListener="#{tfClassBean.firstTree.collapseAll1()}" update=":tfForm:tfTree"/>
+        <p:commandButton value="Collapse all" actionListener="#{tfClassBean.firstTree.collapseAll()}" update=":tfForm:tfTree"/>
 
 
         <p:button value="?" title="Help" onclick="return false" id="expandHelpButton" styleClass="helpBtn"/>
