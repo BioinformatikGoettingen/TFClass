@@ -23,13 +23,39 @@ h2{
 }
 #leftTD{
     vertical-align: top;
-    width :39%;
+    float: left;
+    width :33%;
+}
+
+#middleTD{
+    float:left; 
+    width:30%;
 }
 
 #rightTD{
     vertical-align : top;
-    width : 60%;
+    width : 33%;
+    float:right;
 }
+
+@media (max-width: 1000px) {
+    #leftTD {
+        width: 50%;
+    }
+    #middleTD {
+        width : 50%;
+    }
+    #rightTD{
+        float:none;
+        width: 50%;
+        margin-left: 50%;
+    }
+    #rightTD  ul{
+        height:35px;
+    }
+}
+
+
 #tfForm\:tfTree{
     width: 100%;
 }
@@ -57,8 +83,13 @@ h2{
 }
 .ui-widget,
 .ui-widget .ui-widget {
-   /*font-size: 12px !important;*/
+    /*font-size: 12px !important;*/
 }
+.ui-tabs .ui-tabs-nav {
+    background-color: white !important;
+    border-bottom: solid 1px;
+}
+
 button{
     font-size: 12px !important;
 }
@@ -68,46 +99,46 @@ button{
     vertical-align: middle;
 }
 .smallBtn{
-/*    margin : 0px !important;
-    padding : 0px !important;
-    font-weight: normal !important;
-    font-size : 1em !important;*/
+    /*    margin : 0px !important;
+        padding : 0px !important;
+        font-weight: normal !important;
+        font-size : 1em !important;*/
 }
 .superclass-icon {
- background-image: url('#{request.contextPath}/resources/superclass.gif') !important;
+    background-image: url('#{request.contextPath}/resources/superclass.gif') !important;
     background-position: 0px 0px;
 }
 .class-icon {
- background-image: url('#{request.contextPath}/resources/class.gif') !important;
+    background-image: url('#{request.contextPath}/resources/class.gif') !important;
     background-position: 0px 0px;
 }
 .class-icon24 {
- background-image: url('#{request.contextPath}/resources/class.gif') !important;
+    background-image: url('#{request.contextPath}/resources/class.gif') !important;
     background-position: 0px 0px;
     width: 24px;
     height: 24px;
 }
 .subfamily-icon {
- background-image: url('#{request.contextPath}/resources/subfamily.gif') !important;
+    background-image: url('#{request.contextPath}/resources/subfamily.gif') !important;
     background-position: 0px 0px;
 }
 .family-icon {
- background-image: url('#{request.contextPath}/resources/family.gif') !important;
+    background-image: url('#{request.contextPath}/resources/family.gif') !important;
     background-position: 0px 0px;
 }
 .genus-icon {
- background-image: url('#{request.contextPath}/resources/genus.gif') !important;
+    background-image: url('#{request.contextPath}/resources/genus.gif') !important;
     background-position: 0px 0px;
 }
 .fspecies-icon {
- background-image: url('#{request.contextPath}/resources/fspecies.gif') !important;
+    background-image: url('#{request.contextPath}/resources/fspecies.gif') !important;
     background-position: 0px 0px;
 }
 body{
-  font-size:  14px ;
+    font-size:  14px ;
     font-family: sans-serif;
     color: #4F4F4F;
-    }
+}
 .ui-widget{
     font-size:  14px;
     font-family: sans-serif;
