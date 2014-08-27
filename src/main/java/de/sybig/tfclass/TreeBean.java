@@ -1,4 +1,3 @@
-
 package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
@@ -14,16 +13,20 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean
 @ViewScoped
-public class TreeBean{
+public class TreeBean {
 
-    public TreeBean (OboConnector connector){
+    private OboConnector connector;
+    private String title;
+    private TfTree tfTree;
+    private TreeNode selectedNode;
+
+    public TreeBean(OboConnector connector, String title) {
         super();
         this.connector = connector;
+        this.title = title;
     }
-       protected OboConnector connector;
-    private TfTree tfTree;
-        private TreeNode selectedNode;
- public void expandAll() {
+
+    public void expandAll() {
         getTfTree().expandTree();
     }
 
@@ -103,29 +106,40 @@ public class TreeBean{
         getTfTree().expandToSubSet("Factor species", getSelectedNode());
     }
 
-
-     public TreeNode getTfRoot() {
+    public TreeNode getTfRoot() {
         return getTfTree().getRoot();
     }
-      public TreeNode getSelectedNode() {
+
+    public TreeNode getSelectedNode() {
         return selectedNode;
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
-         this.selectedNode = selectedNode;
+        this.selectedNode = selectedNode;
     }
-    public void setSelectedNode(String name){
-        OboClass selectedCls = connector.getCls( name, null);
+
+    public void setSelectedNode(String name) {
+        OboClass selectedCls = connector.getCls(name, null);
         collapseAll();
         selectedNode = tfTree.expandNode(selectedCls);
-selectedNode.setSelected(true);
+        selectedNode.setSelected(true);
         System.out.println("expanded to " + selectedNode);
     }
-    protected TfTree getTfTree() {
+
+
+    public TfTree getTfTree() {
         if (tfTree == null) {
             tfTree = new TfTree(connector);
         }
         return tfTree;
     }
-}
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+}

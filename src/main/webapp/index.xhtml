@@ -57,7 +57,7 @@
             <p:messages />
         </div>
         <div id="leftTD" style="float: left; width: 33%">
-            <p:panel id="ontologyPanel"><h2>Transcription factor classification</h2>
+            <p:panel id="ontologyPanel"><h2>#{tfClassBean.firstTree.title}</h2>
                 <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
                 <p>
                     Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
@@ -143,8 +143,10 @@
                 </p:tree></p:panel>
         </div>
         <div id="middleTD" style="float:left; width:30%">
-            <h2>Alternative tree</h2>
-             <p:tree id="tfTree2" value="#{tfClassBean.secondTree.tfRoot}" var="node" dynamic="true" animate="true"
+
+            <p:panel id="ontologyPanel2"><h2>#{tfClassBean.secondTree.title}</h2>
+
+                <p:tree id="tfTree2" value="#{tfClassBean.secondTree.tfRoot}" var="node" dynamic="true" animate="true"
                         selectionMode="single" selection="#{tfClassBean.selectedNode2}"  style="width:1000px !important">
                     <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                     </p:treeNode>
@@ -167,7 +169,7 @@
                         <h:outputText value="#{node.name} #{node.label}" />
                     </p:treeNode>
                 </p:tree>
-               
+            </p:panel>
         </div>
         <div id="rightTD" style="float:right; width:33%">
             <p:panel id="additional">
@@ -184,6 +186,8 @@
                 </p:autoComplete>
                 <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
                 <p:defaultCommand target=":tfForm:voidBtn"/>
+                <p:commandButton value="Switch classifications" action="#{tfClassBean.switchTrees()}"
+                                 update="tfForm:ontologyPanel tfForm:ontologyPanel2"/>
                 <p><p:commandButton value="Expand all" action="#{tfClassBean.firstTree.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
                 <p:commandButton value="Collapse all" actionListener="#{tfClassBean.firstTree.collapseAll()}" update=":tfForm:tfTree"/>
 

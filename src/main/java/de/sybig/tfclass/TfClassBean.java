@@ -62,8 +62,8 @@ public class TfClassBean {
 
     public String init() {
         // used on the top of the page to init the bean
-        humanTree = firstTree = new TreeBean(ObaProvider.getInstance().getConnectorHuman());
-        mouseTree = secondTree = new TreeBean(ObaProvider.getInstance().getConnectorMouse());
+        humanTree = firstTree = new TreeBean(ObaProvider.getInstance().getConnectorHuman(), "Human transcription factors");
+        mouseTree = secondTree = new TreeBean(ObaProvider.getInstance().getConnectorMouse(), "Mouse transcription facotrs");
         try {
             String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
             if (idString != null) {
@@ -132,7 +132,12 @@ public class TfClassBean {
             return null;
         }
     }
-
+    public void switchTrees(){
+        TreeBean tmpTree = firstTree;
+        firstTree = secondTree;
+        secondTree = tmpTree;
+    }
+    
     public TreeBean getFirstTree() {
         return firstTree;
     }
