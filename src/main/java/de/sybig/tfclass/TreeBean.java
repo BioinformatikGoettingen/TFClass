@@ -115,6 +115,7 @@ public class TreeBean {
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
+        System.out.println("setting selected node to: " + selectedNode);
         this.selectedNode = selectedNode;
     }
 

@@ -57,7 +57,6 @@ public class TfClassBean {
     @PostConstruct
     void initialiseSession() {
         FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-//        System.out.println("session ready");
     }
 
     public String init() {
@@ -176,6 +175,9 @@ public class TfClassBean {
     }
    
     public void setSelectedNode1(TreeNode selectedNode1) {
+        if (selectedNode1 == null){
+            return;
+        }
         firstTree.setSelectedNode(selectedNode1);
         OboClass selectedOba = (OboClass)selectedNode1.getData();
         if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
@@ -184,7 +186,6 @@ public class TfClassBean {
         this.selectedNode1 = selectedNode1;
     }
     public TreeNode getSelectedNode2(){
-        System.out.println("getting selected node 2" + secondTree.getSelectedNode());
         return secondTree.getSelectedNode();
     }
     public void setSelectedNode2(TreeNode node){
@@ -277,7 +278,7 @@ public class TfClassBean {
         firstTree.collapseAll();
         TreeNode last = firstTree.getTfTree().expandNode(getSearchedClass());
         if (last == null) {
-            System.out.println(last + " for " + getSearchedClass());
+//            System.out.println(last + " for " + getSearchedClass());
             return;
         }
         last.setSelected(true);
