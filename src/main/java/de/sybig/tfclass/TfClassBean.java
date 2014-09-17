@@ -21,7 +21,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.primefaces.component.tabview.TabView;
-import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
@@ -61,8 +60,8 @@ public class TfClassBean {
 
     public String init() {
         // used on the top of the page to init the bean
-        humanTree = firstTree = new TreeBean(ObaProvider.getInstance().getConnectorHuman(), "Human transcription factors");
-        mouseTree = secondTree = new TreeBean(ObaProvider.getInstance().getConnectorMouse(), "Mouse transcription facotrs");
+        humanTree = firstTree = new TreeBean(ObaProvider.getInstance().getConnectorHuman(), "Human");
+        mouseTree = secondTree = new TreeBean(ObaProvider.getInstance().getConnectorMouse(), "Mouse");
         try {
             String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
             if (idString != null) {
@@ -180,9 +179,9 @@ public class TfClassBean {
         }
         firstTree.setSelectedNode(selectedNode1);
         OboClass selectedOba = (OboClass)selectedNode1.getData();
-        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
-            secondTree.setSelectedNode(selectedOba.getName());
-        }
+//        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
+            secondTree.setSelectedNode(selectedOba);
+//        }
         this.selectedNode1 = selectedNode1;
     }
     public TreeNode getSelectedNode2(){

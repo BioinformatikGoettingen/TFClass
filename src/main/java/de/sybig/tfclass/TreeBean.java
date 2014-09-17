@@ -16,14 +16,14 @@ import org.primefaces.model.TreeNode;
 public class TreeBean {
 
     private OboConnector connector;
-    private String title;
+    private String species;
     private TfTree tfTree;
     private TreeNode selectedNode;
 
     public TreeBean(OboConnector connector, String title) {
         super();
         this.connector = connector;
-        this.title = title;
+        this.species = title;
     }
 
     public void expandAll() {
@@ -119,12 +119,24 @@ public class TreeBean {
         this.selectedNode = selectedNode;
     }
 
-    public void setSelectedNode(String name) {
-        OboClass selectedCls = connector.getCls(name, null);
-        collapseAll();
+    public void setSelectedNode(OboClass cls) {
+//         if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species"))
+        if (cls.getSubsets().equals("Factor species")){
+            cls = (OboClass) cls.getParents().iterator().next();
+        }
+        while (cls.getParents() != null && cls.getParents().size() > 0 ){
+            OboClass selectedCls = connector.getCls(cls.getName(), null);
+            if (selectedCls == null){
+                cls = (OboClass) cls.getParents().iterator().next();
+                continue;
+            }
+            collapseAll();
         selectedNode = tfTree.expandNode(selectedCls);
         selectedNode.setSelected(true);
-        System.out.println("expanded to " + selectedNode);
+        System.out.println("setinng second tree to " + selectedNode);
+        return;
+        }
+        
     }
 
 
@@ -135,12 +147,12 @@ public class TreeBean {
         return tfTree;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSpecies() {
+        return species;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSpecies(String title) {
+        this.species = title;
     }
 
 }

@@ -24,33 +24,43 @@ h2{
 #leftTD{
     vertical-align: top;
     float: left;
-    width :33%;
+    width :25%;
+    position: absolute;
+    left: 10px;
+    border-right: solid grey 1px;
 }
 
 #middleTD{
     float:left; 
     width:30%;
+    position : absolute;
+    left :34%;
 }
 
 #rightTD{
-    vertical-align : top;
+    /*vertical-align : top;*/
     width : 33%;
     float:right;
+    /*position:fixed;*/
+    /*right: 10px;*/
 }
 
 @media (max-width: 1000px) {
     #leftTD {
         width: 50%;
+        margin-left: 50%;
+                top:50%;
     }
     #middleTD {
         width : 50%;
+        left: 10px;
     }
     #rightTD{
-        float:none;
-        width: 50%;
-        margin-left: 50%;
+    margin-left: 50%;
+        width: 50%;    
     }
     #rightTD  ul{
+
         height:35px;
     }
 }

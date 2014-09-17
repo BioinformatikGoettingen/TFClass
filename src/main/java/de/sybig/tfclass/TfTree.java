@@ -143,6 +143,7 @@ public class TfTree {
 //        collapseTree(getRoot());
         for (TreeNode child : getRoot().getChildren()) {
             collapseTree(child);
+            child.setSelected(false);
         }
     }
 
