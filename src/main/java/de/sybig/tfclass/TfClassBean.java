@@ -423,9 +423,9 @@ public class TfClassBean {
         return null;
     }
 
-    public void tabClose(TabChangeEvent event) {
-        System.out.println("closed " + event);
-    }
+//    public void tabClose(TabChangeEvent event) {
+//        System.out.println("closed " + event);
+//    }
 
     public String getClassLink() {
         if (humanTree.getSelectedNode() == null) {

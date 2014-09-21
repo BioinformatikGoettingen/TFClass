@@ -133,7 +133,6 @@ public class TreeBean {
             collapseAll();
         selectedNode = tfTree.expandNode(selectedCls);
         selectedNode.setSelected(true);
-        System.out.println("setinng second tree to " + selectedNode);
         return;
         }
         
