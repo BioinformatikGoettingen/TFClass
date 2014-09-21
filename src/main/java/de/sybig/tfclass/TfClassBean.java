@@ -109,10 +109,14 @@ public class TfClassBean {
 
     /**
      * Searches in the ontology mapped to the main tree for the search pattern.
-     * A list of matching {@see OboClass} is returned. If the search returns no hits
+     * A list of matching {
+     *
+     * @see OboClass} is returned. If the search returns no hits
      * <code>null</code> is returned.
-     *<br />
-     * This function is used for the autocomplete function, the search result is selected with {@see #selectSearched}
+     * <br />
+     * This function is used for the autocomplete function, the search result is
+     * selected with {
+     * @see #selectSearched}
      * @param pattern The pattern to search
      * @return List of matching classes or <code>null</code>
      */
@@ -130,12 +134,13 @@ public class TfClassBean {
             return null;
         }
     }
-    public void switchTrees(){
+
+    public void switchTrees() {
         TreeBean tmpTree = firstTree;
         firstTree = secondTree;
         secondTree = tmpTree;
     }
-    
+
     public TreeBean getFirstTree() {
         return firstTree;
     }
@@ -172,22 +177,22 @@ public class TfClassBean {
         return firstTree.getSelectedNode();
 //        return selectedNode1;
     }
-   
+
     public void setSelectedNode1(TreeNode selectedNode1) {
-        if (selectedNode1 == null){
+        if (selectedNode1 == null) {
             return;
         }
         firstTree.setSelectedNode(selectedNode1);
-        OboClass selectedOba = (OboClass)selectedNode1.getData();
-//        if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species")) {
-            secondTree.setSelectedNode(selectedOba);
-//        }
+        OboClass selectedOba = (OboClass) selectedNode1.getData();
+        secondTree.setSelectedNode(selectedOba);
         this.selectedNode1 = selectedNode1;
     }
-    public TreeNode getSelectedNode2(){
+
+    public TreeNode getSelectedNode2() {
         return secondTree.getSelectedNode();
     }
-    public void setSelectedNode2(TreeNode node){
+
+    public void setSelectedNode2(TreeNode node) {
         secondTree.setSelectedNode(node);
     }
 
@@ -210,12 +215,9 @@ public class TfClassBean {
         return fieldList;
     }
 
-   
-
 //    public TreeNode getTfRoot2() {
 //        return getTfTree2().getRoot();
 //    }
-
     public List<NormalTissueCytomer> getExpressionTable() {
         TreeNode selected = humanTree.getSelectedNode();
         if (selected == null) {
@@ -237,10 +239,11 @@ public class TfClassBean {
         } catch (Exception e) {
             log.error("An error occured while getting the expression table {}", e.getMessage());
         }
-        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
-        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(EXPRESSTABID)) {
-            tabView.setActiveIndex(0);
-        }
+//        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
+//        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(EXPRESSTABID)) {
+//            System.out.println("g");
+//            tabView.setActiveIndex(0);
+//        }
         return null;
     }
 
@@ -272,7 +275,6 @@ public class TfClassBean {
         return options;
     }
 
-
     public void selectSearched() {
         firstTree.collapseAll();
         TreeNode last = firstTree.getTfTree().expandNode(getSearchedClass());
@@ -281,10 +283,8 @@ public class TfClassBean {
             return;
         }
         last.setSelected(true);
-        firstTree.setSelectedNode (last);
+        firstTree.setSelectedNode(last);
     }
-
-   
 
     public OboClass getSearchedClass() {
         return searchedClass;
@@ -294,16 +294,12 @@ public class TfClassBean {
         this.searchedClass = searchedClass;
     }
 
-   
-
     private TfTree getTfTree2() {
         if (tfTree2 == null) {
             tfTree2 = new TfTree(ObaProvider.getInstance().getConnectorMouse());
         }
         return tfTree2;
     }
-
-  
 
     public String getDefinition() {
         if (humanTree.getClass() == null) {
@@ -426,7 +422,6 @@ public class TfClassBean {
 //    public void tabClose(TabChangeEvent event) {
 //        System.out.println("closed " + event);
 //    }
-
     public String getClassLink() {
         if (humanTree.getSelectedNode() == null) {
             return null;
@@ -439,8 +434,6 @@ public class TfClassBean {
         }
         return null;
     }
-
- 
 
     private String replacePubMed(String text) {
         Pattern regex = Pattern.compile("PMID (\\d{7})");

@@ -38,7 +38,6 @@ public class TreeBean {
      * Unsets the selected node and collapse all nodes in the tree object.
      */
     public void collapseAll() {
-//        setSelectedNode((TreeNode)null);
         selectedNode = null;
         getTfTree().collapseTree();
     }
@@ -115,29 +114,31 @@ public class TreeBean {
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
-        System.out.println("setting selected node to: " + selectedNode);
         this.selectedNode = selectedNode;
     }
 
     public void setSelectedNode(OboClass cls) {
 //         if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species"))
-        if (cls.getSubsets().equals("Factor species")){
+        if (cls.getSubsets().equals("Factor species")) {
             cls = (OboClass) cls.getParents().iterator().next();
         }
-        while (cls.getParents() != null && cls.getParents().size() > 0 ){
+        while (cls.getParents() != null && cls.getParents().size() > 0) {
             OboClass selectedCls = connector.getCls(cls.getName(), null);
-            if (selectedCls == null){
+            if (selectedCls == null) {
                 cls = (OboClass) cls.getParents().iterator().next();
                 continue;
             }
+            
+            if (selectedNode != null) {
+                selectedNode.setSelected(false);
+            }
             collapseAll();
-        selectedNode = tfTree.expandNode(selectedCls);
-        selectedNode.setSelected(true);
-        return;
+            selectedNode = tfTree.expandNode(selectedCls);
+            selectedNode.setSelected(true);
+            return;
         }
-        
-    }
 
+    }
 
     public TfTree getTfTree() {
         if (tfTree == null) {

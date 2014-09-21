@@ -71,8 +71,7 @@
             <div id="middleTD" >
                 <p:panel id="ontologyPanel"><h2>#{tfClassBean.firstTree.species}  transcription factors</h2>
                     <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
-                    
-                    
+                                       
                     <p:contextMenu for="tfTree" nodeType="Superclass" style="width:300px">
                         <p:menuitem value="Expand from here to Class" icon="class-icon"
                                     update=":tfForm:tfTree" actionListener="#{tfClassBean.firstTree.expandCurrentToClass()}" />
