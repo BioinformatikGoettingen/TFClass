@@ -282,7 +282,7 @@
                         <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
                         <h:outputText value="Uniprot"/>
-                        <h:outputText value="#{tfClassBean.uniprot}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="#{tfClassBean.uniprotHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
 
                         <h:outputText value="Protein expression pattern" rendered="#{not empty tfClassBean.expressionTable}"/>
@@ -290,6 +290,11 @@
                                        rendered="#{not empty tfClassBean.expressionTable}" />
                     </h:panelGrid>
                     <h3>Mouse</h3>
+                    <h:panelGrid columns="2">
+                    <h:outputText value="Uniprot"/>
+                        <h:outputText value="#{tfClassBean.uniprotMouse}" rendered="#{tfClassBean.mouseTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.mouseTree.selectedNode == null}" />
+                    </h:panelGrid>
                 </p:outputPanel>
 
             </p:panel>

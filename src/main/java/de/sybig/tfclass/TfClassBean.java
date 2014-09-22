@@ -20,7 +20,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import org.primefaces.component.tabview.TabView;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +34,8 @@ import service.NormaltissueFacadeREST;
 public class TfClassBean {
 
     private static final Logger log = LoggerFactory.getLogger(TfClassBean.class);
+    private static final String HUMAN = "HUMAN";
+    private static final String MOUSE = "MOUSE";
     @EJB
     private NormaltissueFacadeREST ntf;
     private static final String LOGOTABID = "logoTab";
@@ -71,7 +72,8 @@ public class TfClassBean {
                 }
                 searchedClass = cls;
                 selectSearched();
-                log.info("navigate to class {} by url parameter tfclass=", cls);
+                secondTree.setSelectedNode(cls);
+                log.info("navigate to class {} by url parameter tfclass={}", cls, idString);
                 return "";
             }
             String ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("ext");
@@ -91,6 +93,7 @@ public class TfClassBean {
                 }
                 searchedClass = cls;
                 selectSearched();
+                secondTree.setSelectedNode(cls);
                 log.info("navigate to class {} specified in the url wiht ext parameter {}", cls, ext);
                 return "";
 
@@ -274,15 +277,16 @@ public class TfClassBean {
         return options;
     }
 
-    public void selectSearched() {
+    public TreeNode selectSearched() {
         firstTree.collapseAll();
         TreeNode last = firstTree.getTfTree().expandNode(getSearchedClass());
         if (last == null) {
 //            System.out.println(last + " for " + getSearchedClass());
-            return;
+            return null;
         }
         last.setSelected(true);
         firstTree.setSelectedNode(last);
+        return last;
     }
 
     public OboClass getSearchedClass() {
@@ -375,13 +379,21 @@ public class TfClassBean {
         return null;
     }
 
-    public String getUniprot() {
+    public String getUniprotHuman() {
+        return getUniprot(HUMAN, humanTree);
+    }
+
+    public String getUniprotMouse() {
+        return getUniprot(MOUSE, mouseTree);
+    }
+
+    private String getUniprot(String species, TreeBean tree) {
         if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) tree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
-            if (a.getName().equals("xref") && a.getValue().startsWith("UNIPROT")) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("UNIPROT") && a.getValue().contains(species)) {
                 return parseUniprot(a.getValue());
             }
         }

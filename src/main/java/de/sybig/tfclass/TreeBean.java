@@ -118,11 +118,13 @@ public class TreeBean {
     }
 
     public void setSelectedNode(OboClass cls) {
+        System.out.println("a " + cls);
 //         if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species"))
         if (cls.getSubsets().equals("Factor species")) {
             cls = (OboClass) cls.getParents().iterator().next();
         }
         while (cls.getParents() != null && cls.getParents().size() > 0) {
+            System.out.println("b " + cls);
             OboClass selectedCls = connector.getCls(cls.getName(), null);
             if (selectedCls == null) {
                 cls = (OboClass) cls.getParents().iterator().next();
