@@ -21,7 +21,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.primefaces.component.tabview.TabView;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -412,10 +411,10 @@ public class TfClassBean {
                 return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
             }
         }
-        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
-        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(LOGOTABID)) {
-            tabView.setActiveIndex(0);
-        }
+//        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
+//        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(LOGOTABID)) {
+//            tabView.setActiveIndex(0);
+//        }
         return null;
     }
 

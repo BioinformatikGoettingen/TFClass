@@ -291,33 +291,7 @@
                     </h:panelGrid>
                     <h3>Mouse</h3>
                 </p:outputPanel>
-<!--                <hline width="100px"/>
-                <p:tabView id="tabView" dynamic="true">
-                  
-                    <p:tab id="details" title="Details">
-                        <h:panelGrid columns="2" id="xrefTable">
 
-
-
-
-                        </h:panelGrid>
-
-                    </p:tab>
-                    <p:tab id="expressionTab" title="Protein expression pattern" rendered="#{not empty tfClassBean.expressionTable}">
-
-                    </p:tab>
-
-                    <p:tab id="logoTab" title="Library"  rendered="#{not empty tfClassBean.logoDescription}">
-                        LOGO #{tfClassBean.logoDescription}
-                        <p:outputPanel rendered="#{not empty tfClassBean.logoDescription}">
-                            <iframe src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/library#{tfClassBean.logoDescription}"  width="100%" height="600px"/>
-                        </p:outputPanel>
-                        <h:outputText value="No data available on this tab." rendered="#{empty tfClassBean.logoDescription}" />
-                    </p:tab>
-                    <p:tab id="seedTab" title="Seeds">
-                        <iframe src="http://seeds.bioinf.med.uni-goettingen.de/tf1.1.1.1.html" height="600px" width="100%" />
-                    </p:tab>
-                </p:tabView>-->
             </p:panel>
             <p:dialog widgetVar="logoDialog" header="Logo plot" >
                 <p:outputPanel id="logoPanel">
@@ -338,7 +312,7 @@
                     <p:dataTable id="expressionTable" rendered="#{not empty tfClassBean.expressionTable}"
                                  value="#{tfClassBean.getExpressionTable()}" var="row" lazy="false"
                                  filteredValue="#{tfClassBean.filteredTissues}"  paginator="true"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rows="15"
                                  rowsPerPageTemplate="10,15,25">
                         <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains" >
                             <f:facet name="header">Tissue</f:facet>
