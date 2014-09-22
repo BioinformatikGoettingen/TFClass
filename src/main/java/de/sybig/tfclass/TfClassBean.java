@@ -423,16 +423,10 @@ public class TfClassBean {
                 return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
             }
         }
-//        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
-//        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(LOGOTABID)) {
-//            tabView.setActiveIndex(0);
-//        }
         return null;
     }
 
-//    public void tabClose(TabChangeEvent event) {
-//        System.out.println("closed " + event);
-//    }
+
     public String getClassLink() {
         if (humanTree.getSelectedNode() == null) {
             return null;
@@ -441,6 +435,18 @@ public class TfClassBean {
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("CLASSLINK")) {
                 return a.getValue().substring(10).replace("\\", "");
+            }
+        }
+        return null;
+    }
+    public String getSeedLink(){
+        if (humanTree.getSelectedNode() == null){
+            return null;
+        }
+        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
+        for (JsonAnnotation a : annotations) {
+            if (a.getName().equals("xref") && a.getValue().startsWith("SEEDLINK")) {
+                return a.getValue().substring(9).replace("\\", "");
             }
         }
         return null;

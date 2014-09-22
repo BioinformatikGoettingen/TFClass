@@ -60,18 +60,18 @@
                 <p:commandButton value="Switch classifications" action="#{tfClassBean.switchTrees()}"
                                  update="tfForm:ontologyPanel tfForm:ontologyPanel2"/>
                 <br />
-                        Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
-                        Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,
-                        Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
-                        Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
-                        Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
-                        Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
+                Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
+                Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,
+                Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
+                Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
+                Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
+                Factor&#160;species:&#160;<img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
             </div>
             <div style="clear: both; padding-top: 40px;"><p/></div>
             <div id="middleTD" >
                 <p:panel id="ontologyPanel"><h2>#{tfClassBean.firstTree.species}  transcription factors</h2>
                     <p:blockUI block="tfTree" trigger=":tfForm:expandClassBtn" />
-                                       
+
                     <p:contextMenu for="tfTree" nodeType="Superclass" style="width:300px">
                         <p:menuitem value="Expand from here to Class" icon="class-icon"
                                     update=":tfForm:tfTree" actionListener="#{tfClassBean.firstTree.expandCurrentToClass()}" />
@@ -193,7 +193,7 @@
                 </p:autoComplete>
                 <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
                 <p:defaultCommand target=":tfForm:voidBtn"/>
-                
+
                 <p><p:commandButton value="Expand all" action="#{tfClassBean.firstTree.expandAll()}" update=":tfForm:tfTree" styleClass="smallBtn"/>
                 <p:commandButton value="Collapse all" actionListener="#{tfClassBean.firstTree.collapseAll()}" update=":tfForm:tfTree"/>
 
@@ -288,10 +288,15 @@
                         <h:outputText value="Protein expression pattern" rendered="#{not empty tfClassBean.expressionTable}"/>
                         <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
                                        rendered="#{not empty tfClassBean.expressionTable}" />
+
+                        <h:outputText value="Seed" rendered="#{not empty tfClassBean.seedLink}"/>
+                        <p:commandLink value="Show seed"  onsuccess="seedDialog.show();"
+                                       update="seedPanel"
+                                       rendered="#{not empty tfClassBean.seedLink}"/>
                     </h:panelGrid>
                     <h3>Mouse</h3>
                     <h:panelGrid columns="2">
-                    <h:outputText value="Uniprot"/>
+                        <h:outputText value="Uniprot"/>
                         <h:outputText value="#{tfClassBean.uniprotMouse}" rendered="#{tfClassBean.mouseTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.mouseTree.selectedNode == null}" />
                     </h:panelGrid>
@@ -303,7 +308,12 @@
                     <img src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/logos/#{tfClassBean.logoAdress}" alt="Logo plot"/>
                 </p:outputPanel>
             </p:dialog>
-
+            <p:dialog widgetVar="seedDialog" header="Seed">
+            
+                <p:outputPanel id="seedPanel">
+                    <iframe src="#{tfClassBean.seedLink}" alt="seed link" style="width:700px; height:600px" />
+                </p:outputPanel>
+            </p:dialog>
             <p:dialog widgetVar="expressionDialog" header="Expression table" style="max-height: 600px">
                 <p:outputPanel id="expressionPanel">
                     The table below summarizes the protein expression data from the <a href="http://www.proteinatlas.org/">Protein Atlas</a>.
