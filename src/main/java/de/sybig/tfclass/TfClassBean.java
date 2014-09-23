@@ -52,6 +52,7 @@ public class TfClassBean {
     private TreeBean secondTree;
     private TreeBean mouseTree;
     private TreeNode selectedNode1;
+    private String seedtable;
 
     @PostConstruct
     void initialiseSession() {
@@ -184,6 +185,7 @@ public class TfClassBean {
         if (selectedNode1 == null) {
             return;
         }
+        seedtable = null;
         firstTree.setSelectedNode(selectedNode1);
         OboClass selectedOba = (OboClass) selectedNode1.getData();
         secondTree.setSelectedNode(selectedOba);
@@ -366,17 +368,46 @@ public class TfClassBean {
         return null;
     }
 
-    public String getTransfac() {
+    public String getTransfacHuman() {
+        return getTransfac(humanTree);
+    }
+
+    public String getTransfacMouse() {
+        return getTransfac(mouseTree);
+    }
+
+    private String getTransfac(TreeBean tree) {
         if (humanTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) tree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("TRANSFAC")) {
                 return parseTransfac(a.getValue());
             }
         }
         return null;
+    }
+
+    public List<String> getOrtholog() {
+        if (firstTree.getSelectedNode() == null) {
+            return null;
+        }
+        List<String> blocked = new LinkedList<String>();
+        blocked.add(firstTree.getSpecies());
+        if (secondTree.getSelectedNode() != null
+                && ((OboClass) firstTree.getSelectedNode().getData()).getName().equals(((OboClass) secondTree.getSelectedNode().getData()).getName())) {
+            blocked.add(secondTree.getSpecies());
+        }
+        List<String> out = new LinkedList<String>();
+        if (!blocked.contains("Human")) {
+            out.add(getUniprot(HUMAN, firstTree));
+        }
+        if (!blocked.contains("Mouse")) {
+            out.add(getUniprot(MOUSE, firstTree));
+        }
+        out.add(getUniprot("RAT", firstTree));
+        return out;
     }
 
     public String getUniprotHuman() {
@@ -426,7 +457,6 @@ public class TfClassBean {
         return null;
     }
 
-
     public String getClassLink() {
         if (humanTree.getSelectedNode() == null) {
             return null;
@@ -439,17 +469,30 @@ public class TfClassBean {
         }
         return null;
     }
-    public String getSeedLink(){
-        if (humanTree.getSelectedNode() == null){
-            return null;
-        }
-        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
-        for (JsonAnnotation a : annotations) {
-            if (a.getName().equals("xref") && a.getValue().startsWith("SEEDLINK")) {
-                return a.getValue().substring(9).replace("\\", "");
+
+    public String getSeedLink() {
+        if (seedtable == null) {
+            if (humanTree.getSelectedNode() == null) {
+                return null;
+            }
+            Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
+            for (JsonAnnotation a : annotations) {
+                if (a.getName().equals("xref") && a.getValue().startsWith("SEEDLINK")) {
+                    String url = a.getValue().substring(9).replace("\\", "");
+//                DefaultHttpClient httpClient = new DefaultHttpClient();
+//               HttpResponse response;
+//                try {
+//                    response = httpClient.execute(new HttpGet(url));
+//                    seedtable = new BasicResponseHandler().handleResponse(response);
+                    seedtable = url;
+//                } catch (IOException ex) {
+//                    java.util.logging.Logger.getLogger(TfClassBean.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+
+                }
             }
         }
-        return null;
+        return seedtable;
     }
 
     private String replacePubMed(String text) {

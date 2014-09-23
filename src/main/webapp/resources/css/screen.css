@@ -71,7 +71,9 @@ h2{
         height:35px;
     }
 }
-
+#tfForm\:orthologList ul{
+    padding-left: 0px !important;
+}
 
 #tfForm\:tfTree{
     width: 100%;

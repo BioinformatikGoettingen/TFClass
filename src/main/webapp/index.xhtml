@@ -153,6 +153,8 @@
 
                     <p:tree id="tfTree2" value="#{tfClassBean.secondTree.tfRoot}" var="node" dynamic="true" animate="true"
                             selectionMode="single" selection="#{tfClassBean.selectedNode2}"  style="width:1000px !important">
+                         <p:ajax event="select" update=":tfForm:detailsPanel" />
+                        <p:ajax event="collapse" listener="#{tfClassBean.secondTree.onNodeCollapse}" />
                         <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                         </p:treeNode>
                         <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
@@ -266,6 +268,10 @@
                                        update="logoPanel"
                                        rendered="#{not empty tfClassBean.logoAdress}"/>
 
+                        <h:outputText value="Orthologs:" />
+                        <p:dataList id="orthologList" value="#{tfClassBean.ortholog}" var="ortholog" itemType="none" style="padding-left: 0px !important;">
+                            <h:outputText value="#{ortholog}" escape="false" />
+                        </p:dataList>
 
                     </h:panelGrid>
                     <h3>Human</h3>
@@ -279,27 +285,30 @@
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
 
                         <h:outputText value="Transfac:"/>
-                        <h:outputText value="#{tfClassBean.transfac}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="#{tfClassBean.transfacHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
-                        <h:outputText value="Uniprot"/>
+                        <h:outputText value="Uniprot:"/>
                         <h:outputText value="#{tfClassBean.uniprotHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
 
-                        <h:outputText value="Protein expression pattern" rendered="#{not empty tfClassBean.expressionTable}"/>
+                        <h:outputText value="Protein expression pattern:" rendered="#{not empty tfClassBean.expressionTable}"/>
                         <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
                                        rendered="#{not empty tfClassBean.expressionTable}" />
 
-                        <h:outputText value="Seed" rendered="#{not empty tfClassBean.seedLink}"/>
+                        <h:outputText value="Seed:" rendered="#{not empty tfClassBean.seedLink}"/>
                         <p:commandLink value="Show seed"  onsuccess="seedDialog.show();"
                                        update="seedPanel"
                                        rendered="#{not empty tfClassBean.seedLink}"/>
                     </h:panelGrid>
                     <h3>Mouse</h3>
                     <h:panelGrid columns="2">
-                        <h:outputText value="Uniprot"/>
+                        <h:outputText value="Uniprot:"/>
                         <h:outputText value="#{tfClassBean.uniprotMouse}" rendered="#{tfClassBean.mouseTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.mouseTree.selectedNode == null}" />
                     </h:panelGrid>
+                    <h:outputText value="Transfac:"/>
+                        <h:outputText value="#{tfClassBean.transfacMouse}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
                 </p:outputPanel>
 
             </p:panel>
@@ -311,7 +320,8 @@
             <p:dialog widgetVar="seedDialog" header="Seed">
             
                 <p:outputPanel id="seedPanel">
-                    <iframe src="#{tfClassBean.seedLink}" alt="seed link" style="width:700px; height:600px" />
+                    <!--<h:outputText value="#{tfClassBean.seedLink}" escape="false" />-->
+                    <iframe src="#{tfClassBean.seedLink}" style="width:600px; height:500px"/>
                 </p:outputPanel>
             </p:dialog>
             <p:dialog widgetVar="expressionDialog" header="Expression table" style="max-height: 600px">
