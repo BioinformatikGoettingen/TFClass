@@ -30,30 +30,32 @@
               draggable="false" closable="false">
         Please wait ...
     </p:dialog>
-    <h1>Classification of Human Transcription Factors</h1>
+    <h1>Classification of Human Transcription Factors and Mouse Orthologs</h1>
     #{tfClassBean.init()}
     <h:form id="tfForm">
         <div width="75%">
-            <p><b>TFClass</b> is a classification of (so far: human) transcription factors
-                based on the characteristics of their DNA-binding domains. It comprises
-                six levels (superclasses, classes, families, subfamilies, genera and
-                factor species), two of which are optional (subfamilies and factor
-                species). More detailed explanations about the classification scheme and
-                its criteria will be given
-                <a href="http://www.edgar-wingender.de/TFClass_schema.html">here</a>.
-                The full classification can also be
-                obtained
-                <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
-                as html document and as
-                <a href="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/TFClass.obo">ontology</a> in obo-format.</p>
-            <!--                        If you experience display errors wiht the Internet Explorer please use the
-                                    <a href="http://tfclass.sybig.de">old version</a> of TFClass-->
-            <p>When referring to this classification, please cite: <br />
-                Wingender, E., Schoeps, T. and Dönitz, J.: <br /><b>TFClass: An expandable
-                    hierarchical classification of human transcription factors</b><br />
-                Nucleic Acids Res. 41, D165-D170 (2013).
-                <a href="http://nar.oxfordjournals.org/content/41/D1/D165.long" target="_blank">link</a> </p>
-
+            <p:panel closable="true" closeTitle="Remove the introduction until the next relaod" toggleable="true" toggleTitle="Collapse the introduction"
+                     header="Introduction" >
+                <p><b>TFClass</b> is a classification of (so far: human) transcription factors
+                    based on the characteristics of their DNA-binding domains. It comprises
+                    six levels (superclasses, classes, families, subfamilies, genera and
+                    factor species), two of which are optional (subfamilies and factor
+                    species). More detailed explanations about the classification scheme and
+                    its criteria will be given
+                    <a href="http://www.edgar-wingender.de/TFClass_schema.html">here</a>.
+                    The full classification can also be
+                    obtained
+                    <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
+                    as html document and as
+                    <a href="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/TFClass.obo">ontology</a> in obo-format.</p>
+                <!--                        If you experience display errors wiht the Internet Explorer please use the
+                                        <a href="http://tfclass.sybig.de">old version</a> of TFClass-->
+                <p>When referring to this classification, please cite: <br />
+                    Wingender, E., Schoeps, T. and Dönitz, J.: <br /><b>TFClass: An expandable
+                        hierarchical classification of human transcription factors</b><br />
+                    Nucleic Acids Res. 41, D165-D170 (2013).
+                    <a href="http://nar.oxfordjournals.org/content/41/D1/D165.long" target="_blank">link</a> </p>
+            </p:panel>
             <p:messages />
 
             <div id="legend">
@@ -149,11 +151,11 @@
             </div>
             <div id="rightTD" >
 
-                <p:panel id="ontologyPanel2"><h2>#{tfClassBean.secondTree.species}  transcription factors</h2>
+                <p:panel id="ontologyPanel2" ><h2>#{tfClassBean.secondTree.species}  transcription factors</h2>
 
                     <p:tree id="tfTree2" value="#{tfClassBean.secondTree.tfRoot}" var="node" dynamic="true" animate="true"
                             selectionMode="single" selection="#{tfClassBean.selectedNode2}"  style="width:1000px !important">
-                         <p:ajax event="select" update=":tfForm:detailsPanel" />
+                        <p:ajax event="select" update=":tfForm:detailsPanel" />
                         <p:ajax event="collapse" listener="#{tfClassBean.secondTree.onNodeCollapse}" />
                         <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                         </p:treeNode>
@@ -268,57 +270,59 @@
                                        update="logoPanel"
                                        rendered="#{not empty tfClassBean.logoAdress}"/>
 
-                        <h:outputText value="Orthologs:" />
-                        <p:dataList id="orthologList" value="#{tfClassBean.ortholog}" var="ortholog" itemType="none" style="padding-left: 0px !important;">
+                        <h:outputText value="Other Orhologs:" />
+                        <p:dataList id="orthologList" value="#{tfClassBean.ortholog}" var="ortholog" itemType="none">
                             <h:outputText value="#{ortholog}" escape="false" />
                         </p:dataList>
 
-                    </h:panelGrid>
-                    <h3>Human</h3>
-                    <h:panelGrid columns="2">
+                        <h3>Human</h3><h:outputText value=""/>
+
                         <h:outputText value="ProteinAtlas:"/>
                         <h:outputText value="#{tfClassBean.proteinAtlas}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
-                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
-
-                        <h:outputText value="BioGPS:"/>
-                        <h:outputText value="#{tfClassBean.bioGPS}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
-                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
-
-                        <h:outputText value="Transfac:"/>
-                        <h:outputText value="#{tfClassBean.transfacHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
-                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
-                        <h:outputText value="Uniprot:"/>
-                        <h:outputText value="#{tfClassBean.uniprotHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
 
                         <h:outputText value="Protein expression pattern:" rendered="#{not empty tfClassBean.expressionTable}"/>
                         <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
                                        rendered="#{not empty tfClassBean.expressionTable}" />
 
-                        <h:outputText value="Seed:" rendered="#{not empty tfClassBean.seedLink}"/>
-                        <p:commandLink value="Show seed"  onsuccess="seedDialog.show();"
+                        <h:outputText value="BioGPS:"/>
+                        <h:outputText value="#{tfClassBean.bioGPS}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
+
+                        <h:outputText value="TRANSFAC:"/>
+                        <h:outputText value="#{tfClassBean.transfacHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
+                        <h:outputText value="Uniprot:"/>
+                        <h:outputText value="#{tfClassBean.uniprotHuman}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
+                        <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
+
+
+
+                        <h:outputText value="Binding sites:" rendered="#{not empty tfClassBean.seedLink}"/>
+                        <p:commandLink value="Show binding sites"  onsuccess="seedDialog.show();"
                                        update="seedPanel"
                                        rendered="#{not empty tfClassBean.seedLink}"/>
-                    </h:panelGrid>
-                    <h3>Mouse</h3>
-                    <h:panelGrid columns="2">
-                        <h:outputText value="Uniprot:"/>
+
+                        <h3 style="color:#{tfClassBean.selectionDiffers and tfClassBean.secondTree.species == 'Mouse'?'red':'black'};">Mouse</h3><h:outputText value="" />
+                        <h:outputText value="Uniprot:"
+                                      style="color:#{tfClassBean.selectionDiffers and tfClassBean.secondTree.species == 'Mouse'?'red':'black'};"/>
                         <h:outputText value="#{tfClassBean.uniprotMouse}" rendered="#{tfClassBean.mouseTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.mouseTree.selectedNode == null}" />
-                    </h:panelGrid>
-                    <h:outputText value="Transfac:"/>
+
+                        <h:outputText value="TRANSFAC:" style="color:#{tfClassBean.selectionDiffers and tfClassBean.secondTree.species == 'Mouse'?'red':'black'};"/>
                         <h:outputText value="#{tfClassBean.transfacMouse}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
-                </p:outputPanel>
 
+                    </h:panelGrid>
+                </p:outputPanel>
             </p:panel>
             <p:dialog widgetVar="logoDialog" header="Logo plot" >
                 <p:outputPanel id="logoPanel">
                     <img src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/logos/#{tfClassBean.logoAdress}" alt="Logo plot"/>
                 </p:outputPanel>
             </p:dialog>
-            <p:dialog widgetVar="seedDialog" header="Seed">
-            
+            <p:dialog widgetVar="seedDialog" header="Binding sites">
+
                 <p:outputPanel id="seedPanel">
                     <!--<h:outputText value="#{tfClassBean.seedLink}" escape="false" />-->
                     <iframe src="#{tfClassBean.seedLink}" style="width:600px; height:500px"/>

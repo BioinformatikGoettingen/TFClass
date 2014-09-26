@@ -53,6 +53,8 @@ public class TfClassBean {
     private TreeBean mouseTree;
     private TreeNode selectedNode1;
     private String seedtable;
+    private boolean selectionDiffers = false;
+
 
     @PostConstruct
     void initialiseSession() {
@@ -198,6 +200,13 @@ public class TfClassBean {
 
     public void setSelectedNode2(TreeNode node) {
         secondTree.setSelectedNode(node);
+        if (node == null || firstTree.getSelectedNode() == null){
+            return;
+        }
+        OboClass cls1 = (OboClass) firstTree.getSelectedNode().getData();
+        OboClass cls2 = (OboClass) secondTree.getSelectedNode().getData();
+
+        selectionDiffers = ! cls1.getName().equals(cls2.getName());
     }
 
     /**
@@ -219,9 +228,6 @@ public class TfClassBean {
         return fieldList;
     }
 
-//    public TreeNode getTfRoot2() {
-//        return getTfTree2().getRoot();
-//    }
     public List<NormalTissueCytomer> getExpressionTable() {
         TreeNode selected = humanTree.getSelectedNode();
         if (selected == null) {
@@ -243,11 +249,6 @@ public class TfClassBean {
         } catch (Exception e) {
             log.error("An error occured while getting the expression table {}", e.getMessage());
         }
-//        TabView tabView = ((TabView) FacesContext.getCurrentInstance().getViewRoot().findComponent("tfForm:tabView"));
-//        if (tabView.getChildren().get(tabView.getActiveIndex()).getId().equals(EXPRESSTABID)) {
-//            System.out.println("g");
-//            tabView.setActiveIndex(0);
-//        }
         return null;
     }
 
@@ -307,10 +308,10 @@ public class TfClassBean {
     }
 
     public String getDefinition() {
-        if (humanTree.getClass() == null) {
+        if (firstTree.getClass() == null) {
             return null;
         }
-        String def = ((OboClass) humanTree.getSelectedNode().getData()).getDefinition();
+        String def = ((OboClass) firstTree.getSelectedNode().getData()).getDefinition();
         if (def == null) {
             return null;
         }
@@ -323,10 +324,10 @@ public class TfClassBean {
     }
 
     public String getAltID() {
-        if (humanTree.getSelectedNode() == null) {
+        if (firstTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) firstTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("alt_id")) {
                 return a.getValue();
@@ -458,10 +459,10 @@ public class TfClassBean {
     }
 
     public String getClassLink() {
-        if (humanTree.getSelectedNode() == null) {
+        if (firstTree.getSelectedNode() == null) {
             return null;
         }
-        Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
+        Set<JsonAnnotation> annotations = ((OboClass) firstTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("CLASSLINK")) {
                 return a.getValue().substring(10).replace("\\", "");
@@ -495,6 +496,13 @@ public class TfClassBean {
         return seedtable;
     }
 
+    public boolean isSelectionDiffers() {
+        return selectionDiffers;
+    }
+
+    public void setSelectionDiffers(boolean selectionDiffers) {
+        this.selectionDiffers = selectionDiffers;
+    }
     private String replacePubMed(String text) {
         Pattern regex = Pattern.compile("PMID (\\d{7})");
         Matcher matcher = regex.matcher(text);
