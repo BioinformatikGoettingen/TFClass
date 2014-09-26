@@ -36,7 +36,7 @@
         <div width="75%">
             <p:panel closable="true" closeTitle="Remove the introduction until the next relaod" toggleable="true" toggleTitle="Collapse the introduction"
                      header="Introduction" >
-                <p><b>TFClass</b> is a classification of (so far: human) transcription factors
+                <p><b>TFClass</b> is a classification of (so far: human and mouse) transcription factors
                     based on the characteristics of their DNA-binding domains. It comprises
                     six levels (superclasses, classes, families, subfamilies, genera and
                     factor species), two of which are optional (subfamilies and factor
@@ -183,7 +183,7 @@
         </div>
         <div id="leftTD">
             <p:panel id="additional">
-                <h2>Search and controll</h2>
+                <h2>Search and control</h2>
                 <h3>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h3>
                 <p:tooltip for="searchHelpButton"
                            value="Searches in the label, ID and external references."
@@ -303,13 +303,12 @@
                                        update="seedPanel"
                                        rendered="#{not empty tfClassBean.seedLink}"/>
 
-                        <h3 style="color:#{tfClassBean.selectionDiffers and tfClassBean.secondTree.species == 'Mouse'?'red':'black'};">Mouse</h3><h:outputText value="" />
-                        <h:outputText value="Uniprot:"
-                                      style="color:#{tfClassBean.selectionDiffers and tfClassBean.secondTree.species == 'Mouse'?'red':'black'};"/>
+                        <h3 >Mouse</h3><h:outputText value="" />
+                        <h:outputText value="Uniprot:" />
                         <h:outputText value="#{tfClassBean.uniprotMouse}" rendered="#{tfClassBean.mouseTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.mouseTree.selectedNode == null}" />
 
-                        <h:outputText value="TRANSFAC:" style="color:#{tfClassBean.selectionDiffers and tfClassBean.secondTree.species == 'Mouse'?'red':'black'};"/>
+                        <h:outputText value="TRANSFAC:"/>
                         <h:outputText value="#{tfClassBean.transfacMouse}" rendered="#{tfClassBean.humanTree.selectedNode != null}" escape="false"/>
                         <h:outputText value="-" rendered="#{tfClassBean.humanTree.selectedNode == null}" />
 

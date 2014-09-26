@@ -128,11 +128,11 @@ public class TfClassBean {
     public List<OboClass> search(String pattern) {
         String searchPattern = pattern;
         try {
-            OboConnector connector = getFirstConnector();
-            OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
+            OboClassList searchResult = firstTree.getConnector().searchCls(searchPattern, getFieldList());
             if (searchResult == null || searchResult.getEntities() == null) {
                 return null;
             }
+            System.out.println("result " + searchResult.getEntities());
             return searchResult.getEntities();
         } catch (Exception ex) {
             log.warn("An error occured while searching in the ontology ", ex);
@@ -209,14 +209,7 @@ public class TfClassBean {
         selectionDiffers = ! cls1.getName().equals(cls2.getName());
     }
 
-    /**
-     * Get the Obo connector for the main tree.
-     *
-     * @return
-     */
-    private OboConnector getFirstConnector() {
-        return ObaProvider.getInstance().getConnectorHuman();
-    }
+ 
 
     private List<String> getFieldList() {
         if (fieldList == null) {

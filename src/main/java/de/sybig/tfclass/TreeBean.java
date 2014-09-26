@@ -15,7 +15,7 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class TreeBean {
 
-    private OboConnector connector;
+    private final OboConnector connector;
     private String species;
     private TfTree tfTree;
     private TreeNode selectedNode;
@@ -157,4 +157,7 @@ public class TreeBean {
         this.species = title;
     }
 
+    public OboConnector getConnector(){
+        return connector;
+    }
 }
