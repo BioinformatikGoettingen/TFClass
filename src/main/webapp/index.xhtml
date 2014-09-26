@@ -193,7 +193,7 @@
                                 completeMethod="#{tfClassBean.search}"
                                 scrollHeight="350" converter="ontologyClassConverter">
                     <p:ajax event="itemSelect" listener="#{tfClassBean.selectSearched()}"
-                            update="tfTree :tfForm:detailsPanel" />
+                            update="tfTree tfTree2 :tfForm:detailsPanel" />
                 </p:autoComplete>
                 <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
                 <p:defaultCommand target=":tfForm:voidBtn"/>

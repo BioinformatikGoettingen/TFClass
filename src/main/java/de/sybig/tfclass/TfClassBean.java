@@ -132,7 +132,6 @@ public class TfClassBean {
             if (searchResult == null || searchResult.getEntities() == null) {
                 return null;
             }
-            System.out.println("result " + searchResult.getEntities());
             return searchResult.getEntities();
         } catch (Exception ex) {
             log.warn("An error occured while searching in the ontology ", ex);
@@ -282,6 +281,7 @@ public class TfClassBean {
         }
         last.setSelected(true);
         firstTree.setSelectedNode(last);
+        secondTree.setSelectedNode(searchedClass);
         return last;
     }
 
