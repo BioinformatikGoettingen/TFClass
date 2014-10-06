@@ -432,7 +432,8 @@ public class TfClassBean {
         Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("LOGOPNGLINK")) {
-                return a.getValue().replace("LOGOPNGLINK:http\\://www.edgar-wingender.de/logos", "");
+               // return a.getValue().replace("LOGOPNGLINK:http\\://www.edgar-wingender.de/logos", "");
+                 return a.getValue().replace("LOGOPNGLINK:http\\:", "http:");
             }
         }
         return null;
@@ -445,7 +446,8 @@ public class TfClassBean {
         Set<JsonAnnotation> annotations = ((OboClass) humanTree.getSelectedNode().getData()).getAnnotations();
         for (JsonAnnotation a : annotations) {
             if (a.getName().equals("xref") && a.getValue().startsWith("LOGODESCRIPTIONLINK")) {
-                return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
+                //return a.getValue().replace("LOGODESCRIPTIONLINK:http\\://www.edgar-wingender.de/library", "");
+                return a.getValue().replace("LOGODESCRIPTIONLINK:http\\:", "http:");
             }
         }
         return null;

@@ -47,7 +47,7 @@
                     obtained
                     <a href="http://www.edgar-wingender.de/huTF_classification.html">here</a>
                     as html document and as
-                    <a href="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/TFClass.obo">ontology</a> in obo-format.</p>
+                    <a href="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/TFClass_ontologies.zip">ontology</a> in obo-format.</p>
                 <!--                        If you experience display errors wiht the Internet Explorer please use the
                                         <a href="http://tfclass.sybig.de">old version</a> of TFClass-->
                 <p>When referring to this classification, please cite: <br />
@@ -266,11 +266,14 @@
 
 
                         <h:outputText value="Logo plot:"  rendered="#{not empty tfClassBean.logoAdress}"/>
-                        <p:commandLink value="Show logo plot"  onsuccess="logoDialog.show();"
-                                       update="logoPanel"
-                                       rendered="#{not empty tfClassBean.logoAdress}"/>
+                        <p:commandLink  onsuccess="logoDialog.show();"
+                                       update="logoPanel logoDescription"
+                                       rendered="#{not empty tfClassBean.logoAdress}">
+                            <img src="#{tfClassBean.logoAdress}"
+                                 title="click to enlarge" alt="show Logo plot" width="180px"/>
+                        </p:commandLink>
 
-                        <h:outputText value="Other Orhologs:" />
+                        <h:outputText value="Other orthologs:" />
                         <p:dataList id="orthologList" value="#{tfClassBean.ortholog}" var="ortholog" itemType="none">
                             <h:outputText value="#{ortholog}" escape="false" />
                         </p:dataList>
@@ -317,14 +320,17 @@
             </p:panel>
             <p:dialog widgetVar="logoDialog" header="Logo plot" >
                 <p:outputPanel id="logoPanel">
-                    <img src="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/logos/#{tfClassBean.logoAdress}" alt="Logo plot"/>
+                    <img src="#{tfClassBean.logoAdress}" alt="Logo plot"/>
+                </p:outputPanel><br/>
+                <p:outputPanel id="logoDescription">
+                <iframe  src="#{tfClassBean.logoDescription}" style="width:800px;height:400px"  rendered="#{not empty tfClassBean.logoDescription}"/>
                 </p:outputPanel>
             </p:dialog>
             <p:dialog widgetVar="seedDialog" header="Binding sites">
 
                 <p:outputPanel id="seedPanel">
                     <!--<h:outputText value="#{tfClassBean.seedLink}" escape="false" />-->
-                    <iframe src="#{tfClassBean.seedLink}" style="width:600px; height:500px"/>
+                    <iframe src="#{tfClassBean.seedLink}" style="width:900px; height:700px"/>
                 </p:outputPanel>
             </p:dialog>
             <p:dialog widgetVar="expressionDialog" header="Expression table" style="max-height: 600px">
