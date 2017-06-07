@@ -39,8 +39,12 @@ public class TfTree {
     }
     public TreeNode getRoot() {
         if (root == null) {
-            OboClass rootCls = getConnector().getRoot();
-            root = new TfTreeNode(rootCls, null);
+            try {
+                OboClass rootCls = getConnector().getRoot();
+                root = new TfTreeNode(rootCls, null);
+            } catch (ConnectException ex) {
+                log.error("could not connect the OBA server to get the root node");
+            }
         }
         return root;
 
@@ -64,6 +68,8 @@ public class TfTree {
         } catch (UniformInterfaceException ex) {
             log.warn("An error occured while getting the path to root for {}, {}", searchedClass, ex);
             return null;
+        } catch (ConnectException ex) {
+           log.error("could not connect to the OBA server");
         }
         if (paths == null || paths.getEntities() == null || paths.getEntities().size() < 1) {
             log.warn("no path to expand for {}", searchedClass);

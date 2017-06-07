@@ -5,6 +5,7 @@ import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.palinker.NormalTissueCytomer;
+import java.net.ConnectException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -330,10 +331,14 @@ public class TfClassBean {
     }
 
     public void jumpToAlternative(String id) {
-        OboConnector connector = ObaProvider.getInstance().getConnectorHuman();
-        OboClass cls = connector.getCls(id, null);
-        setSearchedClass(cls);
-        selectSearched();
+        try {
+            OboConnector connector = ObaProvider.getInstance().getConnectorHuman();
+            OboClass cls = connector.getCls(id, null);
+            setSearchedClass(cls);
+            selectSearched();
+        } catch (ConnectException ex) {
+            log.error("Could not connect to OBA service");
+        }
     }
 
     public String getProteinAtlas() {

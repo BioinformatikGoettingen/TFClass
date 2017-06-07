@@ -36,7 +36,7 @@
         <dependency>
             <groupId>de.sybig</groupId>
             <artifactId>oba-client</artifactId>
-            <version>1.2.2-SNAPSHOT</version>
+            <version>1.4-SNAPSHOT</version>
             <!-- needed for the obo classes -->
         </dependency>
         <dependency>
@@ -120,5 +120,10 @@
             <layout>default</layout>
             <name>Repository for library EclipseLink (JPA 2.0)</name>
         </repository>
+        <repository>
+                <id>primefaces</id>
+                <name>primefaces</name>
+                <url>http://repository.primefaces.org</url>
+            </repository>
     </repositories>
 </project>

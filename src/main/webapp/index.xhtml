@@ -35,7 +35,7 @@
     <h:form id="tfForm">
         <div width="75%">
             <p:panel closable="true" closeTitle="Remove the introduction until the next relaod" toggleable="true" toggleTitle="Collapse the introduction"
-                     header="Introduction" >
+                     header="Introduction" rendered="false">
                 <p>
                     <b>TFClass</b> is a classification of human transcription factors (TFs) and their mouse orthologs based on the characteristics of
                         their DNA-binding domains. It comprises four general levels (superclass, class, family, subfamily) and two levels of
@@ -65,7 +65,8 @@ Nucleic Acids Res. 41, D165-D170 (2013). <a href="http://nar.oxfordjournals.org/
 This panel with the introduction text may be collapsed or closed with the handles in the right upper corner.
             </p:panel>
             <p:messages />
-
+            <div style="float:left">
+                <h2><a href="about.jsf">About TFClass</a></h2></div>
             <div id="legend">
                 <p:commandButton value="Switch classifications" action="#{tfClassBean.switchTrees()}"
                                  update="tfForm:ontologyPanel tfForm:ontologyPanel2"/>

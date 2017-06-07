@@ -2,10 +2,13 @@ package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
+import java.net.ConnectException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -16,6 +19,7 @@ import org.primefaces.model.TreeNode;
 public class TreeBean {
 
     private final OboConnector connector;
+    private static final Logger log = LoggerFactory.getLogger(TreeBean.class);
     private String species;
     private TfTree tfTree;
     private TreeNode selectedNode;
@@ -121,7 +125,7 @@ public class TreeBean {
 //         if (selectedOba.getSubsets().equals("Genus") || selectedOba.getSubsets().equals("Factor species"))
         if (cls.getSubsets().equals("Factor species")) {
             cls = (OboClass) cls.getParents().iterator().next();
-        }
+        }try{
         while (cls.getParents() != null && cls.getParents().size() > 0) {
             OboClass selectedCls = connector.getCls(cls.getName(), null);
             if (selectedCls == null) {
@@ -137,7 +141,9 @@ public class TreeBean {
             selectedNode.setSelected(true);
             return;
         }
-
+        }catch(ConnectException ex){
+            log.error("Could not connect to the OBA service");
+        }
     }
 
     public TfTree getTfTree() {
