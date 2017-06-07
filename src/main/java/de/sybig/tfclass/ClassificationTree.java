@@ -68,7 +68,6 @@ public class ClassificationTree {
 
         public CfNode(String type, OboClass oc, TreeNode parent) {
             super(type, oc, parent);
-             System.out.println("type " + type);
             this.oc = oc;
         }
 
@@ -88,7 +87,6 @@ public class ClassificationTree {
                         for (OboClass child : oboChildren) {
                             String type = "";
                             for (JsonAnnotation a : (Set<JsonAnnotation>)child.getAnnotations()){
-                                System.out.println("a " + a.getName());
                                 if (a.getName().equals("level")){
                                    type = a.getValue();
                                 }

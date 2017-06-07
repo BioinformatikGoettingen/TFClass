@@ -1,11 +1,8 @@
 package de.sybig.tfclass;
 
-import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +34,16 @@ public class ClassificationBean {
     }
 
     public TreeNode getClassificationRoot() {
-        
         return getTfTree().getRoot();
+    }
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        System.out.println("selected node " + selectedNode.getData());
+        this.selectedNode = selectedNode;
     }
 
 }

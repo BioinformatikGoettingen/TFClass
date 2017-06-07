@@ -12,29 +12,35 @@
     </h:head>
     <body>
         <h1>Classification of Transcription Factors in Mammalia</h1>
-       
-    <p:tree id="cfTree" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
-                            >
-        <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-                        <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
-                            <h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-                        <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
-                            <h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-                        <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
-                            <h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-                        <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
-                            <h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-                        <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
-                            <h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-                        <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
-                            <h:outputText value="#{node.name} #{node.label}" />
-                        </p:treeNode>
-    </p:tree>
-    </body>
+    <p:panel>
+        <h:form id="classificationForm">
+
+            <p:tree id="cfTree" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
+               selectionMode="single" selection="#{classificationBean.selectedNode}" >
+                <p:ajax event="select" update="cfTree" />
+                <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+            </p:tree>
+
+        </h:form>
+    </p:panel>
+</body>
 </html>
