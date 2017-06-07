@@ -17,7 +17,7 @@
 
             <p:tree id="cfTree" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
                selectionMode="single" selection="#{classificationBean.selectedNode}" >
-                <p:ajax event="select" update="cfTree" />
+                <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
                 <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                 </p:treeNode>
                 <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
@@ -39,7 +39,17 @@
                     <h:outputText value="#{node.name} #{node.label}" />
                 </p:treeNode>
             </p:tree>
-
+            <p:panel id="detailsPanel">
+                <h2>Details</h2>
+                <p:panel>
+                    <h3>Genus information</h3>
+                       
+                        #{classificationBean.getSpeciesOfSelectedNode().size()} species this transcription factor.
+                </p:panel>
+                <p:panel rendered="#{classificationBean.selectedNode.type == 'Genus'}">
+                    <h3>Homo sapiens</h3>
+                </p:panel>
+            </p:panel>
         </h:form>
     </p:panel>
 </body>
