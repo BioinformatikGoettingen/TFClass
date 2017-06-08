@@ -21,6 +21,11 @@ h2{
     font-weight: bold;
     margin : 2px;
 }
+.bold{
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 #legend{
     float:left;
     width:66%;
@@ -40,9 +45,10 @@ h2{
 .treePanel{
     vertical-align: top;
     float: left;
-    width :25%;
+    width :350px !important;
     position: absolute;
     left: 10px;
+
     border-right: solid grey 1px !important;
   }
 
@@ -50,7 +56,7 @@ h2{
     float:left; 
     width:66%;
     position : absolute;
-    left :27%;
+    left :370px;
 }
 
 .dashboard{

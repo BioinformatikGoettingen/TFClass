@@ -2,6 +2,7 @@ package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
+import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,6 +58,18 @@ public class ClassificationBean {
 
     public TreeNode getClassificationRoot() {
         return getTfTree().getRoot();
+    }
+
+    public String getAnnotationValueOfSelectedNode(String annotation) {
+        if (selectedNode == null) {
+            return null;
+        }
+        OboClass oc = (OboClass) selectedNode.getData();
+        Set<JsonAnnotation> annotations = oc.getAnnotationValues(annotation);
+        if (annotations == null || annotations.isEmpty()) {
+            return null;
+        }
+        return annotations.iterator().next().getValue();
     }
 
     public TreeNode getSelectedNode() {
