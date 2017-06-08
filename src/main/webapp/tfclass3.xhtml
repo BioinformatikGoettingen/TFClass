@@ -50,7 +50,7 @@
                                       class="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('about')}"/><br/>
                         <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('about')}" />
 
-                        <h:outputText value="Consensus sequence #{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"
+                        <h:outputText value="Consensus sequence"
                                       class="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/><br/>
                         <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}" />
 
@@ -60,9 +60,12 @@
                                       rendered="#{not empty classificationBean.getSpeciesOfSelectedNode().size()}"/>
                     </p:panel>
                     <p:panel id="human" rendered="#{classificationBean.selectedNode.type == 'Genus'}" header="Homo sapiens" class="reportPanel">
-                        #{classificationBean.getSelectedNodeforSpecies(9606)}
+                        <h:outputText value="Outlinks" class="bold"/>
+                        <p:dataList value="#{classificationBean.getXref(9606)}" var="link">
+                            <h:outputText value="#{link}" />
+                        </p:dataList>
                         
-                        https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=7229&lin=s
+                        
                     </p:panel>
                 </p:dashboard>
                 <div style="clear:both" />

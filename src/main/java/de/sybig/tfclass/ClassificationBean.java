@@ -4,7 +4,11 @@ import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -25,6 +29,7 @@ public class ClassificationBean {
 
     private ClassificationTree tfTree;
     private TreeNode selectedNode;
+    private Map<String, List<OboClass>> downstreamOfSelected;
 
     public ClassificationBean() {
         super();
@@ -38,22 +43,34 @@ public class ClassificationBean {
         return tfTree;
     }
 
-    public Set<OboClass> getSpeciesOfSelectedNode() {
+    public Set<String> getSpeciesOfSelectedNode() {
         if (selectedNode == null) {
             return null;
         }
+        return getDownstreamOfSelected().keySet();
+    }
 
-        OboClass oc = (OboClass) selectedNode.getData();
-        if (oc == null || oc.getProperties() == null) {
-            return null;
-        }
-        Set<OboClass> speciesList = new HashSet<OboClass>();
-        for (JsonObjectPropertyExpression props : (Set<JsonObjectPropertyExpression>) oc.getProperties()) {
-            if ("contains".equals(props.getProperty().getName())) { //todo use restriction object?
-                speciesList.add((OboClass) props.getTarget().getParents().iterator().next());
+    private Map<String, List<OboClass>> getDownstreamOfSelected() {
+        if (downstreamOfSelected == null) {
+            downstreamOfSelected = new HashMap<String, List<OboClass>>();
+            OboClass oc = (OboClass) selectedNode.getData();
+            if (oc == null || oc.getProperties() == null) {
+                return downstreamOfSelected;
+            }
+            downstreamOfSelected = new HashMap<String, List<OboClass>>();
+            for (JsonObjectPropertyExpression props : (Set<JsonObjectPropertyExpression>) oc.getProperties()) {
+                if ("contains".equals(props.getProperty().getName())) { //todo use restriction object?
+                    OboClass cls = (OboClass) props.getTarget();
+                    OboClass parent = (OboClass) cls.getParents().iterator().next();
+                    String taxon = ((JsonAnnotation) parent.getAnnotationValues("ncbi_taxon").iterator().next()).getValue();
+                    if (!downstreamOfSelected.containsKey(taxon)) {
+                        downstreamOfSelected.put(taxon, new LinkedList<OboClass>());
+                    }
+                    downstreamOfSelected.get(taxon).add(cls);
+                }
             }
         }
-        return speciesList;
+        return downstreamOfSelected;
     }
 
     public TreeNode getClassificationRoot() {
@@ -77,6 +94,23 @@ public class ClassificationBean {
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
+        downstreamOfSelected = null;
         this.selectedNode = selectedNode;
+    }
+
+    /// species specific
+    public List<String> getXref(String taxon) {
+        LinkedList<String> links = new LinkedList<String>();
+        List<OboClass> paralogs = getDownstreamOfSelected().get(taxon);
+        if (paralogs == null) {
+            return null;
+        }
+        for (OboClass prot : paralogs) {
+            Set<JsonAnnotation> xref = prot.getAnnotationValues("xref");
+            for (JsonAnnotation annotation : xref) {
+                links.add(annotation.getValue());
+            }
+        }
+        return links;
     }
 }
