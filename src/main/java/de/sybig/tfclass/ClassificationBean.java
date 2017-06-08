@@ -99,8 +99,8 @@ public class ClassificationBean {
     }
 
     /// species specific
-    public List<String> getXref(String taxon) {
-        LinkedList<String> links = new LinkedList<String>();
+    public List<List<String>> getXref(String taxon) {
+        List<List<String>> links = new LinkedList<List<String>>();
         List<OboClass> paralogs = getDownstreamOfSelected().get(taxon);
         if (paralogs == null) {
             return null;
@@ -108,9 +108,21 @@ public class ClassificationBean {
         for (OboClass prot : paralogs) {
             Set<JsonAnnotation> xref = prot.getAnnotationValues("xref");
             for (JsonAnnotation annotation : xref) {
-                links.add(annotation.getValue());
+                String link = annotation.getValue();
+                if (link.startsWith("ENSEMBL_GeneID:EN")){
+                    links.add(parseEnsembleLink(link));
+                }
             }
         }
         return links;
+    }
+    private List<String> parseEnsembleLink(String link){
+        LinkedList<String> out = new LinkedList<String>();
+        String id = link.replace("ENSEMBL_GeneID:","");
+        out.add("Ensembl gene");
+        out.add("http://www.ensembl.org/id/"+id);
+        out.add(id);
+        return out;
+        
     }
 }

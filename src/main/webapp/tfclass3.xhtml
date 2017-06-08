@@ -62,7 +62,8 @@
                     <p:panel id="human" rendered="#{classificationBean.selectedNode.type == 'Genus'}" header="Homo sapiens" class="reportPanel">
                         <h:outputText value="Outlinks" class="bold"/>
                         <p:dataList value="#{classificationBean.getXref(9606)}" var="link">
-                            <h:outputText value="#{link}" />
+                            <h:outputText value="#{link.get(0)}: " />
+                            <h:outputLink value="#{link.get(1)}" target="_blank" >#{link.get(2)}"</h:outputLink>
                         </p:dataList>
                         
                         
