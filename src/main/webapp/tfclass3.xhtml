@@ -15,7 +15,7 @@
     <p:panel>
         <h:form id="classificationForm">
 
-            <p:tree id="cfTree" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
+            <p:tree id="cfTree" class="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
                selectionMode="single" selection="#{classificationBean.selectedNode}" >
                 <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
                 <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
@@ -39,17 +39,23 @@
                     <h:outputText value="#{node.name} #{node.label}" />
                 </p:treeNode>
             </p:tree>
-            <p:panel id="detailsPanel">
-                <h2>Details</h2>
-                <p:panel>
+            <p:panel id="detailsPanel"  class="detailsPanel">
+                <p:growl id="msgs" showDetail="true" />
+                Dashboard
+            <p:dashboard  id="detailsDashboard" class="dashboard" model="#{detailsDashboard.model}">
+                <p:ajax event="reorder" listener="#{detailsDashboard.handleReorder}" update="msgs" />
+                <p:panel id="generalReport" header="General" class="reportPanel">
                     <h3>Genus information</h3>
                        
                         #{classificationBean.getSpeciesOfSelectedNode().size()} species this transcription factor.
                 </p:panel>
-                <p:panel rendered="#{classificationBean.selectedNode.type == 'Genus'}">
+               <p:panel id="human" rendered="#{classificationBean.selectedNode.type == 'Genus'}" header="Homo sapiens" class="reportPanel">
                     <h3>Homo sapiens</h3>
                 </p:panel>
-            </p:panel>
+            </p:dashboard>
+                  <div style="clear:both" />
+                 
+                </p:panel>
         </h:form>
     </p:panel>
 </body>
