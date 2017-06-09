@@ -100,6 +100,9 @@ public class ClassificationBean {
 
     /// species specific
     public List<List<String>> getXref(String taxon) {
+        if (!selectedNode.getType().equals("Genus")){
+            return null;
+        }
         List<List<String>> links = new LinkedList<List<String>>();
         List<OboClass> paralogs = getDownstreamOfSelected().get(taxon);
         if (paralogs == null) {
@@ -123,6 +126,5 @@ public class ClassificationBean {
         out.add("http://www.ensembl.org/id/"+id);
         out.add(id);
         return out;
-        
     }
 }
