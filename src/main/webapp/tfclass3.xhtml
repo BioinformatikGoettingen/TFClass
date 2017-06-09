@@ -59,15 +59,20 @@
                         <h:outputText value="#{classificationBean.getSpeciesOfSelectedNode().size()} species with this transcription factor." 
                                       rendered="#{not empty classificationBean.getSpeciesOfSelectedNode().size()}"/>
                     </p:panel>
-                    <p:panel id="human" rendered="#{classificationBean.selectedNode.type == 'Genus'}" header="Homo sapiens" class="reportPanel">
-                        <h:outputText value="Outlinks" class="bold"/>
-                        <p:dataList value="#{classificationBean.getXref(9606)}" var="link">
-                            <h:outputText value="#{link.get(0)}: " />
-                            <h:outputLink value="#{link.get(1)}" target="_blank" >#{link.get(2)}"</h:outputLink>
-                        </p:dataList>
-                        
-                        
+
+                    <p:panel id="human" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Homo sapiens" class="reportPanel">
+                        <ui:include src="species_report.xhtml">
+                            <ui:param name="taxon" value="9606" />
+                        </ui:include>
                     </p:panel>
+
+                    <p:panel id="Macacamulatta" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Macaca mulatta" class="reportPanel">
+                        <ui:include src="species_report.xhtml">
+                            <ui:param name="taxon" value="9544" />
+                        </ui:include>
+                    </p:panel>
+
+
                 </p:dashboard>
                 <div style="clear:both" />
 

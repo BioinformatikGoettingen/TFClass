@@ -20,46 +20,48 @@ import org.primefaces.model.DefaultDashboardModel;
  */
 @ManagedBean
 @ViewScoped
-public class DetailsDashboard  implements Serializable {
-     
+public class DetailsDashboard implements Serializable {
+
     private DashboardModel model;
-     
+
     @PostConstruct
     public void init() {
         model = new DefaultDashboardModel();
         DashboardColumn column1 = new DefaultDashboardColumn();
-    
+
         column1.addWidget("generalReport");
-                column1.addWidget("human");
-        
+        column1.addWidget("human");
+        column1.addWidget("Macacamulatta");
+
         model.addColumn(column1);
     }
-    
+
     public void handleReorder(DashboardReorderEvent event) {
         FacesMessage message = new FacesMessage();
         message.setSeverity(FacesMessage.SEVERITY_INFO);
         message.setSummary("Reordered: " + event.getWidgetId());
         message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
-         
+
         addMessage(message);
     }
-     
+
     public void handleClose(CloseEvent event) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Panel Closed", "Closed panel id:'" + event.getComponent().getId() + "'");
-         
+
         addMessage(message);
     }
-     
+
     public void handleToggle(ToggleEvent event) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, event.getComponent().getId() + " toggled", "Status:" + event.getVisibility().name());
-         
+
         addMessage(message);
     }
-     
+
     private void addMessage(FacesMessage message) {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
-     public DashboardModel getModel() {
+
+    public DashboardModel getModel() {
         return model;
     }
 }
