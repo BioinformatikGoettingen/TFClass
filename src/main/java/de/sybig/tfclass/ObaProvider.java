@@ -18,7 +18,7 @@ public class ObaProvider {
         connector = new OboConnector("TFClass-human");
         connectorMouse = new OboConnector("TFClass-mouse");
         connector3 = new OboConnector("tfclass");
-        connector3.setBaseURI("http://localhost:9998");
+        connector3.setBaseURI("http://oba:9998");
 //        connector.setBaseURI("http://speedy2:9997/");
     }
 

@@ -1,14 +1,12 @@
 package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
-import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import org.slf4j.Logger;
@@ -25,14 +23,26 @@ public class SpeciesBean {
     private final static Logger log = LoggerFactory.getLogger(SpeciesBean.class);
     private final OboConnector connector;
     private Set species;
-    private Map<String, String> speciesNames = new HashMap<String, String>();
-    private Map<String, String> genBankNames = new HashMap<String, String>();
+    private final Map<String, String> scientificNames = new HashMap<String, String>();
+    private final Map<String, String> speciesNames = new HashMap<String, String>();
+    private final Map<String, String> genBankNames = new HashMap<String, String>();
 
     public SpeciesBean() {
         System.out.println("New species bean");
         connector = ObaProvider.getInstance().getConnector3();
     }
-
+    public String getScientificName(String taxon) {
+        if (taxon.startsWith(taxon)){
+            taxon = taxon.substring(1, taxon.length());
+        }
+        System.out.println("taxon "+ taxon);
+        if (!scientificNames.containsKey(taxon)) {
+            scientificNames.put(taxon, getAnnotation(taxon, "label"));
+        }
+        System.out.println("- " + scientificNames.get(taxon));
+        return scientificNames.get(taxon);
+    }
+    
     public String getCommonName(String taxon) {
         if (!speciesNames.containsKey(taxon)) {
             speciesNames.put(taxon, getAnnotation(taxon, "common_name"));

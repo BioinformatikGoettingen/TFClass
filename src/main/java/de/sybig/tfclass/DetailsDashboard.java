@@ -29,10 +29,8 @@ public class DetailsDashboard implements Serializable {
         model = new DefaultDashboardModel();
         DashboardColumn column1 = new DefaultDashboardColumn();
 
-        column1.addWidget("generalReport");
-        column1.addWidget("human");
-        column1.addWidget("Macacamulatta");
-
+        column1.addWidget("s9544");
+        column1.addWidget("s9606");
         model.addColumn(column1);
     }
 
@@ -42,7 +40,7 @@ public class DetailsDashboard implements Serializable {
         message.setSummary("Reordered: " + event.getWidgetId());
         message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
 
-        addMessage(message);
+        addMessage(message); 
     }
 
     public void handleClose(CloseEvent event) {

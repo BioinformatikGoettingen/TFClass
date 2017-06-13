@@ -15,7 +15,7 @@
     <p:panel>
         <h:form id="classificationForm">
 
-            <p:tree id="cfTree" class="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
+            <p:tree id="cfTree" styleClass="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
                     selectionMode="single" selection="#{classificationBean.selectedNode}" >
                 <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
                 <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
@@ -39,34 +39,35 @@
                     <h:outputText value="#{node.name} #{node.label}" />
                 </p:treeNode>
             </p:tree>
-            <p:panel id="detailsPanel"  class="detailsPanel">
-                <p:growl id="msgs" showDetail="true" />
-                Dashboard
-                <p:dashboard  id="detailsDashboard" class="dashboard" model="#{detailsDashboard.model}">
-                    <p:ajax event="reorder" listener="#{detailsDashboard.handleReorder}" update="msgs" />
-                    <p:panel id="generalReport" header="General" class="reportPanel">
+            <p:panel id="detailsPanel"  styleClass="detailsPanel">
+                <p:dataList value="#{detailsDashboard.model.columns.get(0).getWidgets()}" var="widget">
+                    <h:outputText value="#{speciesBean.getScientificName(widget)}" />
+                </p:dataList>
+                 <p:panel id="generalReport" header="General" styleClass="reportPanel">
 
                         <h:outputText value="About #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
-                                      class="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('about')}"/><br/>
+                                      styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('about')}"/><br/>
                         <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('about')}" />
 
                         <h:outputText value="Consensus sequence"
-                                      class="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/><br/>
+                                      styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/><br/>
                         <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}" />
 
                         <h:outputText value="Distribution of #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
-                                      class="bold" rendered="#{not empty classificationBean.getSpeciesOfSelectedNode().size()}"/><br/>           
+                                      styleClass="bold" rendered="#{not empty classificationBean.getSpeciesOfSelectedNode().size()}"/><br/>           
                         <h:outputText value="#{classificationBean.getSpeciesOfSelectedNode().size()} species with this transcription factor." 
                                       rendered="#{not empty classificationBean.getSpeciesOfSelectedNode().size()}"/>
                     </p:panel>
-
-                    <p:panel id="human" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Homo sapiens" class="reportPanel">
-                        <ui:include src="species_report.xhtml">
-                            <ui:param name="taxon" value="9606" />
-                        </ui:include>
-                    </p:panel>
-
-                    <p:panel id="Macacamulatta" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Macaca mulatta" class="reportPanel">
+                <p:dashboard  id="detailsDashboard" styleClass="dashboard" model="#{detailsDashboard.model}">
+                    <p:ajax event="reorder" listener="#{detailsDashboard.handleReorder}"/>
+                    
+                        <p:panel id="s9544" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Homo sapiens" styleClass="reportPanel">
+                            <ui:include src="species_report.xhtml">
+                                <ui:param name="taxon" value="9606" />
+                            </ui:include>
+                        </p:panel>
+                   
+                    <p:panel id="s9606" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Macaca mulatta" clastyleClassss="reportPanel">
                         <ui:include src="species_report.xhtml">
                             <ui:param name="taxon" value="9544" />
                         </ui:include>
