@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Transcription factor classification</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="EmulateIE8"/>
+        <h:outputStylesheet name="css/screen.css"/>
+    </h:head>
+    <body>
+        <h1>Classification of Transcription Factors in Mammalia</h1>
+    <p:panel>
+        <h:form id="classificationForm">
+
+            <p:tree id="cfTree" styleClass="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
+                    selectionMode="single" selection="#{classificationBean.selectedNode}" cache="FALSE">
+                <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
+                <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Class"><img src="#{request.contextPath}/resources/class.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Family"><img src="#{request.contextPath}/resources/family.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Genus"><img src="#{request.contextPath}/resources/genus.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Factor species"><img src="#{request.contextPath}/resources/fspecies.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+                <p:treeNode type="Subfamily"><img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>
+                    <h:outputText value="#{node.name} #{node.label}" />
+                </p:treeNode>
+            </p:tree>
+            <p:panel id="detailsPanel"  styleClass="detailsPanel">
+                Selected species:
+                <p:dataList value="#{detailsDashboard.model.columns.get(0).getWidgets()}" var="widget"  styleClass="inlineList">
+                    <h:outputText value="#{speciesBean.getScientificName(widget)}" />
+                </p:dataList>   <p:commandLink value="more"  onsuccess="speciesSelectorDlg.show();"
+                                               update="speciesSelectionPanel"
+                                               />
+
+                <p:panel id="generalReport" header="General" styleClass="reportPanel">
+
+                    <h:outputText value="About #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
+                                  styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('about')}"/><br/>
+                    <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('about')}" />
+
+                    <h:outputText value="Consensus sequence"
+                                  styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/><br/>
+                    <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}" />
+
+                    <h:outputText value="Distribution of #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
+                                  styleClass="bold" rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/><br/>           
+                    <h:outputText value="#{classificationBean.getSpeciesOfSelectedNode().size()} species with this transcription factor." 
+                                  rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/>
+                </p:panel>
+                <p:dashboard  id="detailsDashboard" styleClass="dashboard" model="#{detailsDashboard.model}">
+                    <p:ajax event="reorder" listener="#{detailsDashboard.handleReorder}"/>
+
+                    <p:panel id="s9544" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Homo sapiens" styleClass="reportPanel">
+                        <ui:include src="species_report.xhtml">
+                            <ui:param name="taxon" value="9606" />
+                        </ui:include>
+                    </p:panel>
+
+                    <p:panel id="s9606" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Macaca mulatta" clastyleClassss="reportPanel">
+                        <ui:include src="species_report.xhtml">
+                            <ui:param name="taxon" value="9544" />
+                        </ui:include>
+                    </p:panel>
+
+
+                </p:dashboard>
+                <div style="clear:both" />
+
+            </p:panel>
+              <p:dialog widgetVar="speciesSelectorDlg" header="Select species">
+                
+                <p:outputPanel id="speciesSelectionPanel">
+                    <p>Selected the species for which a species report should be shown.</p>
+                    <p:tree value="#{speciesTree.root}" var="s" selectionMode="checkbox">
+                        <p:treeNode><h:outputText value="#{s.label}, #{speciesBean.getGenBankName(s.name)}" /></p:treeNode>
+                    </p:tree>
+                </p:outputPanel>
+            </p:dialog>
+            <p:dialog widgetVar="speciesSelectorDlg2" header="Select species">
+                
+                <p:outputPanel id="speciesSelectionPanel2">
+                    <p>Selected the species for which a species report should be shown.</p>
+                    <p:selectManyCheckbox id="grid2" value="#{speciesBean.selectedSpecies}" layout="grid" columns="2">
+                        <f:selectItems value="#{speciesBean.species}" var="s" itemLabel="#{s.label}, #{speciesBean.getGenBankName(s.name)}" itemValue="#{s}" />                
+                    </p:selectManyCheckbox>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </p:panel>
+</body>
+</html>

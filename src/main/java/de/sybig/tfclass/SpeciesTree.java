@@ -3,15 +3,14 @@ package de.sybig.tfclass;
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.client.OntologyClass;
-import de.sybig.oba.server.JsonAnnotation;
 import java.net.ConnectException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
@@ -21,15 +20,24 @@ import org.slf4j.LoggerFactory;
  *
  * @author juergen.doenitz@bioinf.med.uni-goettingen.de
  */
-public class ClassificationTree {
+@ManagedBean
+@SessionScoped
+public class SpeciesTree {
 
-    private final OboConnector connector;
-    private final Logger log = LoggerFactory.getLogger(ClassificationTree.class);
-    private CfNode root;
+    private OboConnector connector;
 
-    public ClassificationTree(OboConnector connector) {
-        super();
-        this.connector = connector;
+    private final Logger log = LoggerFactory.getLogger(SpeciesTree.class);
+    private SpeciesTree.SfNode root;
+
+    public SpeciesTree() {
+
+    }
+
+    private OboConnector getConnector() {
+        if (connector == null) {
+            connector = ObaProvider.getInstance().getConnector3();
+        }
+        return connector;
     }
 
     public TreeNode getRoot() {
@@ -37,10 +45,10 @@ public class ClassificationTree {
             try {
                 OboClass rootCls = getConnector().getRoot();
                 Set<OboClass> firstChildren = rootCls.getChildren();
-                root = new ClassificationTree.CfNode(rootCls, null);
+                root = new SpeciesTree.SfNode(rootCls, null);
                 for (OboClass child : firstChildren) {
-                    if (child.getName().equals("TF_class")) {
-                        root = new ClassificationTree.CfNode(child, null);
+                    if (child.getName().equals("species")) {
+                        root = new SpeciesTree.SfNode(child, null);
                     }
                 }
             } catch (ConnectException ex) {
@@ -51,27 +59,22 @@ public class ClassificationTree {
         return root;
     }
 
-    private OboConnector getConnector() {
-        return connector;
-    }
-
-    public class CfNode extends DefaultTreeNode {
+    public class SfNode extends DefaultTreeNode {
 
         final Lock lock = new ReentrantLock();
         private final OboClass oc;
         private volatile LinkedList<TreeNode> childnodes = null;
 
-        private CfNode(OboClass oc, TreeNode parent) {
+        private SfNode(OboClass oc, TreeNode parent) {
             super(oc, parent);
             this.oc = oc;
         }
 
-        public CfNode(String type, OboClass oc, TreeNode parent) {
-            super(type, oc, parent);
-            System.out.println(oc + " adding to " + parent);
-            this.oc = oc;
-        }
-
+//        public SfNode(String type, OboClass oc, TreeNode parent) {
+//            super(type, oc, parent);
+//            System.out.println(oc + " adding to " + parent);
+//            this.oc = oc;
+//        }
         @Override
         public synchronized List<TreeNode> getChildren() {
 
@@ -84,15 +87,15 @@ public class ClassificationTree {
 
                     if (cs != null) {
                         List<OboClass> oboChildren = new LinkedList<OboClass>(cs);
-                        Collections.sort(oboChildren, new ClassificationTree.NodeComparator());
+//                        Collections.sort(oboChildren, new ClassificationTree.NodeComparator());
                         for (OboClass child : oboChildren) {
-                            String type = "";
-                            for (JsonAnnotation a : (Set<JsonAnnotation>) child.getAnnotations()) {
-                                if (a.getName().equals("level")) {
-                                    type = a.getValue();
-                                }
-                            }
-                            new ClassificationTree.CfNode(type, child, this);
+//                            String type = "";
+//                            for (JsonAnnotation a : (Set<JsonAnnotation>) child.getAnnotations()) {
+//                                if (a.getName().equals("level")) {
+//                                    type = a.getValue();
+//                                }
+//                            }
+                            new SpeciesTree.SfNode(child, this);
                             // the node is added to children by the super class
                             // do not add it here
                         }
@@ -145,7 +148,7 @@ public class ClassificationTree {
             if (getClass() != obj.getClass()) {
                 return false;
             }
-            final CfNode other = (CfNode) obj;
+            final SfNode other = (SfNode) obj;
             if (this.oc != other.oc && (this.oc == null || !((OboClass) this.oc).getName().equals(((OboClass) other.oc).getName()))) {
                 return false;
             }
@@ -153,47 +156,4 @@ public class ClassificationTree {
         }
 
     }
-
-    public class NodeComparator implements Comparator<OboClass> {
-
-        @Override
-        public int compare(OboClass t, OboClass t1) {
-//            System.out.println(t.getName() + " compare to " + t1.getName());
-            if (isStringID(t.getName()) && isStringID(t1.getName())) {
-                String[] tnames = t.getName().split("\\.");
-                String[] t1names = t1.getName().split("\\.");
-                for (int i = 0; i < tnames.length; i++) {
-                    if (t1names.length <= i) {
-                        return -1;
-                    }
-                    int a = Integer.parseInt(tnames[i]);
-                    int b = Integer.parseInt(t1names[i]);
-                    if (a == 0) {
-                        if (b == 0) {
-                            continue;
-                        }
-                        return 1;
-                    }
-                    if (b == 0) {
-                        return -1;
-                    }
-                    if (a == b) {
-                        continue;
-                    }
-                    if (a > b) {
-                        return 1;
-                    }
-                    return -1;
-                }
-                return 0;
-            } else {
-                return t.getName().compareTo(t1.getName());
-            }
-        }
-    }
-
-    private boolean isStringID(String s) {
-        return s.matches("[0-9\\.]*");
-    }
-
 }

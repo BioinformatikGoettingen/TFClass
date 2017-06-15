@@ -112,6 +112,17 @@ h2{
     padding-left: 0px !important;
 }
 
+.inlineList ul{
+    padding-bottom: 20px;
+}
+
+.inlineList li{
+ display: inline;
+  list-style-type: none;
+  padding-right: 10px;
+  float: left;
+}
+
 #tfForm\:tfTree{
     width: 100%;
 }

@@ -5,7 +5,6 @@ import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +93,7 @@ public class ClassificationBean {
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
+//        System.out.println("selected note " + selectedNode.getChildren());
         downstreamOfSelected = null;
         this.selectedNode = selectedNode;
     }

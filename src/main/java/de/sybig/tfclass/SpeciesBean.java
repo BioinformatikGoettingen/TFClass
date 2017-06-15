@@ -4,7 +4,10 @@ import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.faces.bean.ApplicationScoped;
@@ -22,27 +25,27 @@ public class SpeciesBean {
 
     private final static Logger log = LoggerFactory.getLogger(SpeciesBean.class);
     private final OboConnector connector;
-    private Set species;
+    private List<OboClass> species;
     private final Map<String, String> scientificNames = new HashMap<String, String>();
     private final Map<String, String> speciesNames = new HashMap<String, String>();
     private final Map<String, String> genBankNames = new HashMap<String, String>();
+    private ArrayList<OboClass> selectedSpecies;
 
     public SpeciesBean() {
         System.out.println("New species bean");
         connector = ObaProvider.getInstance().getConnector3();
     }
+
     public String getScientificName(String taxon) {
-        if (taxon.startsWith(taxon)){
+        if (taxon.startsWith("s")) {
             taxon = taxon.substring(1, taxon.length());
         }
-        System.out.println("taxon "+ taxon);
         if (!scientificNames.containsKey(taxon)) {
             scientificNames.put(taxon, getAnnotation(taxon, "label"));
         }
-        System.out.println("- " + scientificNames.get(taxon));
         return scientificNames.get(taxon);
     }
-    
+
     public String getCommonName(String taxon) {
         if (!speciesNames.containsKey(taxon)) {
             speciesNames.put(taxon, getAnnotation(taxon, "common_name"));
@@ -71,15 +74,51 @@ public class SpeciesBean {
         return null;
     }
 
-    private Set<OboClass> getSpecies() {
+    public List<OboClass> getSpecies() {
         if (species == null) {
             try {
                 OboClass speciesRoot = connector.searchCls("species").getEntities().get(0);
-                species = speciesRoot.getChildren();
+                Set speciesSet = speciesRoot.getChildren();
+                species = new ArrayList<OboClass>(speciesSet);
+                species.sort(new ScientificNameComparator());
+
             } catch (ConnectException ex) {
                 log.error("could not get root node for the species", ex);
             }
         }
         return species;
+    }
+
+    public List<OboClass> getSelectedSpecies() {
+        if (selectedSpecies == null) {
+            selectedSpecies = new ArrayList<OboClass>();
+            //selectedSpecies.addAll(getSpecies());
+        }
+        return selectedSpecies;
+    }
+
+    public void setSelectedSpecies(List<OboClass> species) {
+        System.out.println("selectes " + species);
+    }
+
+    public class ScientificNameComparator implements Comparator {
+
+        @Override
+        public int compare(Object o1, Object o2) {
+
+            OboClass cls1 = (OboClass) o1;
+            OboClass cls2 = (OboClass) o2;
+
+            String name1 = getScientificName(cls1.getName());
+            String name2 = getScientificName(cls2.getName());
+            if (name1 == null){
+                return 1;
+            }
+            if (name2 == null){
+                return -1;
+            }
+            return name1.compareTo(name2);
+        }
+
     }
 }
