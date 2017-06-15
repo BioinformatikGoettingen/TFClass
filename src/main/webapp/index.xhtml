@@ -82,17 +82,19 @@
                 <div style="clear:both" />
 
             </p:panel>
-              <p:dialog widgetVar="speciesSelectorDlg" header="Select species">
-                
+            <p:dialog widgetVar="speciesSelectorDlg" header="Select species">
+
                 <p:outputPanel id="speciesSelectionPanel">
                     <p>Selected the species for which a species report should be shown.</p>
-                    <p:tree value="#{speciesTree.root}" var="s" selectionMode="checkbox">
-                        <p:treeNode><h:outputText value="#{s.label}, #{speciesBean.getGenBankName(s.name)}" /></p:treeNode>
-                    </p:tree>
+                    <p:scrollPanel mode="native" style="width:500px;height:600px">
+                        <p:tree value="#{speciesTree.root}" var="s" selectionMode="checkbox" style="width: 100%">
+                            <p:treeNode><h:outputText value="#{s.label}, #{speciesBean.getGenBankName(s.name)}" /></p:treeNode>
+                        </p:tree>
+                    </p:scrollPanel>
                 </p:outputPanel>
             </p:dialog>
             <p:dialog widgetVar="speciesSelectorDlg2" header="Select species">
-                
+
                 <p:outputPanel id="speciesSelectionPanel2">
                     <p>Selected the species for which a species report should be shown.</p>
                     <p:selectManyCheckbox id="grid2" value="#{speciesBean.selectedSpecies}" layout="grid" columns="2">

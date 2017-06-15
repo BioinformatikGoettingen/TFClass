@@ -68,7 +68,6 @@ public class ClassificationTree {
 
         public CfNode(String type, OboClass oc, TreeNode parent) {
             super(type, oc, parent);
-            System.out.println(oc + " adding to " + parent);
             this.oc = oc;
         }
 
@@ -158,7 +157,6 @@ public class ClassificationTree {
 
         @Override
         public int compare(OboClass t, OboClass t1) {
-//            System.out.println(t.getName() + " compare to " + t1.getName());
             if (isStringID(t.getName()) && isStringID(t1.getName())) {
                 String[] tnames = t.getName().split("\\.");
                 String[] t1names = t1.getName().split("\\.");

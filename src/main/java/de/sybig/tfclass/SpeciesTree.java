@@ -4,6 +4,8 @@ import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.client.OntologyClass;
 import java.net.ConnectException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +61,26 @@ public class SpeciesTree {
         return root;
     }
 
+    private static class NodeComparator implements Comparator{
+
+
+        @Override
+        public int compare(Object o1, Object o2) {
+            if (!(o1 instanceof OboClass && o2 instanceof OboClass)){
+                return 0;
+            }
+            String name1 = ((OboClass)o1).getLabel();
+            String name2 = ((OboClass)o2).getLabel();
+            if (name1 == null){
+                return 1;
+            }
+            if (name2 == null){
+                return -1;
+            }
+            return name1.compareTo(name2);
+        }
+    }
+
     public class SfNode extends DefaultTreeNode {
 
         final Lock lock = new ReentrantLock();
@@ -70,11 +92,6 @@ public class SpeciesTree {
             this.oc = oc;
         }
 
-//        public SfNode(String type, OboClass oc, TreeNode parent) {
-//            super(type, oc, parent);
-//            System.out.println(oc + " adding to " + parent);
-//            this.oc = oc;
-//        }
         @Override
         public synchronized List<TreeNode> getChildren() {
 
@@ -87,12 +104,8 @@ public class SpeciesTree {
 
                     if (cs != null) {
                         List<OboClass> oboChildren = new LinkedList<OboClass>(cs);
-//                        Collections.sort(oboChildren, new ClassificationTree.NodeComparator());
+                        Collections.sort(oboChildren, new SpeciesTree.NodeComparator());
                         for (OboClass child : oboChildren) {
-//                            String type = "";
-//                            for (JsonAnnotation a : (Set<JsonAnnotation>) child.getAnnotations()) {
-//                                if (a.getName().equals("level")) {
-//                                    type = a.getValue();
 //                                }
 //                            }
                             new SpeciesTree.SfNode(child, this);
