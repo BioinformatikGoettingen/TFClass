@@ -1,9 +1,13 @@
 package de.sybig.tfclass;
 
+import de.sybig.oba.client.OboClass;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.CloseEvent;
@@ -18,8 +22,8 @@ import org.primefaces.model.DefaultDashboardModel;
  *
  * @author juergen.doenitz@bioinf.med.uni-goettingen.de
  */
-@ManagedBean
-@ViewScoped
+@ManagedBean(name="dashboard")
+@SessionScoped
 public class DetailsDashboard implements Serializable {
 
     private DashboardModel model;
@@ -29,11 +33,31 @@ public class DetailsDashboard implements Serializable {
         model = new DefaultDashboardModel();
         DashboardColumn column1 = new DefaultDashboardColumn();
 
-        column1.addWidget("s9544");
-        column1.addWidget("s9606");
+//        column1.addWidget("s9544");
+//        column1.addWidget("s9606");
         model.addColumn(column1);
     }
 
+    public void setSelectedSpecies(List<OboClass> selected){
+        System.out.println("previous enabled widgets " + model.getColumn(0).getWidgetCount());
+        List<String> newNames = new ArrayList<String>();
+        for (OboClass cls : selected){
+            newNames.add("s"+cls.getName());
+        }
+        List<String> current = model.getColumn(0).getWidgets();
+        for (String item : current){
+            if (!newNames.contains(item)){
+                model.getColumn(0).removeWidget(item);
+            }
+        }
+        for (String item : newNames){
+            if (!current.contains(item)){
+                model.getColumn(0).addWidget(item);
+            }
+        }
+        System.out.println("post enabled widgets " + model.getColumn(0).getWidgetCount());
+    }
+    
     public void handleReorder(DashboardReorderEvent event) {
         FacesMessage message = new FacesMessage();
         message.setSeverity(FacesMessage.SEVERITY_INFO);

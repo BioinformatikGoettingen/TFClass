@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <p:dashboard  id="dashboard" styleClass="dashboard" model="#{dashboard.model}">
+        <p:ajax event="reorder" listener="#{dashboard.handleReorder}"/>
+
+        <p:panel id="s9606" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Homo sapiens" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9606" />
+            </ui:include>
+        </p:panel>
+
+        <p:panel id="s9544" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Macaca mulatta" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
+    </p:dashboard>
+</ui:composition>

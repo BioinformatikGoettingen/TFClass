@@ -68,6 +68,7 @@ h2{
 
 .reportPanel{
     width: 100%;
+    border: solid #ffcc62 1px !important;
 }
 
 #middleTD{

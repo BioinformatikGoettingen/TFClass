@@ -29,10 +29,9 @@ public class SpeciesBean {
     private final Map<String, String> scientificNames = new HashMap<String, String>();
     private final Map<String, String> speciesNames = new HashMap<String, String>();
     private final Map<String, String> genBankNames = new HashMap<String, String>();
-    private ArrayList<OboClass> selectedSpecies;
+//    private ArrayList<OboClass> selectedSpecies;
 
     public SpeciesBean() {
-        System.out.println("New species bean");
         connector = ObaProvider.getInstance().getConnector3();
     }
 
@@ -89,17 +88,17 @@ public class SpeciesBean {
         return species;
     }
 
-    public List<OboClass> getSelectedSpecies() {
-        if (selectedSpecies == null) {
-            selectedSpecies = new ArrayList<OboClass>();
-            //selectedSpecies.addAll(getSpecies());
-        }
-        return selectedSpecies;
-    }
-
-    public void setSelectedSpecies(List<OboClass> species) {
-        System.out.println("selectes " + species);
-    }
+//    public List<OboClass> getSelectedSpecies() {
+//        if (selectedSpecies == null) {
+//            selectedSpecies = new ArrayList<OboClass>();
+//            //selectedSpecies.addAll(getSpecies());
+//        }
+//        return selectedSpecies;
+//    }
+//
+//    public void setSelectedSpecies(List<OboClass> species) {
+//        System.out.println("selectes " + species);
+//    }
 
     public class ScientificNameComparator implements Comparator {
 

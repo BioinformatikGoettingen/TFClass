@@ -41,10 +41,16 @@
             </p:tree>
             <p:panel id="detailsPanel"  styleClass="detailsPanel">
                 Selected species:
-                <p:dataList value="#{detailsDashboard.model.columns.get(0).getWidgets()}" var="widget"  styleClass="inlineList">
+                  <h:outputText value="Number: #{speciesSelection.getSelectedNodes()}" />
+                  <p:dataList value="#{speciesSelection.getSelectedNodes()}" var="s">
+                      <h:outputText value="#{s}" />
+                  </p:dataList>
+                <p:dataList id="selectedSpeciesList" value="#{dashboard.model.columns.get(0).getWidgets()}" var="widget"  styleClass="inlineList">
+                  
                     <h:outputText value="#{speciesBean.getScientificName(widget)}" />
-                </p:dataList>   <p:commandLink value="more"  onsuccess="speciesSelectorDlg.show();"
-                                               update="speciesSelectionPanel"
+                </p:dataList>   
+                <p:commandLink value="more"  onsuccess="speciesSelectorDlg.show();"
+
                                                />
 
                 <p:panel id="generalReport" header="General" styleClass="reportPanel">
@@ -62,47 +68,25 @@
                     <h:outputText value="#{classificationBean.getSpeciesOfSelectedNode().size()} species with this transcription factor." 
                                   rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/>
                 </p:panel>
-                <p:dashboard  id="detailsDashboard" styleClass="dashboard" model="#{detailsDashboard.model}">
-                    <p:ajax event="reorder" listener="#{detailsDashboard.handleReorder}"/>
-
-                    <p:panel id="s9544" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Homo sapiens" styleClass="reportPanel">
-                        <ui:include src="species_report.xhtml">
-                            <ui:param name="taxon" value="9606" />
-                        </ui:include>
-                    </p:panel>
-
-                    <p:panel id="s9606" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Macaca mulatta" clastyleClassss="reportPanel">
-                        <ui:include src="species_report.xhtml">
-                            <ui:param name="taxon" value="9544" />
-                        </ui:include>
-                    </p:panel>
-
-
-                </p:dashboard>
+                <ui:include src="dashboard.xhtml" />
                 <div style="clear:both" />
 
             </p:panel>
             <p:dialog widgetVar="speciesSelectorDlg" header="Select species">
-
+                <p:ajax event="close" listener="#{speciesSelection.update()}"
+                        update=":classificationForm:detailsPanel"/>
                 <p:outputPanel id="speciesSelectionPanel">
                     <p>Selected the species for which a species report should be shown.</p>
                     <p:scrollPanel mode="native" style="width:500px;height:600px">
-                        <p:tree value="#{speciesTree.root}" var="s" selectionMode="checkbox" style="width: 100%">
+                        <p:tree value="#{speciesTree.root}" var="s" style="width: 100%"
+                                selectionMode="checkbox" selection="#{speciesSelection.selectedNodes}">
                             <p:treeNode><h:outputText value="#{s.label}, #{speciesBean.getGenBankName(s.name)}" /></p:treeNode>
                         </p:tree>
                     </p:scrollPanel>
                 </p:outputPanel>
             </p:dialog>
-            <p:dialog widgetVar="speciesSelectorDlg2" header="Select species">
-
-                <p:outputPanel id="speciesSelectionPanel2">
-                    <p>Selected the species for which a species report should be shown.</p>
-                    <p:selectManyCheckbox id="grid2" value="#{speciesBean.selectedSpecies}" layout="grid" columns="2">
-                        <f:selectItems value="#{speciesBean.species}" var="s" itemLabel="#{s.label}, #{speciesBean.getGenBankName(s.name)}" itemValue="#{s}" />                
-                    </p:selectManyCheckbox>
-                </p:outputPanel>
-            </p:dialog>
         </h:form>
     </p:panel>
+
 </body>
 </html>
