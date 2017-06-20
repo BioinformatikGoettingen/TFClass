@@ -146,12 +146,14 @@ public class SpeciesTree {
         @Override
         public int hashCode() {
             int hash = 3;
-            hash = 17 * hash + (this.oc != null ? this.oc.hashCode() : 0);
+            hash = 19 * hash + (this.oc != null ? this.oc.hashCode() : 0);
+            System.out.println(hash + " hash for " + this);
             return hash;
         }
 
         @Override
         public boolean equals(Object obj) {
+            System.out.println(this + " equal to " + obj);
             if (this == obj) {
                 return true;
             }
@@ -159,10 +161,12 @@ public class SpeciesTree {
                 return false;
             }
             if (getClass() != obj.getClass()) {
+                System.out.println(this + " not equal 1" + obj);
                 return false;
             }
             final SfNode other = (SfNode) obj;
             if (this.oc != other.oc && (this.oc == null || !((OboClass) this.oc).getName().equals(((OboClass) other.oc).getName()))) {
+                          System.out.println(this + " not equal 2" + obj);
                 return false;
             }
             return true;

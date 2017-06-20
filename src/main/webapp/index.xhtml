@@ -45,10 +45,10 @@
                   <p:dataList value="#{speciesSelection.getSelectedNodes()}" var="s">
                       <h:outputText value="#{s}" />
                   </p:dataList>
-                <p:dataList id="selectedSpeciesList" value="#{dashboard.model.columns.get(0).getWidgets()}" var="widget"  styleClass="inlineList">
+<!--                <p:dataList id="selectedSpeciesList" value="#{dashboard.model.columns.get(0).getWidgets()}" var="widget"  styleClass="inlineList">
                   
                     <h:outputText value="#{speciesBean.getScientificName(widget)}" />
-                </p:dataList>   
+                </p:dataList>   -->
                 <p:commandLink value="more"  onsuccess="speciesSelectorDlg.show();"
 
                                                />

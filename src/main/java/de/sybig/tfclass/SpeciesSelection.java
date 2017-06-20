@@ -1,16 +1,14 @@
 package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -19,7 +17,7 @@ import org.primefaces.model.TreeNode;
  */
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class SpeciesSelection {
     
     TreeNode[] selectedNodes;
@@ -35,12 +33,23 @@ public class SpeciesSelection {
         
 //        Set<TreeNode> set = new HashSet<TreeNode>(Arrays.asList(selectedNodes));
 //        selectedNodes = set.toArray(selectedNodes);
-//        System.out.println("getting selected species " + selectedNodes.length);
+        System.out.println("getting selected species " + selectedNodes.length);
         return selectedNodes;
     }
 
     public void setSelectedNodes(TreeNode[] selectedNodes) {
-        this.selectedNodes = selectedNodes;
+        
+        Set<TreeNode> selSet = new HashSet<TreeNode>();
+        for (TreeNode tn : selectedNodes){
+            if (! selSet.contains(tn)){
+                selSet.add(tn);
+            }else{
+                System.out.println("removing " + tn);
+            }
+        }
+        
+        this.selectedNodes = selSet.toArray(new TreeNode[selSet.size()]);
+        System.out.println("setting selected nodes " + this.selectedNodes);
         
     }
     
@@ -61,6 +70,7 @@ public class SpeciesSelection {
     }
 
     private TreeNode[] getDefaultSpecies() {
+        System.out.println("setting default species");
         TreeNode root = speciesTree.getRoot();
         TreeNode node = searchSpecies(speciesTree.getRoot(), "9606"); //human
         TreeNode[] defaultSpecies = new TreeNode[1];

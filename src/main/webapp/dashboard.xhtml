@@ -20,5 +20,41 @@
                 <ui:param name="taxon" value="9544" />
             </ui:include>
         </p:panel>
+
+        <p:panel id="s10090" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Mus musculus" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
+
+        <p:panel id="s9483" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Callithrix jacchus" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
+        
+        <p:panel id="s10116" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Rattus norvegicus" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
+        
+        <p:panel id="s30611" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Otolemur garnettii" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
+        
+        <p:panel id="s43179" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Ictidomys tridecemlineatus" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
+        
+        <p:panel id="s9823" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="Sus scrofa" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="9544" />
+            </ui:include>
+        </p:panel>
     </p:dashboard>
 </ui:composition>
