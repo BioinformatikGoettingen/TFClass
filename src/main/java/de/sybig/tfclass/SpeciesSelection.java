@@ -33,7 +33,7 @@ public class SpeciesSelection {
         
 //        Set<TreeNode> set = new HashSet<TreeNode>(Arrays.asList(selectedNodes));
 //        selectedNodes = set.toArray(selectedNodes);
-        System.out.println("getting selected species " + selectedNodes.length);
+        //System.out.println("getting selected species " + selectedNodes.length);
         return selectedNodes;
     }
 
@@ -47,10 +47,8 @@ public class SpeciesSelection {
                 System.out.println("removing " + tn);
             }
         }
-        
         this.selectedNodes = selSet.toArray(new TreeNode[selSet.size()]);
-        System.out.println("setting selected nodes " + this.selectedNodes);
-        
+        //System.out.println("setting selected nodes " + this.selectedNodes);
     }
     
     public void update(){

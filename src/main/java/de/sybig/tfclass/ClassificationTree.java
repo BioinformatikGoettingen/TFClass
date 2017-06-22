@@ -1,9 +1,14 @@
 package de.sybig.tfclass;
 
+import com.sun.jersey.api.client.UniformInterfaceException;
+import de.sybig.oba.client.Obo2DClassList;
 import de.sybig.oba.client.OboClass;
+import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.client.OntologyClass;
 import de.sybig.oba.server.JsonAnnotation;
+import de.sybig.oba.server.JsonCls;
+import de.sybig.oba.server.JsonClsList;
 import java.net.ConnectException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +31,7 @@ public class ClassificationTree {
     private final OboConnector connector;
     private final Logger log = LoggerFactory.getLogger(ClassificationTree.class);
     private CfNode root;
+    private LinkedList<String> fieldList;
 
     public ClassificationTree(OboConnector connector) {
         super();
@@ -51,6 +57,94 @@ public class ClassificationTree {
         return root;
     }
 
+    public TreeNode expandNode(OboClass searchedClass) {
+        if (searchedClass == null) {
+            log.warn("can not expand tree, searched class is null");
+            return null;
+        }
+        Obo2DClassList paths = null;
+        try {
+            OboClass r = getConnector().getRoot();
+            System.out.println("connector " + getConnector().getBaseURI());
+            paths = getConnector().xDownstreamOfY(searchedClass, root.getOc());
+        } catch (UniformInterfaceException ex) {
+            log.warn("An error occured while getting the path to root for {}, {}", searchedClass, ex);
+            return null;
+        } catch (ConnectException ex) {
+            log.error("could not connect to the OBA server");
+        }
+        if (paths == null || paths.getEntities() == null || paths.getEntities().size() < 1) {
+            log.warn("no path to expand for {}", searchedClass);
+            return null;
+        }
+        JsonClsList<JsonCls> path = paths.get(0);
+        //System.out.println("path the expand "+ path);
+        TreeNode lastExpanded = getRoot();
+        for (int i = path.getEntities().size() - 2; i > 0; i--) {
+            JsonCls cls = path.getEntities().get(i);
+            lastExpanded = expandChild(lastExpanded, cls);
+            if (lastExpanded == null) {
+                log.warn("could not expand path");
+                return null;
+            }
+        }
+        collapseTree(searchedClass);
+        return searchChildForObo(lastExpanded, path.get(0));
+
+    }
+
+    private TreeNode expandChild(TreeNode lastExpanded, JsonCls cls) {
+        TreeNode child = searchChildForObo(lastExpanded, cls);
+        if (child == null) {
+            return null;
+        }
+        child.setExpanded(true);
+        return child;
+    }
+
+    private TreeNode searchChildForObo(TreeNode parent, JsonCls cls) {
+        for (TreeNode child : parent.getChildren()) {
+            if (((OboClass) child.getData()).getName().equals(cls.getName())) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+        private void collapseTree(OboClass oboClass) {
+        TreeNode treeNode = searchTreeNode(getRoot(), oboClass);
+//        System.out.println("collapsing " + treeNode);
+        treeNode.setExpanded(false);
+    }
+    
+    void collapseTree() {
+        for (TreeNode child : getRoot().getChildren()) {
+            collapseTree(child);
+            child.setSelected(false);
+        }
+    }
+
+    public void collapseTree(TreeNode n) {
+        n.setSelected(false);
+        n.setExpanded(false);
+        for (TreeNode child : n.getChildren()) {
+            if (child.isExpanded()) {
+                collapseTree(child);
+            }
+        }
+    }
+  private TreeNode searchTreeNode(TreeNode parent, OboClass pattern) {
+        for (TreeNode child : parent.getChildren()) {
+            if (((OboClass) child.getData()).getName().equals(pattern.getName())) {
+                return child;
+            }
+            TreeNode tn = searchTreeNode(child, pattern);
+            if (tn != null) {
+                return tn;
+            }
+        }
+        return null;
+    }
     private OboConnector getConnector() {
         return connector;
     }

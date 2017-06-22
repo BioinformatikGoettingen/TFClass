@@ -147,7 +147,6 @@ public class SpeciesTree {
         public int hashCode() {
             int hash = 3;
             hash = 19 * hash + (this.oc != null ? this.oc.hashCode() : 0);
-            System.out.println(hash + " hash for " + this);
             return hash;
         }
 

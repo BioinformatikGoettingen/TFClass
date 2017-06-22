@@ -1,6 +1,7 @@
 package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
+import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
@@ -26,9 +27,11 @@ public class ClassificationBean {
     private final OboConnector connector;
     private static final Logger log = LoggerFactory.getLogger(ClassificationBean.class);
 
-    private ClassificationTree tfTree;
+    private ClassificationTree classificationTree;
     private TreeNode selectedNode;
     private Map<String, List<OboClass>> downstreamOfSelected;
+    private LinkedList<String> fieldList;
+    private OboClass searchedClass;
 
     public ClassificationBean() {
         super();
@@ -36,10 +39,10 @@ public class ClassificationBean {
     }
 
     public ClassificationTree getTfTree() {
-        if (tfTree == null) {
-            tfTree = new ClassificationTree(connector);
+        if (classificationTree == null) {
+            classificationTree = new ClassificationTree(connector);
         }
-        return tfTree;
+        return classificationTree;
     }
 
     public Set<String> getSpeciesOfSelectedNode() {
@@ -47,6 +50,56 @@ public class ClassificationBean {
             return null;
         }
         return getDownstreamOfSelected().keySet();
+    }
+
+    public List<OboClass> search(String pattern) {
+        System.out.println("searching for " + pattern);
+        String searchPattern = pattern;
+        try {
+            OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
+            if (searchResult == null || searchResult.getEntities() == null) {
+                return null;
+            }
+            return searchResult.getEntities();
+        } catch (Exception ex) {
+            log.warn("An error occured while searching in the ontology ", ex);
+            return null;
+        }
+    }
+
+    public OboClass getSearchedClass() {
+        return searchedClass;
+    }
+
+    public void setSearchedClass(OboClass searchedClass) {
+        this.searchedClass = searchedClass;
+    }
+
+    public TreeNode selectSearched() {
+        collapseAll();
+        TreeNode last = classificationTree.expandNode(getSearchedClass());
+        if (last == null) {
+            System.out.println(last + " for " + getSearchedClass());
+            return null;
+        }
+        last.setSelected(true);
+        setSelectedNode(last);
+        return last;
+    }
+
+    public void collapseAll() {
+        selectedNode = null;
+        getTfTree().collapseTree();
+    }
+
+    private List<String> getFieldList() {
+        if (fieldList == null) {
+            fieldList = new LinkedList<String>();
+            fieldList.add("className");
+            fieldList.add("label");
+            fieldList.add("xref");
+        }
+        return fieldList;
     }
 
     private Map<String, List<OboClass>> getDownstreamOfSelected() {
@@ -100,7 +153,7 @@ public class ClassificationBean {
 
     /// species specific
     public List<List<String>> getXref(String taxon) {
-        if (!selectedNode.getType().equals("Genus")){
+        if (!selectedNode.getType().equals("Genus")) {
             return null;
         }
         List<List<String>> links = new LinkedList<List<String>>();
@@ -112,19 +165,36 @@ public class ClassificationBean {
             Set<JsonAnnotation> xref = prot.getAnnotationValues("xref");
             for (JsonAnnotation annotation : xref) {
                 String link = annotation.getValue();
-                if (link.startsWith("ENSEMBL_GeneID:EN")){
+                if (link.startsWith("ENSEMBL_GeneID:EN")) {
                     links.add(parseEnsembleLink(link));
+                } else if (link.startsWith("TRANSFAC")) {
+                    System.out.println("adding transfac link");
+                    links.add(parseTransfacLink(link));
                 }
             }
         }
         return links;
     }
-    private List<String> parseEnsembleLink(String link){
+
+    private List<String> parseEnsembleLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
-        String id = link.replace("ENSEMBL_GeneID:","");
+        String id = link.replace("ENSEMBL_GeneID:", "");
         out.add("Ensembl gene");
-        out.add("http://www.ensembl.org/id/"+id);
+        out.add("http://www.ensembl.org/id/" + id);
         out.add(id);
+        return out;
+    }
+
+    private List<String> parseTransfacLink(String link) {
+        LinkedList<String> out = new LinkedList<String>();
+        String[] id = link.replace("TANSFAC:", "").split(",");
+        out.add("TRANSFAC");
+        out.add("https://portal.biobase-international.com/cgi-bin/knowledgebase/pageview.cgi?view=LocusReport&protein_acc=" + id[0]);
+        if (id.length > 1) {
+            out.add(id[1]);
+        } else {
+            out.add(id[1]);
+        }
         return out;
     }
 }
