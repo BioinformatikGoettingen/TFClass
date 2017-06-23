@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.File;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.model.TreeNode;
@@ -32,6 +33,7 @@ public class ClassificationBean {
     private Map<String, List<OboClass>> downstreamOfSelected;
     private LinkedList<String> fieldList;
     private OboClass searchedClass;
+    private HashMap<String, String> fastaMap;
 
     public ClassificationBean() {
         super();
@@ -146,9 +148,37 @@ public class ClassificationBean {
     }
 
     public void setSelectedNode(TreeNode selectedNode) {
-//        System.out.println("selected note " + selectedNode.getChildren());
         downstreamOfSelected = null;
         this.selectedNode = selectedNode;
+    }
+
+    public String getFastaForSelected() {
+        if (getSelectedNode() == null) {
+            return null;
+        }
+        return getFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
+    }
+
+    private Map<String, String> getFastaMap() {
+        if (fastaMap == null) {
+            fastaMap = new HashMap<String, String>();
+            String dir = System.getenv("static_suppl_dir");
+            if (dir == null) {
+                dir = System.getProperty("static_suppl_dir");
+            }
+            if (dir == null) {
+                return fastaMap;
+            }
+            File dirf = new File(dir);
+            File[] files = dirf.listFiles();
+            for (File f : files) {
+                String name = f.getName();
+                if (name.endsWith("_mammalia.fasta")) {
+                    fastaMap.put(name.substring(0, name.indexOf("_")), name);
+                }
+            }
+        }
+        return fastaMap;
     }
 
     /// species specific

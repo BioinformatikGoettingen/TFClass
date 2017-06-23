@@ -14,7 +14,10 @@
         <h1>Classification of Transcription Factors in Mammalia</h1>
     <p:panel>
         <h:form id="classificationForm">
-             <h3>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h3>
+             <div style="float:right">
+                 <h2><a href="about.jsf">About TFClass</a></h2>
+             </div>
+            <h3>Search:<p:button value="?" title="Help" onclick="return false" id="searchHelpButton" styleClass="helpBtn"/></h3>
             <p:tooltip for="searchHelpButton"
                        value="Searches in the label, ID and external references."
                        styleClass="helpTooltip" showEvent="click"  />
@@ -27,7 +30,7 @@
             </p:autoComplete>
             <p:commandButton type="submit" id="voidBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" />
             <p:defaultCommand target="voidBtn"/>
-            
+
             <p:tree id="cfTree" styleClass="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
                     selectionMode="single" selection="#{classificationBean.selectedNode}" cache="FALSE">
                 <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
@@ -76,13 +79,20 @@
                                   styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/><br/>
                     <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}" />
 
-                    
+
                     <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('seed')}">
-                    <h:outputText value="Seed sites" styleClass="bold" />
-                    Ein kurzer Text?
-                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
+                        <h:outputText value="Seed sites" styleClass="bold" />
+                        Ein kurzer Text?
+                        <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
                     </p:outputPanel>
-                    
+
+
+
+                    <p:outputPanel rendered="#{not empty classificationBean.getFastaForSelected()}">
+                        <h:outputText value="FASTA file for the protein"  styleClass="bold" />
+                        <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}" >FASTA</h:outputLink>
+                    </p:outputPanel>
+
                     <h:outputText value="Distribution of #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
                                   styleClass="bold" rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/><br/>           
                     <h:outputText value="#{classificationBean.getSpeciesOfSelectedNode().size()} species with this transcription factor." 
