@@ -196,20 +196,32 @@ public class ClassificationBean {
             for (JsonAnnotation annotation : xref) {
                 String link = annotation.getValue();
                 if (link.startsWith("ENSEMBL_GeneID:EN")) {
+                    links.add(parseEnsembleGeneLink(link));
+                } else if (link.startsWith("ENSEMBL:EN")) {
                     links.add(parseEnsembleLink(link));
                 } else if (link.startsWith("TRANSFAC")) {
-                    System.out.println("adding transfac link");
                     links.add(parseTransfacLink(link));
+                } else if (link.startsWith("UNIPROT")) {
+                    links.add(parseUniprotLink(link));
                 }
             }
         }
         return links;
     }
 
-    private List<String> parseEnsembleLink(String link) {
+    private List<String> parseEnsembleGeneLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String id = link.replace("ENSEMBL_GeneID:", "");
         out.add("Ensembl gene");
+        out.add("http://www.ensembl.org/id/" + id);
+        out.add(id);
+        return out;
+    }
+
+    private List<String> parseEnsembleLink(String link) {
+        LinkedList<String> out = new LinkedList<String>();
+        String id = link.replace("ENSEMBL:", "");
+        out.add("Ensembl");
         out.add("http://www.ensembl.org/id/" + id);
         out.add(id);
         return out;
@@ -223,8 +235,17 @@ public class ClassificationBean {
         if (id.length > 1) {
             out.add(id[1]);
         } else {
-            out.add(id[1]);
+            out.add(id[0]);
         }
+        return out;
+    }
+
+    private List<String> parseUniprotLink(String link) {
+        LinkedList<String> out = new LinkedList<String>();
+        String id = link.replace("UNIPROT:", "");
+        out.add("UniProt");
+        out.add("http://www.uniprot.org/uniprot/" + id);
+        out.add(id);
         return out;
     }
 }

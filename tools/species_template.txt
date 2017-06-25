@@ -1,0 +1,5 @@
+ 		<p:panel id="sncbiID" rendered="#{classificationBean.selectedNode.type == 'Genus'}"  header="species_name" styleClass="reportPanel">
+            <ui:include src="species_report.xhtml">
+                <ui:param name="taxon" value="ncbiID" />
+            </ui:include>
+        </p:panel>

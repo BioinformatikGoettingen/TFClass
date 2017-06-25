@@ -1,0 +1,43 @@
+9646$Ailuropoda melanoleuca
+9913$Bos taurus
+9483$Callithrix jacchus
+9612$Canis lupus
+9615$Canis lupus familiaris
+10141$Cavia porcellus
+9358$Choloepus hoffmanni
+9361$Dasypus novemcinctus
+10020$Dipodomys ordii
+9371$Echinops telfairi
+9796$Equus caballus
+9365$Erinaceus europaeus
+9685$Felis catus
+9595$Gorilla gorilla gorilla
+9606$Homo sapiens
+43179$Ictidomys tridecemlineatus
+9785$Loxodonta africana
+9544$Macaca mulatta
+9315$Macropus eugenii
+30608$Microcebus murinus
+13616$Monodelphis domestica
+10090$Mus musculus
+9668$Mustela putorius
+9669$Mustela putorius furo
+59463$Myotis lucifugus
+61853$Nomascus leucogenys
+9978$Ochotona princeps
+9258$Ornithorhynchus anatinus
+9986$Oryctolagus cuniculus
+30611$Otolemur garnettii
+9940$Ovis aries
+9598$Pan troglodytes
+9601$Pongo abelii
+9813$Procavia capensis
+132908$Pteropus vampyrus
+10116$Rattus norvegicus
+9305$Sarcophilus harrisii
+42254$Sorex araneus
+9823$Sus scrofa
+1868482$Tarsius syrichta
+37347$Tupaia belangeri
+9739$Tursiops truncatus
+30538$Vicugna pacos

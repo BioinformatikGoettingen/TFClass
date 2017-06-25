@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -17,6 +18,7 @@ import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
 import org.primefaces.model.DefaultDashboardColumn;
 import org.primefaces.model.DefaultDashboardModel;
+import org.primefaces.model.TreeNode;
 
 /**
  *
@@ -27,19 +29,28 @@ import org.primefaces.model.DefaultDashboardModel;
 public class DetailsDashboard implements Serializable {
 
     private DashboardModel model;
+    @ManagedProperty(value="#{speciesTree}")
+    SpeciesTree speciesTree;
+
+    public void setSpeciesTree(SpeciesTree speciesTree) {
+        this.speciesTree = speciesTree;
+    }
 
     @PostConstruct
     public void init() {
         model = new DefaultDashboardModel();
         DashboardColumn column1 = new DefaultDashboardColumn();
-
+        for (TreeNode child: speciesTree.getRoot().getChildren()){
+            OboClass cls = (OboClass) child.getData();
+            column1.addWidget("s"+ cls.getName());
+        }
 //        column1.addWidget("s9544");
 //        column1.addWidget("s9606");
         model.addColumn(column1);
     }
 
     public void setSelectedSpecies(List<OboClass> selected){
-        System.out.println("previous enabled widgets " + model.getColumn(0).getWidgetCount());
+        //System.out.println("previous enabled widgets " + model.getColumn(0).getWidgetCount());
         List<String> newNames = new ArrayList<String>();
         for (OboClass cls : selected){
             newNames.add("s"+cls.getName());
@@ -55,7 +66,7 @@ public class DetailsDashboard implements Serializable {
                 model.getColumn(0).addWidget(item);
             }
         }
-        System.out.println("post enabled widgets " + model.getColumn(0).getWidgetCount());
+       // System.out.println("post enabled widgets " + model.getColumn(0).getWidgetCount());
     }
     
     public void handleReorder(DashboardReorderEvent event) {
