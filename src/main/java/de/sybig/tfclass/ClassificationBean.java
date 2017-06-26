@@ -33,7 +33,8 @@ public class ClassificationBean {
     private Map<String, List<OboClass>> downstreamOfSelected;
     private LinkedList<String> fieldList;
     private OboClass searchedClass;
-    private HashMap<String, String> fastaMap;
+    private Map<String, String> fastaMap;
+    private Map<String, String> dbdFastaMap;
 
     public ClassificationBean() {
         super();
@@ -158,27 +159,44 @@ public class ClassificationBean {
         }
         return getFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
     }
-
+    public String getDBDFastaForSelected(){
+          if (getSelectedNode() == null) {
+            return null;
+        }
+        return getDBDFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
+}
+    
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
-            fastaMap = new HashMap<String, String>();
-            String dir = System.getenv("static_suppl_dir");
-            if (dir == null) {
-                dir = System.getProperty("static_suppl_dir");
-            }
-            if (dir == null) {
-                return fastaMap;
-            }
-            File dirf = new File(dir);
-            File[] files = dirf.listFiles();
-            for (File f : files) {
-                String name = f.getName();
-                if (name.endsWith("_mammalia.fasta")) {
-                    fastaMap.put(name.substring(0, name.indexOf("_")), name);
-                }
-            }
+            fastaMap = getFileMap("_mammalia.fasta");
         }
         return fastaMap;
+    }
+    private Map<String, String> getDBDFastaMap() {
+        if (dbdFastaMap == null) {
+            dbdFastaMap = getFileMap("mammalia_dbd.fasta");
+        }
+        return dbdFastaMap;
+    }
+
+    private Map<String, String> getFileMap(String pattern) {
+        Map<String, String> fileMap = new HashMap<String, String>();
+        String dir = System.getenv("static_suppl_dir");
+        if (dir == null) {
+            dir = System.getProperty("static_suppl_dir");
+        }
+        if (dir == null) {
+            return fileMap;
+        }
+        File dirf = new File(dir);
+        File[] files = dirf.listFiles();
+        for (File f : files) {
+            String name = f.getName();
+            if (name.endsWith(pattern)) {
+                fileMap.put(name.substring(0, name.indexOf("_")), name);
+            }
+        }
+        return fileMap;
     }
 
     /// species specific

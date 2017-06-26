@@ -92,6 +92,10 @@
                         <h:outputText value="FASTA file for the protein"  styleClass="bold" />
                         <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}" >FASTA</h:outputLink>
                     </p:outputPanel>
+                    <p:outputPanel rendered="#{not empty classificationBean.getDBDFastaForSelected()}">
+                        <h:outputText value="FASTA file for the DNA binding domain"  styleClass="bold" />
+                        <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" >FASTA</h:outputLink>
+                    </p:outputPanel>
 
                     <h:outputText value="Distribution of #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
                                   styleClass="bold" rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/><br/>           
