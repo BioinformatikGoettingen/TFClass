@@ -25,6 +25,7 @@ h2{
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
+    margin-top:10px
 }
 #legend{
     float:left;
@@ -52,6 +53,17 @@ h2{
     border-right: solid grey 1px !important;
   }
 
+  #fastaTable{
+      margin-top:15px
+  }
+  #fastaTable td, th{
+       border-bottom: 1px solid #ddd;
+  }
+  #fastaTable img{
+     height: 140px;
+     margin-left: -25px;
+  }
+  
 .detailsPanel{
     float:left; 
     width:66%;

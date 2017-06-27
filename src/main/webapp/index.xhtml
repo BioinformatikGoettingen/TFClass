@@ -78,7 +78,7 @@
                                   rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('information')}"> More information</h:outputLink>
 
                     <h:outputText value="Consensus sequence"
-                                  styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/><br/>
+                                  styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/>
                     <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}" />
 
 
@@ -88,26 +88,34 @@
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
                     </p:outputPanel>
 
-
-
                     <p:outputPanel rendered="#{not empty classificationBean.getFastaForSelected()}">
-                        <h:outputText value="FASTA file for the protein"  styleClass="bold" />
-                        <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}" >FASTA</h:outputLink>
-                    </p:outputPanel>
-                    <p:outputPanel rendered="#{not empty classificationBean.getDBDFastaForSelected()}">
-                        <h:outputText value="FASTA file for the DNA binding domain"  styleClass="bold" />
-                        <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" >FASTA</h:outputLink>
-                    </p:outputPanel>
-                    <p:outputPanel rendered="#{not empty classificationBean.getSVGForSelected()}">
-                        <h:outputText value="Phylogenetic tree"  styleClass="bold" />
-                        <h:outputLink value="/suppl/#{classificationBean.getSVGForSelected()}" target="_blank">tree</h:outputLink>
-                        <img src="/suppl/#{classificationBean.getSVGForSelected()}" width="200px" alt="Phylogenetic tree"/>
+                        <table id="fastaTable">
+                            <thead>
+                                <tr>
+                                    <td/>
+                                    <th>DNA binding domain</th>
+                                    <th>Whole protein</th>
+                                </tr>
+                                <tr>
+                                    <th>FASTA</th>
+                                    <td>
+                            <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" >FASTA file</h:outputLink></td>
+                            <td> <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
+                            </tr>
+                            <tr>
+                                <th>Phylogenetic tree</th>
+                                <td></td>
+                                <td><div style="position:relative; width: 220px; height: 150px;">
+                                        <h:outputLink value="/suppl/#{classificationBean.getSVGForSelected()}" target="_blank" rendered="#{not empty classificationBean.getSVGForSelected()}">
+                                            <img src="/suppl/#{classificationBean.getSVGForSelected()}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                        </h:outputLink></div>
+                                </td>
+                            </tr>
+                            </thead>
+                        </table>
                     </p:outputPanel>
 
-                    <h:outputText value="Distribution of #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
-                                  styleClass="bold" rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/><br/>           
-                    <h:outputText value="#{classificationBean.getSpeciesOfSelectedNode().size()} species with this transcription factor." 
-                                  rendered="#{not empty classificationBean.getSpeciesOfSelectedNode()}"/>
+
                 </p:panel>
                 <ui:include src="dashboard.xhtml" />
                 <div style="clear:both" />
