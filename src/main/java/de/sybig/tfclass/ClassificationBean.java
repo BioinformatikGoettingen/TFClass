@@ -35,6 +35,8 @@ public class ClassificationBean {
     private OboClass searchedClass;
     private Map<String, String> fastaMap;
     private Map<String, String> dbdFastaMap;
+    private Map<String, String> svgMap;
+    private Map<String, String> dbdSvgMap;
 
     public ClassificationBean() {
         super();
@@ -55,8 +57,14 @@ public class ClassificationBean {
         return getDownstreamOfSelected().keySet();
     }
 
+    public boolean isSpeciesInSelectedNode(String taxon) {
+        if (selectedNode == null) {
+            return false;
+        }
+        return (getDownstreamOfSelected().keySet().contains(taxon));
+    }
+
     public List<OboClass> search(String pattern) {
-        System.out.println("searching for " + pattern);
         String searchPattern = pattern;
         try {
             OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
@@ -159,24 +167,40 @@ public class ClassificationBean {
         }
         return getFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
     }
-    public String getDBDFastaForSelected(){
-          if (getSelectedNode() == null) {
+
+    public String getDBDFastaForSelected() {
+        if (getSelectedNode() == null) {
             return null;
         }
         return getDBDFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
-}
-    
+    }
+
+    public String getSVGForSelected() {
+        if (getSelectedNode() == null) {
+            return null;
+        }
+        return getSVGMap().get(((OboClass) getSelectedNode().getData()).getName());
+    }
+
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
             fastaMap = getFileMap("_mammalia.fasta");
         }
         return fastaMap;
     }
+
     private Map<String, String> getDBDFastaMap() {
         if (dbdFastaMap == null) {
             dbdFastaMap = getFileMap("mammalia_dbd.fasta");
         }
         return dbdFastaMap;
+    }
+
+    private Map<String, String> getSVGMap() {
+        if (svgMap == null) {
+            svgMap = getFileMap("_mammalia_PhyML-iTOL.svg");
+        }
+        return svgMap;
     }
 
     private Map<String, String> getFileMap(String pattern) {
