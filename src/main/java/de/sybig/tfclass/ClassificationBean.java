@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.io.File;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,53 @@ public class ClassificationBean {
         super();
         this.connector = ObaProvider.getInstance().getConnector3();
     }
+ public String init() {
+        // used on the top of the page to init the bean
+      
+        try {
+            String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
+            if (idString != null) {
+                OboClass cls = ObaProvider.getInstance().getConnector3().getCls(idString, null);
+                if (cls == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + idString, null));
+                    return "";
+                }
+                searchedClass = cls;
+                selectSearched();
+                log.info("navigate to class {} by url parameter tfclass={}", cls, idString);
+                return "";
+            }
+            String ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("ext");
+            if (ext == null || ext.length() < 1) {
+                ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uniprot");
+            }
+            if (ext != null) {
+                OboClassList resultList = ObaProvider.getInstance().getConnectorHuman().searchCls(ext);
+                if (resultList == null || resultList.size() != 1) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
+                    return "";
+                }
+                OboClass cls = resultList.getEntities().get(0);
+                if (cls == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
+                    return "";
+                }
+                searchedClass = cls;
+                selectSearched();
+                log.info("navigate to class {} specified in the url wiht ext parameter {}", cls, ext);
+                return "";
 
+            }
+        } catch (NumberFormatException e) {
+            log.error("The id '{}' parsed from the URL for the detail view is not valid");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter ", null));
+        } catch (Exception e) {
+            log.error("Error while parsing URL parameter " + e);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter ", null));
+        }
+
+        return "";
+    }
     public ClassificationTree getTfTree() {
         if (classificationTree == null) {
             classificationTree = new ClassificationTree(connector);
