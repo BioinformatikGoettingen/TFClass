@@ -107,13 +107,16 @@
                             <td> <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
                             </tr>
                             <tr>
-                                <th>Phylogenetic tree</th>
+                                <th>Phylogenetic tree<br/>Mammalia</th>
                                 <td></td>
-                                <td><div style="position:relative; width: 220px; height: 150px;">
-                                        <h:outputLink value="/suppl/#{classificationBean.getSVGForSelected()}" target="_blank" rendered="#{not empty classificationBean.getSVGForSelected()}">
-                                            <img src="/suppl/#{classificationBean.getSVGForSelected()}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                        </h:outputLink></div>
-                                </td>
+                                <td>
+                            <p:dataList value="#{classificationBean.proteinSVGsForSelected}" var="svg" styleClass="inlineList">
+                                <div style="position:relative; width: 220px; height: 150px;">
+                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:outputLink></div>
+                            </p:dataList>
+                            </td>
                             </tr>
                             </thead>
                         </table>

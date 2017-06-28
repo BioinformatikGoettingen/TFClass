@@ -1,0 +1,4 @@
+Add static content to Glassfish
+
+Follow the instructions on https://cdivilly.wordpress.com/2012/06/21/serving-static-content-on-weblogic-and-glassfish/
+

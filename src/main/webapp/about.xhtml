@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Transcription factor classification</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <h:outputStylesheet name="css/screen.css"/>
+    </h:head>
+    <body>
+        
+            <h1>Classification of Human Transcription Factors and Mouse Orthologs</h1>
+            <h2><a href="index.jsf">Back to TFClass</a></h2>
+        <div style="width:75%; margin-left: 12.5%">
+            <p>
+                <b>Transcription factors</b>, in a somewhat simplified definition, are
+                proteins that regulate transcription by binding to specific sequence
+                elements in regulatory genome regions such as promoters, enhancers etc.
+            </p>
+            <p>
+                <b>TFClass</b> is a classification of eukaryotic transcription factors
+                based on the characteristics of their DNA-binding domains. It comprises
+                four general levels (superclass, class, family, subfamily) and two
+                levels of instantiation (genus and molecular species). Two of them
+                (subfamily and factor species) are optional. More detailed explanations
+                about the classification scheme and its criteria are given
+                <a href="http://www.edgar-wingender.de/TFClass_schema.html" target="_blank">here.</a>.
+            </p>
+            <p>
+                So far, TFClass comprises human transcription factors (TFs) and their
+                rodent orthologs. The full classification of human TFs in its latest draft
+                version as html document can also be obtained
+                <a href="http://www.edgar-wingender.de/huTF_classification.html" target="_blank">here</a>,
+                that of their mouse orthologs
+                <a href="http://www.edgar-wingender.de/muTF_classification-1.html" target="_blank">here</a>,
+                or can be downloaded as
+                <a href="http://tfclass.bioinf.med.uni-goettingen.de/suplementary/TFClass_ontologies.zip">ontology</a>
+                in obo-format.
+            </p>
+            <h2>About the interface:</h2>
+            <p>
+                The active ontology is shown in the central part (default: human), it can
+                be <span class="function_ref">switched</span> with the one on the right-hand side (default: mouse). To
+                browse the classification, an individual taxon can be opened by clicking
+                on the arrow head in front of it; clicking again closes all taxa that may
+                have been opened. The classification of orthologs on the right-hand side
+                opens correspondingly.
+            </p><p>
+                On the left-hand side, further <span class="function_ref">search and browse functions</span> as well
+                as <span class="function_ref">additional information</span> for the highlighted taxon in the central
+                part are provided. The <span class="function_ref">search field</span> is equipped with an autocomplete
+                function to facilitate finding the right term among all the conceivable
+                spelling variations. <span class="function_ref">Expand / collapse all:</span> expands the full tree in
+                the center or collapses all parts of the tree that have been opened.
+                <span class="function_ref">Expand to:</span> The whole classification in the center will be opened
+                down to the selected level.
+            </p><p>
+                The additional information is rank- and organism-specific and
+                changes with the selection made.
+            </p><p>
+                <span class="function_ref">Show binding sites:</span> Linked to (sub)family entities, if present.
+                Clicking this option will open a selection list of all matrices
+                that are connected with any of the TFs in this (sub)family.
+                Chosing one of them will open the complete list of potential
+                binding sites that (a) are located in the 1kb upstream region of
+                human genes, (b) are conserved among human, mouse, dog and cow,
+                and (c) have a minimum threshold as selected. Most database
+                cross-references: Linked to TF genus entries (rank 5); links to
+                external databases go straight to their entries. Links to 
+                <a href="http://www.uniprot.org/" target="_blank">UniProt</a>
+                isoforms and TRANSFAC proteins are also given for individual
+                factor species.
+            </p><p>
+                Protein expression (human only): Displayed in a separate overlay. 
+                Based on the information provided by the 
+                <a href="http://www.proteinatlas.org/" target="_blank">Human Protein Atlas</a>,
+                expression sources (organs, tissues) have been linked to the
+                <a href="http://cytomer.bioinf.med.uni-goettingen.de" target="_blank">Cytomer</a> ontology.
+            </p>
+            <h2>Citation:</h2>
+            <p>
+                <b>When referring to this classification, please cite:</b>
+            </p><p>
+                Wingender, E., Schoeps, T., Haubrock M. and Dönitz, J.:<br/>
+                TFClass: a classification of human transcription factors and their rodent orthologs.<br/>
+                Nucleic Acids Res. 43, in press (2015). doi: 10.1093/nar/gku1064
+                <a href="http://nar.oxfordjournals.org/cgi/content/full/gku1064" target="_blank">link</a>
+            </p><p>
+                <b>Previous publications:</b>
+            </p><p>
+                Wingender, E., Schoeps, T. and Dönitz, J.:<br/>
+                TFClass: An expandable hierarchical classification of human transcription factors.<br/>
+                Nucleic Acids Res. 41, D165-D170 (2013). doi: 10.1093/nar/gks1123
+                <a href="http://nar.oxfordjournals.org/content/41/D1/D165.long" target="_blank">link</a>
+            </p><p>
+                Wingender, E.: Criteria for an updated classification of human transcription factor DNA-binding domains.<br/>
+                J. Bioinform. Comput. Biol. 11, 1340007 (2013). doi: 10.1142/S0219720013400076
+                <a href="http://www.worldscientific.com/doi/abs/10.1142/S0219720013400076" target="_blank">link</a>
+            </p><p>
+                Wingender, E.: Classification scheme of eukaryotic transcription factors. <br/>
+                Mol. Biol. 31, 584-600 (1997); Mol. Biol. Engl. Tr. 31, 483-497 (1997).
+                <a href="http://www.edgar-wingender.de/resources/054_Wingender_Mol.%20Biol_v31_p584.pdf" target="_blank">link</a>
+
+            </p>
+        </div>
+            <h2><a href="index.jsf">Back to TFClass</a></h2>
+    </body>
+</html>
