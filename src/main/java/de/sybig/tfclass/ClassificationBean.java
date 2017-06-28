@@ -44,9 +44,10 @@ public class ClassificationBean {
         super();
         this.connector = ObaProvider.getInstance().getConnector3();
     }
- public String init() {
+
+    public String init() {
         // used on the top of the page to init the bean
-      
+
         try {
             String idString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tfclass");
             if (idString != null) {
@@ -91,6 +92,7 @@ public class ClassificationBean {
 
         return "";
     }
+
     public ClassificationTree getTfTree() {
         if (classificationTree == null) {
             classificationTree = new ClassificationTree(connector);
@@ -272,6 +274,24 @@ public class ClassificationBean {
     }
 
     /// species specific
+    public String getSingleAnnotationForSpecies(String taxon, String annotation) {
+        if (!selectedNode.getType().equals("Genus")) {
+            return null;
+        }
+        List<OboClass> paralogs = getDownstreamOfSelected().get(taxon);
+        if (paralogs == null) {
+            return null;
+        }
+        for (OboClass prot : paralogs) {
+            Set<JsonAnnotation> annot = prot.getAnnotationValues(annotation);
+            if (annot == null || annot.size() < 1) {
+                return null;
+            }
+            return annot.iterator().next().getValue();
+        }
+        return null;
+    }
+
     public List<List<String>> getXref(String taxon) {
         if (!selectedNode.getType().equals("Genus")) {
             return null;
@@ -290,7 +310,10 @@ public class ClassificationBean {
                 } else if (link.startsWith("ENSEMBL:EN")) {
                     links.add(parseEnsembleLink(link));
                 } else if (link.startsWith("TRANSFAC")) {
-                    links.add(parseTransfacLink(link));
+                    List<String> tflink = parseTransfacLink(link);
+                    if (tflink != null) {
+                        links.add(tflink);
+                    }
                 } else if (link.startsWith("UNIPROT")) {
                     links.add(parseUniprotLink(link));
                 }
@@ -320,12 +343,13 @@ public class ClassificationBean {
     private List<String> parseTransfacLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String[] id = link.replace("TANSFAC:", "").split(",");
-        out.add("TRANSFAC");
-        out.add("https://portal.biobase-international.com/cgi-bin/knowledgebase/pageview.cgi?view=LocusReport&protein_acc=" + id[0]);
         if (id.length > 1) {
+            out.add("TRANSFAC");
+            out.add("http://factor.genexplain.com/cgi-bin/transfac_factor/getTF.cgi?AC=" + id[1]);
             out.add(id[1]);
         } else {
-            out.add(id[0]);
+            System.out.println("No T ID for " + link);
+            return null;
         }
         return out;
     }

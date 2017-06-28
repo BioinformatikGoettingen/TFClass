@@ -6,7 +6,14 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <p><h:outputText value="Synonyms: #{speciesBean.getGenBankName(taxon)}" title="Genbank common name"/>
-    <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" /></p>
+        <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" /></p>
+
+    <p:outputPanel rendered="#{not empty classificationBean.getSingleAnnotationForSpecies(taxon, 'LOGO_plot')}">
+        <h:outputText value="LOGO plot" class="bold"/>
+        <h:outputLink value="#{classificationBean.getSingleAnnotationForSpecies(taxon, 'LOGO_definition')}" target="_blank">
+            <img src="#{classificationBean.getSingleAnnotationForSpecies(taxon, 'LOGO_plot')}" alt="LOGO plot" />
+        </h:outputLink>
+    </p:outputPanel>
     <h:outputText value="Outlinks" class="bold"/>
     <p:dataList value="#{classificationBean.getXref(taxon)}" var="link">
         <h:outputText value="#{link.get(0)}: " />
