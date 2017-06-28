@@ -86,7 +86,12 @@
                         <h:outputText value="Binding sites" styleClass="bold" />                      
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
                     </p:outputPanel>
-
+                    <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('LOGO_plot')}">
+                        <h:outputText value="LOGO plot" class="bold"/>
+                        <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('LOGO_definition')}" target="_blank">
+                            <img src="#{classificationBean.getAnnotationValueOfSelectedNode( 'LOGO_plot')}" alt="LOGO plot" />
+                        </h:outputLink>
+                    </p:outputPanel>
                     <p:outputPanel rendered="#{not empty classificationBean.getFastaForSelected()}">
                         <table id="fastaTable">
                             <thead>
