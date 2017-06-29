@@ -129,10 +129,17 @@
                             </tr>
                             <tr>
                                 <th>Phylogenetic tree<br/>Mammalia</th>
-                                <td></td>
+                                <td>
+                                    <p:dataList value="#{classificationBean.DBDSVGsForSelected}" var="svg" styleClass="inlineList">
+                                <div style="position:relative; width: 200px; height: 150px;">
+                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:outputLink></div>
+                            </p:dataList>
+                                </td>
                                 <td>
                             <p:dataList value="#{classificationBean.proteinSVGsForSelected}" var="svg" styleClass="inlineList">
-                                <div style="position:relative; width: 220px; height: 150px;">
+                                <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
                                     </h:outputLink></div>
@@ -141,10 +148,17 @@
                             </tr>
                             <tr>
                                 <th>Phylogenetic tree<br/>slim</th>
-                                <td></td>
+                                <td>
+                                      <p:dataList value="#{classificationBean.DBDSlimSVGsForSelected}" var="svg" styleClass="inlineList">
+                                <div style="position:relative; width: 200px; height: 150px;">
+                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:outputLink></div>
+                            </p:dataList>
+                                </td>
                                 <td>
                             <p:dataList value="#{classificationBean.proteinSlimSVGsForSelected}" var="svg" styleClass="inlineList">
-                                <div style="position:relative; width: 220px; height: 150px;">
+                                <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
                                     </h:outputLink></div>

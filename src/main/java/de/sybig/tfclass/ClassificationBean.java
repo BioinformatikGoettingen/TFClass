@@ -42,11 +42,17 @@ public class ClassificationBean {
     private Map<String, String> proteinWebprankMap;
     private Map<String, String> proteinPhyML2Map;
 
-    private Map<String, String> proteinPhyMLslimMap;
-    private Map<String, String> proteinWebprankslimMap;
-    private Map<String, String> proteinPhyML2slimMap;
+    private Map<String, String> proteinSlimPhyMLMap;
+    private Map<String, String> proteinSlimWebprankMap;
+    private Map<String, String> proteinSlimPhyML2Map;
     
-    private Map<String, String> dbdSvgMap;
+    private Map<String, String> dbdPhyMLMap;
+    private Map<String, String> dbdWebprankMap;
+    private Map<String, String> dbdPhyML2Map;
+    
+    private Map<String, String> dbdSlimPhyMLMap;
+    private Map<String, String> dbdSlimWebprankMap;
+    private Map<String, String> dbdSlimPhyML2Map;
 
     public ClassificationBean() {
         super();
@@ -269,6 +275,42 @@ public class ClassificationBean {
         return out;
     }
 
+    public List<String> getDBDSVGsForSelected() {
+        if (getSelectedNode() == null) {
+            return null;
+        }
+        String id = ((OboClass) getSelectedNode().getData()).getName();
+        List<String> out = new LinkedList<String>();
+        if (getDBDPhyMLMap().containsKey(id)) {
+            out.add(getDBDPhyMLMap().get(id));
+        }
+        if (getDBDWebprankMap().containsKey(id)) {
+            out.add(getDBDWebprankMap().get(id));
+        }
+        if (getDBDPhyML2Map().containsKey(id)) {
+            out.add(getDBDPhyML2Map().get(id));
+        }
+        return out;
+    }
+     public List<String> getDBDSlimSVGsForSelected() {
+        if (getSelectedNode() == null) {
+            return null;
+        }
+        String id = ((OboClass) getSelectedNode().getData()).getName();
+        List<String> out = new LinkedList<String>();
+        if (getDBDSlimPhyMLMap().containsKey(id)) {
+            out.add(getDBDSlimPhyMLMap().get(id));
+        }
+        if (getDBDSlimWebprankMap().containsKey(id)) {
+            out.add(getDBDSlimWebprankMap().get(id));
+        }
+        if (getDBDSlimPhyML2Map().containsKey(id)) {
+            out.add(getDBDSlimPhyML2Map().get(id));
+        }
+        return out;
+    }
+    
+    
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
             fastaMap = getFileMap("_mammalia.fasta");
@@ -305,24 +347,68 @@ public class ClassificationBean {
     }
 
      private Map<String, String> getProteinPhyMLslimMap() {
-        if (proteinPhyMLslimMap == null) {
-            proteinPhyMLslimMap = getFileMap("_mammalia-slim_PhyML-iTOL.svg");
+        if (proteinSlimPhyMLMap == null) {
+            proteinSlimPhyMLMap = getFileMap("_mammalia-slim_PhyML-iTOL.svg");
         }
-        return proteinPhyMLslimMap;
+        return proteinSlimPhyMLMap;
     }
 
     private Map<String, String> getProteinWebprankslimMap() {
-        if (proteinWebprankslimMap == null) {
-            proteinWebprankslimMap = getFileMap("_mammalia-slim_webprank-iTOL.svg");
+        if (proteinSlimWebprankMap == null) {
+            proteinSlimWebprankMap = getFileMap("_mammalia-slim_webprank-iTOL.svg");
         }
-        return proteinWebprankslimMap;
+        return proteinSlimWebprankMap;
     }
 
     private Map<String, String> getProteinPhyML2slimMap() {
-        if (proteinPhyML2slimMap == null) {
-            proteinPhyML2slimMap = getFileMap("_mammalia-slim_PhyML2-iTOL.svg");
+        if (proteinSlimPhyML2Map == null) {
+            proteinSlimPhyML2Map = getFileMap("_mammalia-slim_PhyML2-iTOL.svg");
         }
-        return proteinPhyML2slimMap;
+        return proteinSlimPhyML2Map;
+    }
+    
+    /// DBD
+    private Map<String, String> getDBDPhyMLMap() {
+        if (dbdPhyMLMap == null) {
+            dbdPhyMLMap = getFileMap("_mammalia_dbd_PhyML-iTOL.svg");
+        }
+        return dbdPhyMLMap;
+    }
+
+    private Map<String, String> getDBDWebprankMap() {
+        if (dbdWebprankMap == null) {
+            dbdWebprankMap = getFileMap("_mammalia_dbd_webprank-iTOL.svg");
+        }
+        return dbdWebprankMap;
+    }
+
+    private Map<String, String> getDBDPhyML2Map() {
+        if (dbdPhyML2Map == null) {
+            dbdPhyML2Map = getFileMap("_mammalia_dbd_PhyML2-iTOL.svg");
+        }
+        return dbdPhyML2Map;
+    }
+    
+    /// DBD slim
+     private Map<String, String> getDBDSlimPhyMLMap() {
+        if (dbdSlimPhyMLMap == null) {
+            dbdSlimPhyMLMap = getFileMap("_mammalia-slim_dbd_PhyML-iTOL.svg");
+        }
+        return dbdSlimPhyMLMap;
+    }
+
+    private Map<String, String> getDBDSlimWebprankMap() {
+        if (dbdSlimWebprankMap == null) {
+            dbdSlimWebprankMap = getFileMap("_mammalia-slim_dbd_webprank-iTOL.svg");
+        }
+        return dbdSlimWebprankMap;
+    }
+
+    private Map<String, String> getDBDSlimPhyML2Map() {
+        if (dbdSlimPhyML2Map == null) {
+            dbdSlimPhyML2Map = getFileMap("_mammalia-slim_dbd_PhyML2-iTOL.svg");
+        }
+        return dbdSlimPhyML2Map;
     }
     
     private Map<String, String> getFileMap(String pattern) {
