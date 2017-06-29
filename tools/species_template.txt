@@ -1,4 +1,5 @@
  		<p:panel id="sncbiID" rendered="#{classificationBean.isSpeciesInSelectedNode('ncbiID')}"  header="species_name" styleClass="reportPanel">
+			<a name="ncbiID" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="ncbiID" />
             </ui:include>

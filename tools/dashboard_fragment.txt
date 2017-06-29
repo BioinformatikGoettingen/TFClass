@@ -1,214 +1,257 @@
  		<p:panel id="s9646" rendered="#{classificationBean.isSpeciesInSelectedNode('9646')}"  header="Ailuropoda melanoleuca" styleClass="reportPanel">
+			<a name="9646" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9646" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9913" rendered="#{classificationBean.isSpeciesInSelectedNode('9913')}"  header="Bos taurus" styleClass="reportPanel">
+			<a name="9913" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9913" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9483" rendered="#{classificationBean.isSpeciesInSelectedNode('9483')}"  header="Callithrix jacchus" styleClass="reportPanel">
+			<a name="9483" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9483" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9612" rendered="#{classificationBean.isSpeciesInSelectedNode('9612')}"  header="Canis lupus" styleClass="reportPanel">
+			<a name="9612" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9612" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9615" rendered="#{classificationBean.isSpeciesInSelectedNode('9615')}"  header="Canis lupus familiaris" styleClass="reportPanel">
+			<a name="9615" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9615" />
             </ui:include>
         </p:panel>
  		<p:panel id="s10141" rendered="#{classificationBean.isSpeciesInSelectedNode('10141')}"  header="Cavia porcellus" styleClass="reportPanel">
+			<a name="10141" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="10141" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9358" rendered="#{classificationBean.isSpeciesInSelectedNode('9358')}"  header="Choloepus hoffmanni" styleClass="reportPanel">
+			<a name="9358" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9358" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9361" rendered="#{classificationBean.isSpeciesInSelectedNode('9361')}"  header="Dasypus novemcinctus" styleClass="reportPanel">
+			<a name="9361" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9361" />
             </ui:include>
         </p:panel>
  		<p:panel id="s10020" rendered="#{classificationBean.isSpeciesInSelectedNode('10020')}"  header="Dipodomys ordii" styleClass="reportPanel">
+			<a name="10020" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="10020" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9371" rendered="#{classificationBean.isSpeciesInSelectedNode('9371')}"  header="Echinops telfairi" styleClass="reportPanel">
+			<a name="9371" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9371" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9796" rendered="#{classificationBean.isSpeciesInSelectedNode('9796')}"  header="Equus caballus" styleClass="reportPanel">
+			<a name="9796" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9796" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9365" rendered="#{classificationBean.isSpeciesInSelectedNode('9365')}"  header="Erinaceus europaeus" styleClass="reportPanel">
+			<a name="9365" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9365" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9685" rendered="#{classificationBean.isSpeciesInSelectedNode('9685')}"  header="Felis catus" styleClass="reportPanel">
+			<a name="9685" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9685" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9595" rendered="#{classificationBean.isSpeciesInSelectedNode('9595')}"  header="Gorilla gorilla gorilla" styleClass="reportPanel">
+			<a name="9595" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9595" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9606" rendered="#{classificationBean.isSpeciesInSelectedNode('9606')}"  header="Homo sapiens" styleClass="reportPanel">
+			<a name="9606" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9606" />
             </ui:include>
         </p:panel>
  		<p:panel id="s43179" rendered="#{classificationBean.isSpeciesInSelectedNode('43179')}"  header="Ictidomys tridecemlineatus" styleClass="reportPanel">
+			<a name="43179" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="43179" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9785" rendered="#{classificationBean.isSpeciesInSelectedNode('9785')}"  header="Loxodonta africana" styleClass="reportPanel">
+			<a name="9785" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9785" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9544" rendered="#{classificationBean.isSpeciesInSelectedNode('9544')}"  header="Macaca mulatta" styleClass="reportPanel">
+			<a name="9544" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9544" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9315" rendered="#{classificationBean.isSpeciesInSelectedNode('9315')}"  header="Macropus eugenii" styleClass="reportPanel">
+			<a name="9315" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9315" />
             </ui:include>
         </p:panel>
  		<p:panel id="s30608" rendered="#{classificationBean.isSpeciesInSelectedNode('30608')}"  header="Microcebus murinus" styleClass="reportPanel">
+			<a name="30608" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="30608" />
             </ui:include>
         </p:panel>
  		<p:panel id="s13616" rendered="#{classificationBean.isSpeciesInSelectedNode('13616')}"  header="Monodelphis domestica" styleClass="reportPanel">
+			<a name="13616" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="13616" />
             </ui:include>
         </p:panel>
  		<p:panel id="s10090" rendered="#{classificationBean.isSpeciesInSelectedNode('10090')}"  header="Mus musculus" styleClass="reportPanel">
+			<a name="10090" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="10090" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9668" rendered="#{classificationBean.isSpeciesInSelectedNode('9668')}"  header="Mustela putorius" styleClass="reportPanel">
+			<a name="9668" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9668" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9669" rendered="#{classificationBean.isSpeciesInSelectedNode('9669')}"  header="Mustela putorius furo" styleClass="reportPanel">
+			<a name="9669" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9669" />
             </ui:include>
         </p:panel>
  		<p:panel id="s59463" rendered="#{classificationBean.isSpeciesInSelectedNode('59463')}"  header="Myotis lucifugus" styleClass="reportPanel">
+			<a name="59463" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="59463" />
             </ui:include>
         </p:panel>
  		<p:panel id="s61853" rendered="#{classificationBean.isSpeciesInSelectedNode('61853')}"  header="Nomascus leucogenys" styleClass="reportPanel">
+			<a name="61853" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="61853" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9978" rendered="#{classificationBean.isSpeciesInSelectedNode('9978')}"  header="Ochotona princeps" styleClass="reportPanel">
+			<a name="9978" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9978" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9258" rendered="#{classificationBean.isSpeciesInSelectedNode('9258')}"  header="Ornithorhynchus anatinus" styleClass="reportPanel">
+			<a name="9258" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9258" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9986" rendered="#{classificationBean.isSpeciesInSelectedNode('9986')}"  header="Oryctolagus cuniculus" styleClass="reportPanel">
+			<a name="9986" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9986" />
             </ui:include>
         </p:panel>
  		<p:panel id="s30611" rendered="#{classificationBean.isSpeciesInSelectedNode('30611')}"  header="Otolemur garnettii" styleClass="reportPanel">
+			<a name="30611" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="30611" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9940" rendered="#{classificationBean.isSpeciesInSelectedNode('9940')}"  header="Ovis aries" styleClass="reportPanel">
+			<a name="9940" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9940" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9598" rendered="#{classificationBean.isSpeciesInSelectedNode('9598')}"  header="Pan troglodytes" styleClass="reportPanel">
+			<a name="9598" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9598" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9601" rendered="#{classificationBean.isSpeciesInSelectedNode('9601')}"  header="Pongo abelii" styleClass="reportPanel">
+			<a name="9601" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9601" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9813" rendered="#{classificationBean.isSpeciesInSelectedNode('9813')}"  header="Procavia capensis" styleClass="reportPanel">
+			<a name="9813" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9813" />
             </ui:include>
         </p:panel>
  		<p:panel id="s132908" rendered="#{classificationBean.isSpeciesInSelectedNode('132908')}"  header="Pteropus vampyrus" styleClass="reportPanel">
+			<a name="132908" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="132908" />
             </ui:include>
         </p:panel>
  		<p:panel id="s10116" rendered="#{classificationBean.isSpeciesInSelectedNode('10116')}"  header="Rattus norvegicus" styleClass="reportPanel">
+			<a name="10116" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="10116" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9305" rendered="#{classificationBean.isSpeciesInSelectedNode('9305')}"  header="Sarcophilus harrisii" styleClass="reportPanel">
+			<a name="9305" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9305" />
             </ui:include>
         </p:panel>
  		<p:panel id="s42254" rendered="#{classificationBean.isSpeciesInSelectedNode('42254')}"  header="Sorex araneus" styleClass="reportPanel">
+			<a name="42254" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="42254" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9823" rendered="#{classificationBean.isSpeciesInSelectedNode('9823')}"  header="Sus scrofa" styleClass="reportPanel">
+			<a name="9823" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9823" />
             </ui:include>
         </p:panel>
  		<p:panel id="s1868482" rendered="#{classificationBean.isSpeciesInSelectedNode('1868482')}"  header="Tarsius syrichta" styleClass="reportPanel">
+			<a name="1868482" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="1868482" />
             </ui:include>
         </p:panel>
  		<p:panel id="s37347" rendered="#{classificationBean.isSpeciesInSelectedNode('37347')}"  header="Tupaia belangeri" styleClass="reportPanel">
+			<a name="37347" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="37347" />
             </ui:include>
         </p:panel>
  		<p:panel id="s9739" rendered="#{classificationBean.isSpeciesInSelectedNode('9739')}"  header="Tursiops truncatus" styleClass="reportPanel">
+			<a name="9739" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="9739" />
             </ui:include>
         </p:panel>
  		<p:panel id="s30538" rendered="#{classificationBean.isSpeciesInSelectedNode('30538')}"  header="Vicugna pacos" styleClass="reportPanel">
+			<a name="30538" />
             <ui:include src="species_report.xhtml">
                 <ui:param name="taxon" value="30538" />
             </ui:include>

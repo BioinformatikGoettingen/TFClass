@@ -37,10 +37,16 @@ public class ClassificationBean {
     private OboClass searchedClass;
     private Map<String, String> fastaMap;
     private Map<String, String> dbdFastaMap;
+    
     private Map<String, String> proteinPhyMLMap;
-    private Map<String, String> dbdSvgMap;
     private Map<String, String> proteinWebprankMap;
     private Map<String, String> proteinPhyML2Map;
+
+    private Map<String, String> proteinPhyMLslimMap;
+    private Map<String, String> proteinWebprankslimMap;
+    private Map<String, String> proteinPhyML2slimMap;
+    
+    private Map<String, String> dbdSvgMap;
 
     public ClassificationBean() {
         super();
@@ -244,6 +250,24 @@ public class ClassificationBean {
         }
         return out;
     }
+    
+    public List<String> getProteinSlimSVGsForSelected() {
+        if (getSelectedNode() == null) {
+            return null;
+        }
+        String id = ((OboClass) getSelectedNode().getData()).getName();
+        List<String> out = new LinkedList<String>();
+        if (getProteinPhyMLslimMap().containsKey(id)) {
+            out.add(getProteinPhyMLslimMap().get(id));
+        }
+        if (getProteinWebprankslimMap().containsKey(id)) {
+            out.add(getProteinWebprankslimMap().get(id));
+        }
+        if (getProteinPhyML2slimMap().containsKey(id)) {
+            out.add(getProteinPhyML2slimMap().get(id));
+        }
+        return out;
+    }
 
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
@@ -280,6 +304,27 @@ public class ClassificationBean {
         return proteinPhyML2Map;
     }
 
+     private Map<String, String> getProteinPhyMLslimMap() {
+        if (proteinPhyMLslimMap == null) {
+            proteinPhyMLslimMap = getFileMap("_mammalia-slim_PhyML-iTOL.svg");
+        }
+        return proteinPhyMLslimMap;
+    }
+
+    private Map<String, String> getProteinWebprankslimMap() {
+        if (proteinWebprankslimMap == null) {
+            proteinWebprankslimMap = getFileMap("_mammalia-slim_webprank-iTOL.svg");
+        }
+        return proteinWebprankslimMap;
+    }
+
+    private Map<String, String> getProteinPhyML2slimMap() {
+        if (proteinPhyML2slimMap == null) {
+            proteinPhyML2slimMap = getFileMap("_mammalia-slim_PhyML2-iTOL.svg");
+        }
+        return proteinPhyML2slimMap;
+    }
+    
     private Map<String, String> getFileMap(String pattern) {
         Map<String, String> fileMap = new HashMap<String, String>();
         String dir = System.getenv("static_suppl_dir");
