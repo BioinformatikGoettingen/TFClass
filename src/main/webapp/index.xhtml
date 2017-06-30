@@ -98,13 +98,13 @@
                     <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('information')}" 
                                   rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('information')}"> More information</h:outputLink>
 
-                    <h:outputText value="Consensus sequence"
+                    <h:outputText value="Consensus binding sequence"
                                   styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}"/>
                     <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('consensus_sequence')}" />
 
 
                     <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('seed')}">
-                        <h:outputText value="Binding sites" styleClass="bold" />                      
+                        <h:outputText value="Predicted binding sites" styleClass="bold" />                      
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
                     </p:outputPanel>
                     <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('LOGO_plot')}">
@@ -113,7 +113,8 @@
                             <img src="#{classificationBean.getAnnotationValueOfSelectedNode( 'LOGO_plot')}" alt="LOGO plot" />
                         </h:outputLink>
                     </p:outputPanel>
-                    <p:outputPanel rendered="#{not empty classificationBean.selectedNode}">
+              
+                    <p:outputPanel rendered="#{(not empty classificationBean.selectedNode) and (classificationBean.selectedNode.type != 'Superclass') and (classificationBean.selectedNode.type != 'Genus')}">
                         <table id="fastaTable">
                             <thead>
                                 <tr>
@@ -123,9 +124,11 @@
                                 </tr>
                                 <tr>
                                     <th>FASTA</th>
-                                    <td>
-                            <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" >FASTA file</h:outputLink></td>
-                            <td> <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
+                                    <td align="center">
+                            <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" 
+                                          rendered="#{not empty classificationBean.getDBDFastaForSelected()}" >FASTA file</h:outputLink></td>
+                            <td align="center"> <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}"
+                                               rendered="#{not empty classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
                             </tr>
                             <tr>
                                 <th>Phylogenetic tree<br/>Mammalia</th>
@@ -133,7 +136,7 @@
                                     <p:dataList value="#{classificationBean.DBDSVGsForSelected}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:outputLink></div>
                             </p:dataList>
                                 </td>
@@ -141,7 +144,7 @@
                             <p:dataList value="#{classificationBean.proteinSVGsForSelected}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:outputLink></div>
                             </p:dataList>
                             </td>
