@@ -35,13 +35,13 @@
                 <a href="http://factor.genexplain.com/cgi-bin/transfac_factor/search.cgi" target="_blank">Go to the search of TRANSFAC</a></p>
             <br/><br/>
             <p:panel style="border:1px solid lightgray; width:320px">
-            Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
+                Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
                 Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,<br/>
                 Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
                 Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
                 Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
-                </p:panel>
-                
+            </p:panel>
+
             <p:tree id="cfTree" styleClass="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
                     selectionMode="single" selection="#{classificationBean.selectedNode}" cache="FALSE">
                 <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
@@ -83,27 +83,27 @@
                 <p:panel id="generalReport" header="General" styleClass="reportPanel">
 
                     <p:outputPanel rendered="#{empty classificationBean.selectedNode}">
-                     
-                            <p>
-                                <b>Transcription factors</b>, in a somewhat simplified definition, are
-                                proteins that regulate transcription by binding to specific sequence
-                                elements in regulatory genome regions such as promoters, enhancers etc.
-                            </p>
-                            <p>
-                                <b>TFClass</b> is a classification of eukaryotic transcription factors
-                                based on the characteristics of their DNA-binding domains. It comprises
-                                four general levels (superclass, class, family, subfamily) and two
-                                levels of instantiation (genus and molecular species). Two of them
-                                (subfamily and factor species) are optional. More detailed explanations
-                                about the classification scheme and its criteria are given
-                                <a href="http://www.edgar-wingender.de/TFClass_schema.html" target="_blank">here.</a>.
-                            </p>
+
+                        <p>
+                            <b>Transcription factors</b>, in a somewhat simplified definition, are
+                            proteins that regulate transcription by binding to specific sequence
+                            elements in regulatory genome regions such as promoters, enhancers etc.
+                        </p>
+                        <p>
+                            <b>TFClass</b> is a classification of eukaryotic transcription factors
+                            based on the characteristics of their DNA-binding domains. It comprises
+                            four general levels (superclass, class, family, subfamily) and two
+                            levels of instantiation (genus and molecular species). Two of them
+                            (subfamily and factor species) are optional. More detailed explanations
+                            about the classification scheme and its criteria are given
+                            <a href="http://www.edgar-wingender.de/TFClass_schema.html" target="_blank">here.</a>.
+                        </p>
                     </p:outputPanel>
 
                     <h:outputText value="About #{classificationBean.getAnnotationValueOfSelectedNode('label')}"
                                   styleClass="bold" rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('about')}"/><br/>
-                    <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('about')}" />
-                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('information')}" 
+                    <h:outputText value="#{classificationBean.getAnnotationValueOfSelectedNode('about')}" escape="false"/>
+                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('information')}"
                                   rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('information')}"> More information</h:outputLink>
 
                     <h:outputText value="Consensus binding sequence"
@@ -121,7 +121,7 @@
                             <img src="#{classificationBean.getAnnotationValueOfSelectedNode( 'LOGO_plot')}" alt="LOGO plot" />
                         </h:outputLink>
                     </p:outputPanel>
-              
+
                     <p:outputPanel rendered="#{(not empty classificationBean.selectedNode) and (classificationBean.selectedNode.type != 'Superclass') and (classificationBean.selectedNode.type != 'Genus')}">
                         <table id="fastaTable">
                             <thead>
@@ -136,19 +136,29 @@
                             <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" 
                                           rendered="#{not empty classificationBean.getDBDFastaForSelected()}" >FASTA file</h:outputLink></td>
                             <td align="center"> <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}"
-                                               rendered="#{not empty classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
+                                                              rendered="#{not empty classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
                             </tr>
                             <tr>
-                                <th>Phylogenetic tree<br/>Mammalia</th>
-                                <td>
-                                    <p:dataList value="#{classificationBean.DBDSVGsForSelected}" var="svg" styleClass="inlineList">
+                                <th>Phylogenetic tree<br/>Mammalia
+                            <p:button value="?" title="Info" onclick="return false" id="mammaliaPhyloHelpButton" styleClass="helpBtn"/>
+                            <p:tooltip for="mammaliaPhyloHelpButton"
+                                       value="These trees (or cladograms, since distances were ignored) were
+                                       generated with a local installation of PhyML 3.0 (Guindon et al., 
+                                       Systematic Biology, 59(3):307-21, 2010.), by webPRANK at EBI
+                                       (http://www.ebi.ac.uk/goldman-srv/webprank/), or by the web version of
+                                       PhyML 3.0 (http://phylogeny.lirmm.fr). The resulting trees were
+                                       visualized with iTOL v3 (http://itol.embl.de/)."
+                                       styleClass="helpTooltip" showEvent="click"  />
+                            </th>
+                            <td>
+                            <p:dataList value="#{classificationBean.DBDSVGsForSelected}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:outputLink></div>
                             </p:dataList>
-                                </td>
-                                <td>
+                            </td>
+                            <td>
                             <p:dataList value="#{classificationBean.proteinSVGsForSelected}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
@@ -158,16 +168,24 @@
                             </td>
                             </tr>
                             <tr>
-                                <th>Phylogenetic tree<br/>slim</th>
-                                <td>
-                                      <p:dataList value="#{classificationBean.DBDSlimSVGsForSelected}" var="svg" styleClass="inlineList">
+                                <th>Phylogenetic tree Mammalia<br/>(slim selection)
+                            <p:button value="?" title="Info" onclick="return false" id="mammaliaSlimPhyloHelpButton" styleClass="helpBtn"/>
+                            <p:tooltip for="mammaliaSlimPhyloHelpButton"
+                                       value="To generate these trees, only the TFs were taken from a selected group
+                                       of mammalian species. As standard, the corresponding human, cow, mouse
+                                       and Monodelphis TFs were taken if available; occasionally, either
+                                       species was to replaced or had to be omitted without replacement."
+                                       styleClass="helpTooltip" showEvent="click"  />
+                            </th>
+                            <td>
+                            <p:dataList value="#{classificationBean.DBDSlimSVGsForSelected}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
                                     </h:outputLink></div>
                             </p:dataList>
-                                </td>
-                                <td>
+                            </td>
+                            <td>
                             <p:dataList value="#{classificationBean.proteinSlimSVGsForSelected}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
@@ -183,7 +201,8 @@
                 <p:panel rendered="#{classificationBean.selectedNode.type == 'Genus'}">
                     <h3>Species specific reports for #{classificationBean.speciesOfSelectedNode.size()} species</h3>
                     Jump to <a href="#9606">human</a>, <a href="#10090">mouse</a> or <a href="#10116">rat</a><br/>
-                    Hint: You can also rearrange the panels with the mouse.
+                    Hint: You can rearrange the panels by drag-and-drop. The new arrangement
+                    will persist during your session.
                 </p:panel>                
                 <ui:include src="dashboard.xhtml" />
                 <div style="clear:both" />

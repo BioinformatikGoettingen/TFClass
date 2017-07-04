@@ -154,6 +154,7 @@ h2{
     border-style: solid !important;
     background-color: #FFFFCC !important;
     padding : 10px !important;
+    max-width: 400px;
 }
 
 .ui-widget-content {
