@@ -34,10 +34,18 @@
             <p>
                 <a href="http://factor.genexplain.com/cgi-bin/transfac_factor/search.cgi" target="_blank">Go to the search of TRANSFAC</a></p>
             <br/><br/>
-
+            <p:panel style="border:1px solid lightgray; width:320px">
+            Superclass:&#160;<img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>,
+                Class:&#160;<img src="#{request.contextPath}/resources/class.gif" height="15px"/>,<br/>
+                Family:&#160;<img src="#{request.contextPath}/resources/family.gif" height="15px"/>,
+                Subfamily:&#160;<img src="#{request.contextPath}/resources/subfamily.gif" height="15px"/>,
+                Genus:&#160;<img src="#{request.contextPath}/resources/genus.gif" height="15px"/>,
+                </p:panel>
+                
             <p:tree id="cfTree" styleClass="treePanel" value="#{classificationBean.classificationRoot}" var="node" dynamic="true" animate="true"
                     selectionMode="single" selection="#{classificationBean.selectedNode}" cache="FALSE">
                 <p:ajax event="select" update="cfTree :classificationForm:detailsPanel" />
+                <p:ajax event="collapse" listener="#{classificationBean.onNodeCollapse}" />
                 <p:treeNode><h:outputText value="#{node.name} #{node.label}" />
                 </p:treeNode>
                 <p:treeNode type="Superclass"><img src="#{request.contextPath}/resources/superclass.gif" height="15px"/>
@@ -173,7 +181,7 @@
                     </p:outputPanel>
                 </p:panel>
                 <p:panel rendered="#{classificationBean.selectedNode.type == 'Genus'}">
-                    <h3>Species specific reports</h3>
+                    <h3>Species specific reports for #{classificationBean.speciesOfSelectedNode.size()} species</h3>
                     Jump to <a href="#9606">human</a>, <a href="#10090">mouse</a> or <a href="#10116">rat</a><br/>
                     Hint: You can also rearrange the panels with the mouse.
                 </p:panel>                

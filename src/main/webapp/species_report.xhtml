@@ -5,8 +5,11 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
 
-    <p><h:outputText value="Synonyms: #{speciesBean.getGenBankName(taxon)}" title="Genbank common name"/>
-        <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" /></p>
+    <p><h:outputLink value="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=#{taxon}" target="_blank">
+            <f:param name="lin" value="s" />
+            <h:outputText value="Synonyms: #{speciesBean.getGenBankName(taxon)}" title="Genbank common name"/>
+            <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" />
+        </h:outputLink></p>
 
     <h:outputText value="Outlinks" class="bold"/>
     <p:dataList value="#{classificationBean.getXref(taxon)}" var="link">

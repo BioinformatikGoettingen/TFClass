@@ -3,7 +3,6 @@ package de.sybig.tfclass;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import de.sybig.oba.client.Obo2DClassList;
 import de.sybig.oba.client.OboClass;
-import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.client.OntologyClass;
 import de.sybig.oba.server.JsonAnnotation;
@@ -113,7 +112,6 @@ public class ClassificationTree {
 
         private void collapseTree(OboClass oboClass) {
         TreeNode treeNode = searchTreeNode(getRoot(), oboClass);
-//        System.out.println("collapsing " + treeNode);
         treeNode.setExpanded(false);
     }
     

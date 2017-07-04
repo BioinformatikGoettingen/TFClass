@@ -15,6 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +155,6 @@ public class ClassificationBean {
         collapseAll();
         TreeNode last = classificationTree.expandNode(getSearchedClass());
         if (last == null) {
-            System.out.println(last + " for " + getSearchedClass());
             return null;
         }
         last.setSelected(true);
@@ -162,6 +162,9 @@ public class ClassificationBean {
         return last;
     }
 
+      public void onNodeCollapse(NodeCollapseEvent event) {
+        getTfTree().collapseTree(event.getTreeNode());
+    }
     public void collapseAll() {
         selectedNode = null;
         getTfTree().collapseTree();
