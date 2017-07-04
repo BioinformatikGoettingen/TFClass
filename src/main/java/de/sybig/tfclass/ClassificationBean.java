@@ -5,20 +5,27 @@ import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.server.JsonAnnotation;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
+import de.sybig.palinker.NormalTissueCytomer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.io.File;
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.NormaltissueFacadeREST;
 
 /**
  *
@@ -28,6 +35,8 @@ import org.slf4j.LoggerFactory;
 @ViewScoped
 public class ClassificationBean {
 
+    @EJB
+    private NormaltissueFacadeREST ntf;
     private final OboConnector connector;
     private static final Logger log = LoggerFactory.getLogger(ClassificationBean.class);
 
@@ -38,7 +47,7 @@ public class ClassificationBean {
     private OboClass searchedClass;
     private Map<String, String> fastaMap;
     private Map<String, String> dbdFastaMap;
-    
+
     private Map<String, String> proteinPhyMLMap;
     private Map<String, String> proteinWebprankMap;
     private Map<String, String> proteinPhyML2Map;
@@ -46,14 +55,17 @@ public class ClassificationBean {
     private Map<String, String> proteinSlimPhyMLMap;
     private Map<String, String> proteinSlimWebprankMap;
     private Map<String, String> proteinSlimPhyML2Map;
-    
+
     private Map<String, String> dbdPhyMLMap;
     private Map<String, String> dbdWebprankMap;
     private Map<String, String> dbdPhyML2Map;
-    
+
     private Map<String, String> dbdSlimPhyMLMap;
     private Map<String, String> dbdSlimWebprankMap;
     private Map<String, String> dbdSlimPhyML2Map;
+    private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
+    private static final String HUMAN = "9606";
+    private List<NormalTissueCytomer> filteredTissues;
 
     public ClassificationBean() {
         super();
@@ -162,9 +174,10 @@ public class ClassificationBean {
         return last;
     }
 
-      public void onNodeCollapse(NodeCollapseEvent event) {
+    public void onNodeCollapse(NodeCollapseEvent event) {
         getTfTree().collapseTree(event.getTreeNode());
     }
+
     public void collapseAll() {
         selectedNode = null;
         getTfTree().collapseTree();
@@ -228,6 +241,61 @@ public class ClassificationBean {
         this.selectedNode = selectedNode;
     }
 
+    public List<NormalTissueCytomer> getExpressionTable(String taxonID) {
+        if (! HUMAN.equals(taxonID)){
+            return null;
+        }
+        List<OboClass> humanNodes = getDownstreamOfSelected().get(HUMAN);
+        if (humanNodes == null) {
+            return null;
+        }
+        try {
+            OboClass humanNode = humanNodes.get(0);
+            Set<JsonAnnotation> annotations = humanNode.getAnnotations();
+            for (JsonAnnotation a : annotations) {
+                if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
+                    Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
+                    Matcher matcher = regex.matcher(a.getValue());
+                    String ensid = matcher.replaceAll("$1");
+                    if (!tissueMap.containsKey(ensid)) {
+                        tissueMap.put(ensid, ntf.getWithEnsemblId(ensid));
+                    }
+                    return tissueMap.get(ensid);
+                }
+            }
+        } catch (Exception e) {
+            log.error("An error occured while getting the expression table {}", e.getMessage());
+        }
+        return null;
+    }
+     public List<NormalTissueCytomer> getFilteredTissues() {
+        return filteredTissues;
+    }
+
+    public void setFilteredTissues(List<NormalTissueCytomer> filteredTissues) {
+        this.filteredTissues = filteredTissues;
+    }
+
+    public SelectItem[] getLevelOptions() {
+        if (getExpressionTable(HUMAN) == null) {
+            return null;
+        }
+        List<String> levels = new LinkedList<String>();
+        for (NormalTissueCytomer t : getExpressionTable(HUMAN)) {
+            if (!levels.contains(t.getLevel())) {
+                levels.add(t.getLevel());
+            }
+        }
+        Collections.sort(levels);
+        SelectItem[] options = new SelectItem[levels.size() + 1];
+        options[0] = new SelectItem("", "Select");
+        for (int i = 0; i < levels.size(); i++) {
+            options[i + 1] = new SelectItem(levels.get(i), levels.get(i));
+
+        }
+        return options;
+    }
+
     public String getFastaForSelected() {
         if (getSelectedNode() == null) {
             return null;
@@ -259,7 +327,7 @@ public class ClassificationBean {
         }
         return out;
     }
-    
+
     public List<String> getProteinSlimSVGsForSelected() {
         if (getSelectedNode() == null) {
             return null;
@@ -295,7 +363,8 @@ public class ClassificationBean {
         }
         return out;
     }
-     public List<String> getDBDSlimSVGsForSelected() {
+
+    public List<String> getDBDSlimSVGsForSelected() {
         if (getSelectedNode() == null) {
             return null;
         }
@@ -312,8 +381,7 @@ public class ClassificationBean {
         }
         return out;
     }
-    
-    
+
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
             fastaMap = getFileMap("_mammalia.fasta");
@@ -349,7 +417,7 @@ public class ClassificationBean {
         return proteinPhyML2Map;
     }
 
-     private Map<String, String> getProteinPhyMLslimMap() {
+    private Map<String, String> getProteinPhyMLslimMap() {
         if (proteinSlimPhyMLMap == null) {
             proteinSlimPhyMLMap = getFileMap("_mammalia-slim_PhyML-iTOL.svg");
         }
@@ -369,7 +437,7 @@ public class ClassificationBean {
         }
         return proteinSlimPhyML2Map;
     }
-    
+
     /// DBD
     private Map<String, String> getDBDPhyMLMap() {
         if (dbdPhyMLMap == null) {
@@ -391,9 +459,9 @@ public class ClassificationBean {
         }
         return dbdPhyML2Map;
     }
-    
+
     /// DBD slim
-     private Map<String, String> getDBDSlimPhyMLMap() {
+    private Map<String, String> getDBDSlimPhyMLMap() {
         if (dbdSlimPhyMLMap == null) {
             dbdSlimPhyMLMap = getFileMap("_mammalia-slim_dbd_PhyML-iTOL.svg");
         }
@@ -413,7 +481,7 @@ public class ClassificationBean {
         }
         return dbdSlimPhyML2Map;
     }
-    
+
     private Map<String, String> getFileMap(String pattern) {
         Map<String, String> fileMap = new HashMap<String, String>();
         String dir = System.getenv("static_suppl_dir");
@@ -509,7 +577,6 @@ public class ClassificationBean {
             out.add("http://factor.genexplain.com/cgi-bin/transfac_factor/getTF.cgi?AC=" + id[1]);
             out.add(id[1]);
         } else {
-            System.out.println("No T ID for " + link);
             return null;
         }
         return out;
@@ -522,5 +589,9 @@ public class ClassificationBean {
         out.add("http://www.uniprot.org/uniprot/" + id);
         out.add(id);
         return out;
+    }
+    
+    public void setNtf(NormaltissueFacadeREST ntf){
+        this.ntf = ntf;
     }
 }

@@ -221,6 +221,45 @@
                     </p:scrollPanel>
                 </p:outputPanel>
             </p:dialog>
+             <p:dialog widgetVar="expressionDialog" header="Expression table" style="max-height: 600px">
+                <p:outputPanel id="expressionPanel">
+                    The table below summarizes the protein expression data from the <a href="http://www.proteinatlas.org/">Protein Atlas</a>.
+                    The tissues and cell types are
+                    linked to the <a href="http://cytomer.bioinf.med.uni-goettingen.de">Cytomer ontology</a>
+                    <p:outputPanel   rendered="#{classificationBean.getExpressionTable('9606') == null}" >
+                        <p>
+                        <h:outputText value="The selected tree node is not linked to a gene, no expression data is available."
+                                      /></p></p:outputPanel>
+
+                    <p:dataTable id="expressionTable" rendered="#{not empty classificationBean.getExpressionTable('9606')}"
+                                 value="#{classificationBean.getExpressionTable('9606')}" var="row" lazy="false"
+                                 filteredValue="#{classificationBean.filteredTissues}"  paginator="true"
+                                 rows="15"
+                                 rowsPerPageTemplate="10,15,25">
+                        <p:column sortBy="#{row.tissueClass}" filterBy="#{row.tissueClass}" filterMatchMode="contains" >
+                            <f:facet name="header">Tissue</f:facet>
+                            <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.tissueClass}" title="link to Cytomer" target="_blank">
+                                <h:outputText value="#{row.tissueClass.replaceAll('_', ' ')}" />
+                            </h:outputLink>
+                        </p:column>
+
+                        <p:column sortBy="#{row.cellClass}"  filterBy="#{row.cellClass}" filterMatchMode="contains">
+                            <f:facet name="header">Cell type</f:facet>
+                            <h:outputLink  value="http://cytomer.bioinf.med.uni-goettingen.de?class=#{row.cellClass}" title="link to Cytomer" target="_blank">
+                                <h:outputText value="#{row.cellClass.replaceAll('_', ' ')}" /></h:outputLink>
+                        </p:column>
+
+                        <p:column sortBy="#{row.getLevelAsInt()}" filterBy="#{row.level}"  filterOptions="#{classificationBean.getLevelOptions()}">
+                            <f:facet name="header">Expression level</f:facet>#{row.level}</p:column>
+
+                        <p:column sortBy="#{row.type}">
+                            <f:facet name="header">Type</f:facet>#{row.type}</p:column>
+                        <p:column sortBy="#{row.getReliabilityAsInt()}">
+                            <f:facet name="header">Reliability</f:facet>#{row.reliability}</p:column>
+                    </p:dataTable>
+
+                </p:outputPanel>
+            </p:dialog>
         </h:form>
     </p:panel>
 
