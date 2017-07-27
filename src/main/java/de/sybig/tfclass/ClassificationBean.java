@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.io.File;
+import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.EJB;
@@ -34,12 +38,12 @@ import service.NormaltissueFacadeREST;
 @ManagedBean
 @ViewScoped
 public class ClassificationBean {
-
+    
     @EJB
     private NormaltissueFacadeREST ntf;
     private final OboConnector connector;
     private static final Logger log = LoggerFactory.getLogger(ClassificationBean.class);
-
+    
     private ClassificationTree classificationTree;
     private TreeNode selectedNode;
     private Map<String, List<OboClass>> downstreamOfSelected;
@@ -47,31 +51,31 @@ public class ClassificationBean {
     private OboClass searchedClass;
     private Map<String, String> fastaMap;
     private Map<String, String> dbdFastaMap;
-
+    
     private Map<String, String> proteinPhyMLMap;
     private Map<String, String> proteinWebprankMap;
     private Map<String, String> proteinPhyML2Map;
-
+    
     private Map<String, String> proteinSlimPhyMLMap;
     private Map<String, String> proteinSlimWebprankMap;
     private Map<String, String> proteinSlimPhyML2Map;
-
+    
     private Map<String, String> dbdPhyMLMap;
     private Map<String, String> dbdWebprankMap;
     private Map<String, String> dbdPhyML2Map;
-
+    
     private Map<String, String> dbdSlimPhyMLMap;
     private Map<String, String> dbdSlimWebprankMap;
     private Map<String, String> dbdSlimPhyML2Map;
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private static final String HUMAN = "9606";
     private List<NormalTissueCytomer> filteredTissues;
-
+    
     public ClassificationBean() {
         super();
         this.connector = ObaProvider.getInstance().getConnector3();
     }
-
+    
     public String init() {
         // used on the top of the page to init the bean
 
@@ -107,7 +111,7 @@ public class ClassificationBean {
                 selectSearched();
                 log.info("navigate to class {} specified in the url wiht ext parameter {}", cls, ext);
                 return "";
-
+                
             }
         } catch (NumberFormatException e) {
             log.error("The id '{}' parsed from the URL for the detail view is not valid");
@@ -116,53 +120,72 @@ public class ClassificationBean {
             log.error("Error while parsing URL parameter " + e);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for this parameter ", null));
         }
-
+        
         return "";
     }
-
+    
     public ClassificationTree getTfTree() {
         if (classificationTree == null) {
             classificationTree = new ClassificationTree(connector);
         }
         return classificationTree;
     }
-
+    
     public Set<String> getSpeciesOfSelectedNode() {
         if (selectedNode == null) {
             return null;
         }
         return getDownstreamOfSelected().keySet();
     }
-
+    
     public boolean isSpeciesInSelectedNode(String taxon) {
-        if (selectedNode == null) {
+        if (selectedNode == null || !selectedNode.getType().equals("Genus")) {
             return false;
         }
         return (getDownstreamOfSelected().keySet().contains(taxon));
     }
-
+    
     public List<OboClass> search(String pattern) {
         String searchPattern = pattern;
         try {
-            OboClassList searchResult = connector.searchCls(searchPattern, getFieldList());
+            OboClassList searchResult = connector.searchCls(searchPattern + "*", getFieldList());
             if (searchResult == null || searchResult.getEntities() == null) {
                 return null;
             }
-            return searchResult.getEntities();
+            Set<OboClass> resultSet = new HashSet<OboClass>();
+            for (OboClass resultCls : searchResult.getEntities()) {
+                resultSet.add(getClassificationClass(resultCls));
+            }
+            ArrayList<OboClass> resultList = new ArrayList<OboClass>(resultSet);
+            Collections.sort(resultList);
+            return resultList;
         } catch (Exception ex) {
             log.warn("An error occured while searching in the ontology ", ex);
             return null;
         }
     }
-
+    
+    private OboClass getClassificationClass(OboClass origCls) throws ConnectException {
+        OboClass cls2 = connector.getCls(origCls); // This is a workaround as long as the classes in a search result have the properties not set.
+        if (cls2.getProperties() == null) {
+            return cls2;
+        }
+        for (JsonObjectPropertyExpression prop : (Set<JsonObjectPropertyExpression>) cls2.getProperties()) {
+            if (prop.getProperty().getName().equals("belongs_to")) {
+                return (OboClass) prop.getTarget();
+            }
+        }
+        return cls2;
+    }
+    
     public OboClass getSearchedClass() {
         return searchedClass;
     }
-
+    
     public void setSearchedClass(OboClass searchedClass) {
         this.searchedClass = searchedClass;
     }
-
+    
     public TreeNode selectSearched() {
         collapseAll();
         TreeNode last = classificationTree.expandNode(getSearchedClass());
@@ -173,16 +196,16 @@ public class ClassificationBean {
         setSelectedNode(last);
         return last;
     }
-
+    
     public void onNodeCollapse(NodeCollapseEvent event) {
         getTfTree().collapseTree(event.getTreeNode());
     }
-
+    
     public void collapseAll() {
         selectedNode = null;
         getTfTree().collapseTree();
     }
-
+    
     private List<String> getFieldList() {
         if (fieldList == null) {
             fieldList = new LinkedList<String>();
@@ -192,8 +215,14 @@ public class ClassificationBean {
         }
         return fieldList;
     }
-
+    
     private Map<String, List<OboClass>> getDownstreamOfSelected() {
+        if (selectedNode == null) {
+            return null;
+        }
+        if (!selectedNode.getType().equals("Genus")) {
+            return null;
+        }
         if (downstreamOfSelected == null) {
             downstreamOfSelected = new HashMap<String, List<OboClass>>();
             OboClass oc = (OboClass) selectedNode.getData();
@@ -215,11 +244,11 @@ public class ClassificationBean {
         }
         return downstreamOfSelected;
     }
-
+    
     public TreeNode getClassificationRoot() {
         return getTfTree().getRoot();
     }
-
+    
     public String getAnnotationValueOfSelectedNode(String annotation) {
         if (selectedNode == null) {
             return null;
@@ -231,21 +260,25 @@ public class ClassificationBean {
         }
         return annotations.iterator().next().getValue();
     }
-
+    
     public TreeNode getSelectedNode() {
         return selectedNode;
     }
-
+    
     public void setSelectedNode(TreeNode selectedNode) {
         downstreamOfSelected = null;
         this.selectedNode = selectedNode;
     }
-
+    
     public List<NormalTissueCytomer> getExpressionTable(String taxonID) {
-        if (! HUMAN.equals(taxonID)){
+        if (!HUMAN.equals(taxonID)) {
             return null;
         }
-        List<OboClass> humanNodes = getDownstreamOfSelected().get(HUMAN);
+        Map<String, List<OboClass>> downstream = getDownstreamOfSelected();
+        if (downstream == null) {
+            return null;
+        }
+        List<OboClass> humanNodes = downstream.get(HUMAN);
         if (humanNodes == null) {
             return null;
         }
@@ -268,14 +301,15 @@ public class ClassificationBean {
         }
         return null;
     }
-     public List<NormalTissueCytomer> getFilteredTissues() {
+    
+    public List<NormalTissueCytomer> getFilteredTissues() {
         return filteredTissues;
     }
-
+    
     public void setFilteredTissues(List<NormalTissueCytomer> filteredTissues) {
         this.filteredTissues = filteredTissues;
     }
-
+    
     public SelectItem[] getLevelOptions() {
         if (getExpressionTable(HUMAN) == null) {
             return null;
@@ -291,25 +325,25 @@ public class ClassificationBean {
         options[0] = new SelectItem("", "Select");
         for (int i = 0; i < levels.size(); i++) {
             options[i + 1] = new SelectItem(levels.get(i), levels.get(i));
-
+            
         }
         return options;
     }
-
+    
     public String getFastaForSelected() {
         if (getSelectedNode() == null) {
             return null;
         }
         return getFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
     }
-
+    
     public String getDBDFastaForSelected() {
         if (getSelectedNode() == null) {
             return null;
         }
         return getDBDFastaMap().get(((OboClass) getSelectedNode().getData()).getName());
     }
-
+    
     public List<String> getProteinSVGsForSelected() {
         if (getSelectedNode() == null) {
             return null;
@@ -327,7 +361,7 @@ public class ClassificationBean {
         }
         return out;
     }
-
+    
     public List<String> getProteinSlimSVGsForSelected() {
         if (getSelectedNode() == null) {
             return null;
@@ -345,7 +379,7 @@ public class ClassificationBean {
         }
         return out;
     }
-
+    
     public List<String> getDBDSVGsForSelected() {
         if (getSelectedNode() == null) {
             return null;
@@ -363,7 +397,7 @@ public class ClassificationBean {
         }
         return out;
     }
-
+    
     public List<String> getDBDSlimSVGsForSelected() {
         if (getSelectedNode() == null) {
             return null;
@@ -381,56 +415,56 @@ public class ClassificationBean {
         }
         return out;
     }
-
+    
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
             fastaMap = getFileMap("_mammalia.fasta");
         }
         return fastaMap;
     }
-
+    
     private Map<String, String> getDBDFastaMap() {
         if (dbdFastaMap == null) {
             dbdFastaMap = getFileMap("mammalia_dbd.fasta");
         }
         return dbdFastaMap;
     }
-
+    
     private Map<String, String> getProteinPhyMLMap() {
         if (proteinPhyMLMap == null) {
             proteinPhyMLMap = getFileMap("_mammalia_PhyML-iTOL.svg");
         }
         return proteinPhyMLMap;
     }
-
+    
     private Map<String, String> getProteinWebprankMap() {
         if (proteinWebprankMap == null) {
             proteinWebprankMap = getFileMap("_mammalia_webprank-iTOL.svg");
         }
         return proteinWebprankMap;
     }
-
+    
     private Map<String, String> getProteinPhyML2Map() {
         if (proteinPhyML2Map == null) {
             proteinPhyML2Map = getFileMap("_mammalia_PhyML2-iTOL.svg");
         }
         return proteinPhyML2Map;
     }
-
+    
     private Map<String, String> getProteinPhyMLslimMap() {
         if (proteinSlimPhyMLMap == null) {
             proteinSlimPhyMLMap = getFileMap("_mammalia-slim_PhyML-iTOL.svg");
         }
         return proteinSlimPhyMLMap;
     }
-
+    
     private Map<String, String> getProteinWebprankslimMap() {
         if (proteinSlimWebprankMap == null) {
             proteinSlimWebprankMap = getFileMap("_mammalia-slim_webprank-iTOL.svg");
         }
         return proteinSlimWebprankMap;
     }
-
+    
     private Map<String, String> getProteinPhyML2slimMap() {
         if (proteinSlimPhyML2Map == null) {
             proteinSlimPhyML2Map = getFileMap("_mammalia-slim_PhyML2-iTOL.svg");
@@ -445,14 +479,14 @@ public class ClassificationBean {
         }
         return dbdPhyMLMap;
     }
-
+    
     private Map<String, String> getDBDWebprankMap() {
         if (dbdWebprankMap == null) {
             dbdWebprankMap = getFileMap("_mammalia_dbd_webprank-iTOL.svg");
         }
         return dbdWebprankMap;
     }
-
+    
     private Map<String, String> getDBDPhyML2Map() {
         if (dbdPhyML2Map == null) {
             dbdPhyML2Map = getFileMap("_mammalia_dbd_PhyML2-iTOL.svg");
@@ -467,21 +501,21 @@ public class ClassificationBean {
         }
         return dbdSlimPhyMLMap;
     }
-
+    
     private Map<String, String> getDBDSlimWebprankMap() {
         if (dbdSlimWebprankMap == null) {
             dbdSlimWebprankMap = getFileMap("_mammalia-slim_dbd_webprank-iTOL.svg");
         }
         return dbdSlimWebprankMap;
     }
-
+    
     private Map<String, String> getDBDSlimPhyML2Map() {
         if (dbdSlimPhyML2Map == null) {
             dbdSlimPhyML2Map = getFileMap("_mammalia-slim_dbd_PhyML2-iTOL.svg");
         }
         return dbdSlimPhyML2Map;
     }
-
+    
     private Map<String, String> getFileMap(String pattern) {
         Map<String, String> fileMap = new HashMap<String, String>();
         String dir = System.getenv("static_suppl_dir");
@@ -520,7 +554,7 @@ public class ClassificationBean {
         }
         return null;
     }
-
+    
     public List<List<String>> getXref(String taxon) {
         if (!selectedNode.getType().equals("Genus")) {
             return null;
@@ -550,7 +584,28 @@ public class ClassificationBean {
         }
         return links;
     }
-
+    
+    public String getUniProt(String taxon) {
+        if (!selectedNode.getType().equals("Genus")) {
+            return null;
+        }
+        List<List<String>> links = new LinkedList<List<String>>();
+        List<OboClass> paralogs = getDownstreamOfSelected().get(taxon);
+        if (paralogs == null) {
+            return null;
+        }
+        for (OboClass prot : paralogs) {
+            Set<JsonAnnotation> xref = prot.getAnnotationValues("xref");
+            for (JsonAnnotation annotation : xref) {
+                String link = annotation.getValue();
+                if (link.startsWith("UNIPROT")) {
+                    return link.replace("UNIPROT:", "");
+                }
+            }
+        }
+        return null;
+    }
+    
     private List<String> parseEnsembleGeneLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String id = link.replace("ENSEMBL_GeneID:", "");
@@ -559,7 +614,7 @@ public class ClassificationBean {
         out.add(id);
         return out;
     }
-
+    
     private List<String> parseEnsembleLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String id = link.replace("ENSEMBL:", "");
@@ -568,7 +623,7 @@ public class ClassificationBean {
         out.add(id);
         return out;
     }
-
+    
     private List<String> parseTransfacLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String[] id = link.replace("TANSFAC:", "").split(",");
@@ -581,7 +636,7 @@ public class ClassificationBean {
         }
         return out;
     }
-
+    
     private List<String> parseUniprotLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String id = link.replace("UNIPROT:", "");
@@ -591,7 +646,7 @@ public class ClassificationBean {
         return out;
     }
     
-    public void setNtf(NormaltissueFacadeREST ntf){
+    public void setNtf(NormaltissueFacadeREST ntf) {
         this.ntf = ntf;
     }
 }
