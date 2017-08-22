@@ -15,11 +15,13 @@
     <h:outputText value="Protein expression pattern:" rendered="#{not empty classificationBean.getExpressionTable(taxon)}" class="bold"/>
     <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
                    rendered="#{not empty classificationBean.getExpressionTable(taxon)}" />
+    <p:outputPanel  rendered="#{not empty classificationBean.getUniProt(taxon)}">
+        <a href="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}"
+           target="blank">
+            <img src="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}" width="400px"/>
+        </a>
+    </p:outputPanel>
 
-    <input id="uniprotid"  name="uniprot" value="#{classificationBean.getUniProt(taxon)}" a:ref="niceInput">
-    <f:passThroughAttribute name="autocorrect" value="off" />
-    </input>
-    {{ uniProtToVue }}
     <h:outputText value="Outlinks" class="bold"/>
     <p:dataList value="#{classificationBean.getXref(taxon)}" var="link">
         <h:outputText value="#{link.get(0)}: " />

@@ -88,17 +88,7 @@ public class SpeciesBean {
         return species;
     }
 
-//    public List<OboClass> getSelectedSpecies() {
-//        if (selectedSpecies == null) {
-//            selectedSpecies = new ArrayList<OboClass>();
-//            //selectedSpecies.addAll(getSpecies());
-//        }
-//        return selectedSpecies;
-//    }
-//
-//    public void setSelectedSpecies(List<OboClass> species) {
-//        System.out.println("selectes " + species);
-//    }
+
 
     public class ScientificNameComparator implements Comparator {
 
