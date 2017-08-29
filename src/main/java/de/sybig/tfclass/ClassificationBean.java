@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -48,6 +49,8 @@ public class ClassificationBean {
 
     @EJB
     private NormaltissueFacadeREST ntf;
+    @ManagedProperty(value="#{speciesBean}")
+    private SpeciesBean speciesBean;
     private final OboConnector connector;
     private static final Logger log = LoggerFactory.getLogger(ClassificationBean.class);
 
@@ -74,6 +77,9 @@ public class ClassificationBean {
     private Map<String, String> dbdSlimPhyMLMap;
     private Map<String, String> dbdSlimWebprankMap;
     private Map<String, String> dbdSlimPhyML2Map;
+    
+    private Map<String, String> protLogoPlotMap;
+    
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private static final String HUMAN = "9606";
     private List<NormalTissueCytomer> filteredTissues;
@@ -523,6 +529,8 @@ public class ClassificationBean {
         return dbdSlimPhyML2Map;
     }
 
+   
+    @Deprecated
     private Map<String, String> getFileMap(String pattern) {
         Map<String, String> fileMap = new HashMap<String, String>();
         String dir = System.getenv("static_suppl_dir");
@@ -619,10 +627,11 @@ public class ClassificationBean {
 
     public String getDBDSequence(String taxon) {
         InputStream fis = null;
-
-        if (!HUMAN.equals(taxon)) {
-            return null;
-        }
+        
+        String species = speciesBean.getScientificName(taxon);
+//        if (!HUMAN.equals(taxon)) {
+//            return null;
+//        }
         String out = "";
         String parentId = ((OboClass) selectedNode.getParent().getData()).getName();
         String nodeLabel = ((OboClass) selectedNode.getData()).getLabel();
@@ -640,10 +649,10 @@ public class ClassificationBean {
             fis = new FileInputStream(dir + "/" + fastaFileName);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
-
             while ((line = br.readLine()) != null) {
-                if (line.startsWith(">Homo_sapiens_" + nodeLabel)) {
-                    out = "/" + br.readLine();
+                line = line.toLowerCase().replaceAll("-", "");
+                if (line.startsWith(String.format(">%s_%s", species.toLowerCase().replaceAll(" ", "_"), nodeLabel.toLowerCase().replaceAll("-", "")))) {
+                    out = "/" + br.readLine();//+"?color="+colorForSuperClass(((OboClass)selectedNode.getData()).getName());
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -702,8 +711,52 @@ public class ClassificationBean {
         out.add(id);
         return out;
     }
-
+    private String colorForSuperClass(String name) {
+        char firstLetter = name.charAt(0);
+        if (firstLetter == '0'){
+            return "FF33CC";
+        }
+        if (firstLetter == '1'){
+            return "00B0F0";
+        }
+        if (firstLetter == '2'){
+            return "FFC000";
+        }
+        if (firstLetter == '3'){
+            return "00B050";
+        }
+        if (firstLetter == '4'){
+            return "FFFF00";
+        }
+        if (firstLetter == '5'){
+            return "5B9BD5";
+        }
+        if (firstLetter == '6'){
+            return "FF0000";
+        }
+        if (firstLetter == '7'){
+            return "99FF33";
+        }
+        if (firstLetter == '8'){
+            return "000000";
+        }
+        if (firstLetter == '9'){
+            return "FFFFFF";
+        }
+        return "AAAAAA";
+    }
     public void setNtf(NormaltissueFacadeREST ntf) {
         this.ntf = ntf;
     }
+
+    public SpeciesBean getSpeciesBean() {
+        return speciesBean;
+    }
+
+    public void setSpeciesBean(SpeciesBean speciesBean) {
+        this.speciesBean = speciesBean;
+    }
+
+
+    
 }
