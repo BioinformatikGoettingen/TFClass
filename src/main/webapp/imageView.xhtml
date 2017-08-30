@@ -18,12 +18,12 @@
         </style>
         <script src="jquery.js"></script>
         <script src="jquery.panzoom.min.js"></script>
-<!--        <script src="jquery.mousewheel.js"></script>-->
+        <!--        <script src="jquery.mousewheel.js"></script>-->
     </h:head>
     <h:body>
         <section>
-              <div class="parent">
-        <div class="panzoom">
+            <div class="parent">
+                <div class="panzoom">
                     <img src="/suppl/#{imageViewBean.fileName}" width="100%" height="90%"/>
                 </div>
             </div>
@@ -45,6 +45,9 @@
                 })();
             </script>
         </section>
+        <h:link value="Return to classification" outcome="index">
+            <f:param name="tfclass" value="#{imageViewBean.id}" />
+        </h:link>
     </h:body>
 </html>
 

@@ -41,6 +41,9 @@ public class ImageViewBean {
         }
         return image;
     }
+    
+   
+       
 
     public ImageType getType() {
         return type;
@@ -55,7 +58,10 @@ public class ImageViewBean {
     }
 
     public String getId() {
-        return id;
+        if (fileName == null){
+            return null;
+        }
+        return fileName.split("_")[0];
     }
 
     public void setId(String id) {
