@@ -156,17 +156,20 @@
                             <td>
                             <p:dataList value="#{supplBean.getDBDSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
-                                    </h:outputLink></div>
+                                    <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg.fileName}" />
+                                      <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                    </h:link>
+                                  </div>
                             </p:dataList>
                             </td>
                             <td>
                             <p:dataList value="#{supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
-                                    </h:outputLink></div>
+                                     <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg}" />
+                                      <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                    </h:link></div>
                             </p:dataList>
                             </td>
                             </tr>
@@ -183,17 +186,19 @@
                             <td>
                             <p:dataList value="#{supplBean.getDBDSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                    </h:outputLink></div>
+                                     <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg}" />
+                                      <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                    </h:link></div>
                             </p:dataList>
                             </td>
                             <td>
                             <p:dataList value="#{supplBean.getProteinSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                    <h:outputLink value="/suppl/#{svg}" target="_blank">
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                    </h:outputLink></div>
+                                     <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg}" />
+                                      <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                    </h:link></div>
                             </p:dataList>
                             </td>
                             </tr>

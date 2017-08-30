@@ -1,7 +1,7 @@
 package de.sybig.tfclass;
 
-import de.sybig.oba.client.OboClass;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +33,10 @@ public class SupplBean {
     private Map<String, String> proteinSlimWebprankMap;
     private Map<String, String> proteinSlimPhyMLMap;
 
+    
+    public SupplBean(){
+        readSupplDir();
+    }
     public String getFasta(String id) {
 
         return getFastaMap().get(id);
@@ -43,17 +47,18 @@ public class SupplBean {
         return getDBDFastaMap().get(id);
     }
 
-    public List<String> getDBDSVGs(String id) {
-
-        List<String> out = new LinkedList<String>();
+    public List<ImageWrapper> getDBDSVGs(String id) {
+        
+        List<ImageWrapper> out = new ArrayList<ImageWrapper>();
         if (getDBDPhyMLMap().containsKey(id)) {
-            out.add(getDBDPhyMLMap().get(id));
+
+            out.add(new ImageWrapper(ImageType.DBD, getDBDPhyMLMap().get(id)));
         }
         if (getDBDWebprankMap().containsKey(id)) {
-            out.add(getDBDWebprankMap().get(id));
+            out.add(new ImageWrapper(ImageType.DBD, getDBDWebprankMap().get(id)));
         }
         if (getDBDPhyML2Map().containsKey(id)) {
-            out.add(getDBDPhyML2Map().get(id));
+            out.add(new ImageWrapper(ImageType.DBD, getDBDPhyML2Map().get(id)));
         }
         return out;
     }
@@ -232,5 +237,50 @@ public class SupplBean {
             }
         }
         return fileMap;
+    }
+
+    private void readSupplDir() {
+        if (true){
+            return;
+        }
+        String dir = System.getenv("static_suppl_dir");
+        if (dir == null) {
+            dir = System.getProperty("static_suppl_dir");
+        }
+
+        File dirf = new File(dir);
+        File[] files = dirf.listFiles();
+        for (File f : files) {
+            ImageWrapper wrapper = new ImageWrapper();
+            String completeName = f.getName();
+            completeName = completeName.replace(".logoplot", "_logoplot");
+            String extension = completeName.substring(completeName.lastIndexOf(".")+1) ;
+            String name = completeName.substring(0,completeName.lastIndexOf("."));
+            String[] parts = name.split("_");
+            
+            wrapper.setId(parts[0]);
+            wrapper.setSpeciesSet(ImageWrapper.SpeciesSet.byName(parts[1]));
+           
+            wrapper.setFileType(extension);
+            if (parts.length < 3){
+                continue;
+            }
+            if ("dbd".equals(parts[3])){
+               // wrapper.setPortion(parts[3]);
+            }
+            System.out.println("3 " + parts[2]);
+            if (parts.length < 3){
+                System.out.println("--- " + completeName);
+                continue;
+            }
+            //System.out.println(wrapper.getSpeciesSet());
+           
+            
+           
+            //System.out.println("2x. " + parts[1]);
+//            if (name.endsWith(pattern)) {
+//                fileMap.put(name.substring(0, name.indexOf("_")), name);
+//            }
+        }
     }
 }

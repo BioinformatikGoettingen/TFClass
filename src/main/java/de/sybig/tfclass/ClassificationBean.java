@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -61,27 +60,8 @@ public class ClassificationBean {
     private Map<String, List<OboClass>> downstreamOfSelected;
     private LinkedList<String> fieldList;
     private OboClass searchedClass;
-    private Map<String, String> fastaMap;
-    private Map<String, String> dbdFastaMap;
-
-    private Map<String, String> proteinPhyMLMap;
-    private Map<String, String> proteinWebprankMap;
-    private Map<String, String> proteinPhyML2Map;
-
-    private Map<String, String> proteinSlimPhyMLMap;
-    private Map<String, String> proteinSlimWebprankMap;
-    private Map<String, String> proteinSlimPhyML2Map;
-
-    private Map<String, String> dbdPhyMLMap;
-    private Map<String, String> dbdWebprankMap;
-    private Map<String, String> dbdPhyML2Map;
-
-    private Map<String, String> dbdSlimPhyMLMap;
-    private Map<String, String> dbdSlimWebprankMap;
-    private Map<String, String> dbdSlimPhyML2Map;
-    
-    private Map<String, String> protLogoPlotMap;
-    
+ 
+   
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private static final String HUMAN = "9606";
     private List<NormalTissueCytomer> filteredTissues;
