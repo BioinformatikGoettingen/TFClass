@@ -136,10 +136,10 @@
                                 <tr>
                                     <th>FASTA</th>
                                     <td align="center">
-                            <h:outputLink value="/suppl/#{classificationBean.getDBDFastaForSelected()}" 
-                                          rendered="#{not empty classificationBean.getDBDFastaForSelected()}" >FASTA file</h:outputLink></td>
-                            <td align="center"> <h:outputLink value="/suppl/#{classificationBean.getFastaForSelected()}"
-                                                              rendered="#{not empty classificationBean.getFastaForSelected()}" >FASTA file</h:outputLink></td>
+                            <h:outputLink value="/suppl/#{supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" 
+                                          rendered="#{not empty supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" >FASTA file</h:outputLink></td>
+                            <td align="center"> <h:outputLink value="/suppl/#{supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}"
+                                                              rendered="#{not empty supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" >FASTA file</h:outputLink></td>
                             </tr>
                             <tr>
                                 <th>Phylogenetic tree<br/>Mammalia
@@ -154,7 +154,7 @@
                                        styleClass="helpTooltip" showEvent="click"  />
                             </th>
                             <td>
-                            <p:dataList value="#{classificationBean.DBDSVGsForSelected}" var="svg" styleClass="inlineList">
+                            <p:dataList value="#{supplBean.getDBDSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
@@ -162,7 +162,7 @@
                             </p:dataList>
                             </td>
                             <td>
-                            <p:dataList value="#{classificationBean.proteinSVGsForSelected}" var="svg" styleClass="inlineList">
+                            <p:dataList value="#{supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
@@ -181,7 +181,7 @@
                                        styleClass="helpTooltip" showEvent="click"  />
                             </th>
                             <td>
-                            <p:dataList value="#{classificationBean.DBDSlimSVGsForSelected}" var="svg" styleClass="inlineList">
+                            <p:dataList value="#{supplBean.getDBDSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
@@ -189,7 +189,7 @@
                             </p:dataList>
                             </td>
                             <td>
-                            <p:dataList value="#{classificationBean.proteinSlimSVGsForSelected}" var="svg" styleClass="inlineList">
+                            <p:dataList value="#{supplBean.getProteinSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:outputLink value="/suppl/#{svg}" target="_blank">
                                         <img src="/suppl/#{svg}" style="position: absolute; clip:rect(1px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
