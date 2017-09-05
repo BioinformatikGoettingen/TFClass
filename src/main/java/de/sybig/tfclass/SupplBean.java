@@ -150,21 +150,21 @@ public class SupplBean {
 
     private Map<String, String> getProteinPhyMLMap() {
         if (proteinPhyMLMap == null) {
-            proteinPhyMLMap = getFileMap("_mammalia_PhyML-iTOL.svg");
+            proteinPhyMLMap = getFileMap("_mammalia_prot_PhyML-iTOL.svg");
         }
         return proteinPhyMLMap;
     }
 
     private Map<String, String> getProteinWebprankMap() {
         if (proteinWebprankMap == null) {
-            proteinWebprankMap = getFileMap("_mammalia_webprank-iTOL.svg");
+            proteinWebprankMap = getFileMap("_mammalia_prot_webprank-iTOL.svg");
         }
         return proteinWebprankMap;
     }
 
     private Map<String, String> getProteinPhyML2Map() {
         if (proteinPhyML2Map == null) {
-            proteinPhyML2Map = getFileMap("_mammalia_PhyML2-iTOL.svg");
+            proteinPhyML2Map = getFileMap("_mammalia_prot_PhyML2-iTOL.svg");
         }
         return proteinPhyML2Map;
     }
@@ -193,28 +193,28 @@ public class SupplBean {
 
     private Map<String, String> getProteinPhyMLslimMap() {
         if (proteinSlimPhyMLMap == null) {
-            proteinSlimPhyMLMap = getFileMap("_mammalia-slim_PhyML-iTOL.svg");
+            proteinSlimPhyMLMap = getFileMap("_mammalia-slim_prot_PhyML-iTOL.svg");
         }
         return proteinSlimPhyMLMap;
     }
 
     private Map<String, String> getProteinWebprankslimMap() {
         if (proteinSlimWebprankMap == null) {
-            proteinSlimWebprankMap = getFileMap("_mammalia-slim_webprank-iTOL.svg");
+            proteinSlimWebprankMap = getFileMap("_mammalia-slim_prot_webprank-iTOL.svg");
         }
         return proteinSlimWebprankMap;
     }
 
     private Map<String, String> getProteinPhyML2slimMap() {
         if (proteinSlimPhyML2Map == null) {
-            proteinSlimPhyML2Map = getFileMap("_mammalia-slim_PhyML2-iTOL.svg");
+            proteinSlimPhyML2Map = getFileMap("_mammalia-slim_prot_PhyML2-iTOL.svg");
         }
         return proteinSlimPhyML2Map;
     }
 
     private Map<String, String> getProtLogoPlotMap() {
         if (protLogoPlotMap == null) {
-            protLogoPlotMap = getFileMap("_mammalia.logoplot.png");
+            protLogoPlotMap = getFileMap("_mammalia_dbd_logoplot.png");
         }
         return protLogoPlotMap;
     }
