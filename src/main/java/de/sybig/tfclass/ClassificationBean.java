@@ -2,10 +2,8 @@ package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
-import de.sybig.oba.client.OboConnector;
 import de.sybig.oba.client.tfclass.TFClassConnector;
 import de.sybig.oba.server.JsonAnnotation;
-import de.sybig.oba.server.JsonCls;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
 import de.sybig.palinker.NormalTissueCytomer;
 import java.io.BufferedReader;
@@ -66,8 +64,6 @@ public class ClassificationBean {
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private static final String HUMAN = "9606";
     private List<NormalTissueCytomer> filteredTissues;
-    private HashMap<JsonCls, OboClassList> speciesDownstreamMap;
-    private HashMap<JsonCls, OboClassList> generaDownstreamMap;
 
     public ClassificationBean() {
         super();
@@ -449,32 +445,7 @@ public class ClassificationBean {
         return out;
     }
 
-    public OboClassList getSpeciesDownstream() throws ConnectException {
-        if (selectedNode == null) {
-            return null;
-        }
-        JsonCls node = (JsonCls) selectedNode.getData();
-        if (speciesDownstreamMap == null) {
-            speciesDownstreamMap = new HashMap<JsonCls, OboClassList>();
-        }
-        if (!speciesDownstreamMap.containsKey(node)) {
-            speciesDownstreamMap.put(node, connector.getSpeciesDownstream((JsonCls) selectedNode.getData()));
-        }
-        return speciesDownstreamMap.get(node);
-    }
-     public OboClassList getGeneraDownstream() throws ConnectException {
-        if (selectedNode == null) {
-            return null;
-        }
-        JsonCls node = (JsonCls) selectedNode.getData();
-        if (generaDownstreamMap == null) {
-            generaDownstreamMap = new HashMap<JsonCls, OboClassList>();
-        }
-        if (!generaDownstreamMap.containsKey(node)) {
-            generaDownstreamMap.put(node, connector.getGeneraDownstream((JsonCls) selectedNode.getData()));
-        }
-        return generaDownstreamMap.get(node);
-    }
+  
 
     private List<String> parseEnsembleGeneLink(String link) {
         LinkedList<String> out = new LinkedList<String>();

@@ -115,10 +115,12 @@
                         <h:outputText value="Predicted binding sites" styleClass="bold" />                      
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
                     </p:outputPanel>
-                    
-                    <h:outputText value="Species below of this node: " styleClass="bold" /> #{classificationBean.getSpeciesDownstream().size()}
-                     <h:outputText value="Genera below of this node: " styleClass="bold" /> #{classificationBean.getGeneraDownstream().size()}
-                    
+                    <p:outputPanel rendered="#{not empty classificationBean.selectedNode}">
+                        <h:outputText value="Species below of this #{ontologySupportBean.getLevel(classificationBean.selectedNode)}:"
+                                      styleClass="bold" /> #{ontologySupportBean.getSpeciesDownstream(classificationBean.selectedNode).size()}
+                        <h:outputText value="Genera below of this #{ontologySupportBean.getLevel(classificationBean.selectedNode)}:" 
+                                      styleClass="bold" /> #{ontologySupportBean.getGeneraDownstream(classificationBean.selectedNode).size()}
+                    </p:outputPanel>
                     <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('LOGO_plot')}">
                         <h:outputText value="LOGO plot of the DNA binding sequence" class="bold"/>
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('LOGO_definition')}" target="_blank">
@@ -162,17 +164,17 @@
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:link outcome="imageView" >
                                         <f:param name="file" value="#{svg.fileName}" />
-                                      <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                        <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:link>
-                                  </div>
+                                </div>
                             </p:dataList>
                             </td>
                             <td>
                             <p:dataList value="#{supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                     <h:link outcome="imageView" >
+                                    <h:link outcome="imageView" >
                                         <f:param name="file" value="#{svg}" />
-                                      <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:link></div>
                             </p:dataList>
                             </td>
@@ -190,18 +192,18 @@
                             <td>
                             <p:dataList value="#{supplBean.getDBDSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                     <h:link outcome="imageView" >
+                                    <h:link outcome="imageView" >
                                         <f:param name="file" value="#{svg}" />
-                                      <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:link></div>
                             </p:dataList>
                             </td>
                             <td>
                             <p:dataList value="#{supplBean.getProteinSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
-                                     <h:link outcome="imageView" >
+                                    <h:link outcome="imageView" >
                                         <f:param name="file" value="#{svg}" />
-                                      <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
+                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,30px);" alt="Phylogenetic tree"/>
                                     </h:link></div>
                             </p:dataList>
                             </td>
@@ -211,7 +213,7 @@
                     </p:outputPanel>
                 </p:panel>
                 <p:panel rendered="#{classificationBean.selectedNode.type == 'Genus'}">
-                    <h3>Species specific reports for #{classificationBean.speciesOfSelectedNode.size()} species</h3>
+                    <h3>Species specific reports</h3>
                     Jump to <a href="#9606">human</a>, <a href="#10090">mouse</a> or <a href="#10116">rat</a><br/>
                     Hint: You can rearrange the panels by drag-and-drop. The new arrangement
                     will persist during your session.
