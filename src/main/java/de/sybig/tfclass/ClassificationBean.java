@@ -149,6 +149,7 @@ public class ClassificationBean {
             Set<OboClass> resultSet = new HashSet<OboClass>();
             for (OboClass resultCls : searchResult.getEntities()) {
                 resultSet.add(getClassificationClass(resultCls));
+//                resultSet.add(resultCls);
             }
             ArrayList<OboClass> resultList = new ArrayList<OboClass>(resultSet);
             Collections.sort(resultList);
@@ -160,7 +161,10 @@ public class ClassificationBean {
     }
 
     private OboClass getClassificationClass(OboClass origCls) throws ConnectException {
-        OboClass cls2 = connector.getCls(origCls); // This is a workaround as long as the classes in a search result have the properties not set.
+        OboClass cls2 = origCls;
+        if (origCls.getProperties() == null) {
+            cls2 = connector.getCls(origCls); // This is a workaround as long as the classes in a search result have the properties not set.
+        }
         if (cls2.getProperties() == null) {
             return cls2;
         }
@@ -367,6 +371,9 @@ public class ClassificationBean {
                     }
                 } else if (link.startsWith("UNIPROT")) {
                     links.add(parseUniprotLink(link));
+                } else if (link.startsWith("ProteinAtlas")) {
+                    links.add(parseProteinAtlasLink(link));
+                    links.add(parseBioGPSLink(link));
                 }
             }
         }
@@ -445,8 +452,6 @@ public class ClassificationBean {
         return out;
     }
 
-  
-
     private List<String> parseEnsembleGeneLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String id = link.replace("ENSEMBL_GeneID:", "");
@@ -484,6 +489,36 @@ public class ClassificationBean {
         out.add("UniProt");
         out.add("http://www.uniprot.org/uniprot/" + id);
         out.add(id);
+        return out;
+    }
+
+    private List<String> parseProteinAtlasLink(String link) {
+        LinkedList<String> out = new LinkedList<String>();
+        String[] id = link.replace("ProteinAtlas:", "").split(",");
+        if (id.length > 0) {
+            out.add("ProteinAtlas");
+            out.add("http://www.proteinatlas.org/" + id[0]);
+            if (id.length > 1 && id[1].trim().length() > 1) {
+                out.add(String.format("%s (%s)", id[0], id[1]));
+            } else {
+                out.add(String.format("%s", id[0]));
+            }
+        } else {
+            return null;
+        }
+        return out;
+    }
+
+    private List<String> parseBioGPSLink(String link) {
+        LinkedList<String> out = new LinkedList<String>();
+        String[] id = link.replace("ProteinAtlas:", "").split(",");
+        if (id.length > 0) {
+            out.add("BioGPS");
+            out.add("http://biogps.org/#goto=genereport&id=" + id[0]);
+            out.add(String.format("%s", id[0]));
+        } else {
+            return null;
+        }
         return out;
     }
 
