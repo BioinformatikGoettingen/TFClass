@@ -3,7 +3,9 @@ package de.sybig.tfclass;
 import de.sybig.oba.client.OboClass;
 import de.sybig.oba.client.OboClassList;
 import de.sybig.oba.client.OboConnector;
+import de.sybig.oba.client.tfclass.TFClassConnector;
 import de.sybig.oba.server.JsonAnnotation;
+import de.sybig.oba.server.JsonCls;
 import de.sybig.oba.server.JsonObjectPropertyExpression;
 import de.sybig.palinker.NormalTissueCytomer;
 import java.io.BufferedReader;
@@ -48,11 +50,11 @@ public class ClassificationBean {
 
     @EJB
     private NormaltissueFacadeREST ntf;
-    @ManagedProperty(value="#{speciesBean}")
+    @ManagedProperty(value = "#{speciesBean}")
     private SpeciesBean speciesBean;
-    @ManagedProperty(value="#{supplBean}")
+    @ManagedProperty(value = "#{supplBean}")
     private SupplBean supplBean;
-    private final OboConnector connector;
+    private final TFClassConnector connector;
     private static final Logger log = LoggerFactory.getLogger(ClassificationBean.class);
 
     private ClassificationTree classificationTree;
@@ -60,11 +62,12 @@ public class ClassificationBean {
     private Map<String, List<OboClass>> downstreamOfSelected;
     private LinkedList<String> fieldList;
     private OboClass searchedClass;
- 
-   
+
     private Map<String, List<NormalTissueCytomer>> tissueMap = new HashMap<String, List<NormalTissueCytomer>>();
     private static final String HUMAN = "9606";
     private List<NormalTissueCytomer> filteredTissues;
+    private HashMap<JsonCls, OboClassList> speciesDownstreamMap;
+    private HashMap<JsonCls, OboClassList> generaDownstreamMap;
 
     public ClassificationBean() {
         super();
@@ -325,7 +328,6 @@ public class ClassificationBean {
         return options;
     }
 
-   
     /// species specific
     public String getSingleAnnotationForSpecies(String taxon, String annotation) {
         if (!selectedNode.getType().equals("Genus")) {
@@ -402,7 +404,7 @@ public class ClassificationBean {
 
     public String getDBDSequence(String taxon) {
         InputStream fis = null;
-        
+
         String species = speciesBean.getScientificName(taxon);
 //        if (!HUMAN.equals(taxon)) {
 //            return null;
@@ -447,6 +449,33 @@ public class ClassificationBean {
         return out;
     }
 
+    public OboClassList getSpeciesDownstream() throws ConnectException {
+        if (selectedNode == null) {
+            return null;
+        }
+        JsonCls node = (JsonCls) selectedNode.getData();
+        if (speciesDownstreamMap == null) {
+            speciesDownstreamMap = new HashMap<JsonCls, OboClassList>();
+        }
+        if (!speciesDownstreamMap.containsKey(node)) {
+            speciesDownstreamMap.put(node, connector.getSpeciesDownstream((JsonCls) selectedNode.getData()));
+        }
+        return speciesDownstreamMap.get(node);
+    }
+     public OboClassList getGeneraDownstream() throws ConnectException {
+        if (selectedNode == null) {
+            return null;
+        }
+        JsonCls node = (JsonCls) selectedNode.getData();
+        if (generaDownstreamMap == null) {
+            generaDownstreamMap = new HashMap<JsonCls, OboClassList>();
+        }
+        if (!generaDownstreamMap.containsKey(node)) {
+            generaDownstreamMap.put(node, connector.getGeneraDownstream((JsonCls) selectedNode.getData()));
+        }
+        return generaDownstreamMap.get(node);
+    }
+
     private List<String> parseEnsembleGeneLink(String link) {
         LinkedList<String> out = new LinkedList<String>();
         String id = link.replace("ENSEMBL_GeneID:", "");
@@ -486,45 +515,46 @@ public class ClassificationBean {
         out.add(id);
         return out;
     }
+
     private String colorForSuperClass(String name) {
         char firstLetter = name.charAt(0);
-        if (firstLetter == '0'){
+        if (firstLetter == '0') {
             return "FF33CC";
         }
-        if (firstLetter == '1'){
+        if (firstLetter == '1') {
             return "00B0F0";
         }
-        if (firstLetter == '2'){
+        if (firstLetter == '2') {
             return "FFC000";
         }
-        if (firstLetter == '3'){
+        if (firstLetter == '3') {
             return "00B050";
         }
-        if (firstLetter == '4'){
+        if (firstLetter == '4') {
             return "FFFF00";
         }
-        if (firstLetter == '5'){
+        if (firstLetter == '5') {
             return "5B9BD5";
         }
-        if (firstLetter == '6'){
+        if (firstLetter == '6') {
             return "FF0000";
         }
-        if (firstLetter == '7'){
+        if (firstLetter == '7') {
             return "99FF33";
         }
-        if (firstLetter == '8'){
+        if (firstLetter == '8') {
             return "000000";
         }
-        if (firstLetter == '9'){
+        if (firstLetter == '9') {
             return "FFFFFF";
         }
         return "AAAAAA";
     }
+
     public void setNtf(NormaltissueFacadeREST ntf) {
         this.ntf = ntf;
     }
 
-  
     public void setSpeciesBean(SpeciesBean speciesBean) {
         this.speciesBean = speciesBean;
     }
@@ -533,6 +563,4 @@ public class ClassificationBean {
         this.supplBean = supplBean;
     }
 
-
-    
 }

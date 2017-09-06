@@ -1,6 +1,7 @@
 package de.sybig.tfclass;
 
 import de.sybig.oba.client.OboConnector;
+import de.sybig.oba.client.tfclass.TFClassConnector;
 
 /**
  *
@@ -11,13 +12,13 @@ public class ObaProvider {
     private static ObaProvider instance;
     private final OboConnector connector;
     private final OboConnector connectorMouse;
-    private final OboConnector connector3;
+    private final TFClassConnector connector3;
 
     private ObaProvider() {
         // private because singleton
         connector = new OboConnector("TFClass-human");
         connectorMouse = new OboConnector("TFClass-mouse");
-        connector3 = new OboConnector("tfclass");
+        connector3 = new TFClassConnector();
         connector3.setBaseURI("http://oba:9998");
     }
 
@@ -36,7 +37,7 @@ public class ObaProvider {
         return connectorMouse;
     }
 
-    public OboConnector getConnector3() {
+    public TFClassConnector getConnector3() {
         return connector3;
     }
 }

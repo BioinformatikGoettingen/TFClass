@@ -17,9 +17,9 @@
                    rendered="#{not empty classificationBean.getExpressionTable(taxon)}" />
     <p:panel  rendered="#{not empty classificationBean.getUniProt(taxon)}" style="float:right; width:60%">
         <h:outputText value="Isoforms and DNA binding domain" class="bold"/>
-        <a href="http://localhost:7080/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}"
+        <a href="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}"
            target="blank">
-            <img src="http://localhost:7080/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}" width="100%"/>
+            <img src="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}" width="100%"/>
         </a>
     </p:panel>
     <p:panel>

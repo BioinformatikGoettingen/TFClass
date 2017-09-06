@@ -115,6 +115,10 @@
                         <h:outputText value="Predicted binding sites" styleClass="bold" />                      
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
                     </p:outputPanel>
+                    
+                    <h:outputText value="Species below of this node: " styleClass="bold" /> #{classificationBean.getSpeciesDownstream().size()}
+                     <h:outputText value="Genera below of this node: " styleClass="bold" /> #{classificationBean.getGeneraDownstream().size()}
+                    
                     <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('LOGO_plot')}">
                         <h:outputText value="LOGO plot of the DNA binding sequence" class="bold"/>
                         <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('LOGO_definition')}" target="_blank">
