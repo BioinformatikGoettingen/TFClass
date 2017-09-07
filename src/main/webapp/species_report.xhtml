@@ -12,9 +12,6 @@
             <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" />
         </h:outputLink></p>
 
-    <h:outputText value="Protein expression pattern:" rendered="#{not empty classificationBean.getExpressionTable(taxon)}" class="bold"/>
-    <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
-                   rendered="#{not empty classificationBean.getExpressionTable(taxon)}" />
     <p:panel  rendered="#{not empty classificationBean.getUniProt(taxon)}" style="float:right; width:60%">
         <h:outputText value="Isoforms and DNA binding domain" class="bold"/>
         <a href="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}"
@@ -29,4 +26,9 @@
             <h:outputLink value="#{link.get(1)}" target="_blank" >#{link.get(2)}</h:outputLink>
         </p:dataList>
     </p:panel>
+    <p:outputPanel rendered="#{taxon == 9606}">nur mensch
+    <h:outputText value="Protein expression pattern: " rendered="#{not empty classificationBean.expressionTable}"/>
+                        <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
+                                       rendered="#{not empty classificationBean.expressionTable}" />
+    </p:outputPanel>
 </ui:composition>

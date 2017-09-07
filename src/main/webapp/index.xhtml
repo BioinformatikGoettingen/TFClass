@@ -242,13 +242,13 @@
                     The table below summarizes the protein expression data from the <a href="http://www.proteinatlas.org/">Protein Atlas</a>.
                     The tissues and cell types are
                     linked to the <a href="http://cytomer.bioinf.med.uni-goettingen.de">Cytomer ontology</a>
-                    <p:outputPanel   rendered="#{classificationBean.getExpressionTable('9606') == null}" >
+                    <p:outputPanel   rendered="#{classificationBean.getExpressionTable() == null}" >
                         <p>
                         <h:outputText value="The selected tree node is not linked to a gene, no expression data is available."
                                       /></p></p:outputPanel>
 
-                    <p:dataTable id="expressionTable" rendered="#{not empty classificationBean.getExpressionTable('9606')}"
-                                 value="#{classificationBean.getExpressionTable('9606')}" var="row" lazy="false"
+                    <p:dataTable id="expressionTable" rendered="#{not empty classificationBean.getExpressionTable()}"
+                                 value="#{classificationBean.getExpressionTable()}" var="row" lazy="false"
                                  filteredValue="#{classificationBean.filteredTissues}"  paginator="true"
                                  rows="15"
                                  rowsPerPageTemplate="10,15,25">

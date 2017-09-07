@@ -268,11 +268,9 @@ public class ClassificationBean {
         this.selectedNode = selectedNode;
     }
 
-    public List<NormalTissueCytomer> getExpressionTable(String taxonID) {
-        if (!HUMAN.equals(taxonID)) {
-            return null;
-        }
+    public List<NormalTissueCytomer> getExpressionTable(){
         Map<String, List<OboClass>> downstream = getDownstreamOfSelected();
+       
         if (downstream == null) {
             return null;
         }
@@ -285,9 +283,9 @@ public class ClassificationBean {
             Set<JsonAnnotation> annotations = humanNode.getAnnotations();
             for (JsonAnnotation a : annotations) {
                 if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
-                    Pattern regex = Pattern.compile("ENSEMBL:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
+                    Pattern regex = Pattern.compile("ENSEMBL_GeneID:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
                     Matcher matcher = regex.matcher(a.getValue());
-                    String ensid = matcher.replaceAll("$1");
+                    String ensid = matcher.replaceAll("$1");              
                     if (!tissueMap.containsKey(ensid)) {
                         tissueMap.put(ensid, ntf.getWithEnsemblId(ensid));
                     }
@@ -309,11 +307,11 @@ public class ClassificationBean {
     }
 
     public SelectItem[] getLevelOptions() {
-        if (getExpressionTable(HUMAN) == null) {
+        if (getExpressionTable() == null) {
             return null;
         }
         List<String> levels = new LinkedList<String>();
-        for (NormalTissueCytomer t : getExpressionTable(HUMAN)) {
+        for (NormalTissueCytomer t : getExpressionTable()) {
             if (!levels.contains(t.getLevel())) {
                 levels.add(t.getLevel());
             }
@@ -329,7 +327,7 @@ public class ClassificationBean {
     }
 
     /// species specific
-    public String getSingleAnnotationForSpecies(String taxon, String annotation) {
+    public String getSingleAnnotationForSpecies(String taxon, String annotation){
         if (!selectedNode.getType().equals("Genus")) {
             return null;
         }
