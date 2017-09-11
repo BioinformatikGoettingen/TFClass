@@ -254,6 +254,24 @@
                             </td>
                             </tr>
                         </p:outputPanel>
+                         <p:outputPanel rendered="#{not empty supplBean.getModuleSlimSVGs(classificationBean.selectedNode.data.name)}">
+                            <tr>
+                                <th>Modules of the binding domain<br/>(slim selection)</th>
+                                <td>
+                            <p:dataList value="#{supplBean.getModuleSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
+                                <div style="position:relative; width: 200px; height: 150px;">
+                                    <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg.fileName}" />
+                                        <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:link>
+
+                                </div>
+                                #{svg.label}
+                            </p:dataList>
+                            </td>
+                            <td></td>  
+                            </tr>
+                        </p:outputPanel>
                         </thead>
                     </table>
                 </p:outputPanel>

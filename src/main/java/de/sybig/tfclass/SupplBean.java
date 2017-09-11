@@ -51,7 +51,6 @@ public class SupplBean {
 
     public List<ImageWrapper> getDBDSVGs(String id) {
 
-        
         List<ImageWrapper> out = new ArrayList<ImageWrapper>();
         if (getDBDPhyMLMap().containsKey(id)) {
 
@@ -114,28 +113,36 @@ public class SupplBean {
         }
         return out;
     }
-    public List<ImageWrapper> getModuleSVGs(String id){
-        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, "dbd-module" );
-            System.out.println("images " + images.size());
+
+    public List<ImageWrapper> getModuleSVGs(String id) {
+        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, "dbd-module");
+        System.out.println("images " + images.size());
         return images;
     }
-    private List<ImageWrapper> filter(String id, SpeciesSet speciesSet, String type){
+
+    public List<ImageWrapper> getModuleSlimSVGs(String id) {
+        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA_SLIM, "dbd-module");
+        System.out.println("images " + images.size());
+        return images;
+    }
+
+    private List<ImageWrapper> filter(String id, SpeciesSet speciesSet, String type) {
         ArrayList<ImageWrapper> out = new ArrayList<ImageWrapper>();
-        for (ImageWrapper iw : imageWrappers){
-              if (! speciesSet.equals(iw.getSpeciesSet())){
+        for (ImageWrapper iw : imageWrappers) {
+            if (!speciesSet.equals(iw.getSpeciesSet())) {
                 continue;
             }
-            if (! id.equals(iw.getId())){
+            if (!id.equals(iw.getId())) {
                 continue;
             }
-            if (! type.equals(iw.getType())){
+            if (!type.equals(iw.getType())) {
                 continue;
             }
             out.add(iw);
         }
         return out;
     }
-    
+
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
             fastaMap = getFileMap("_mammalia.fasta");
@@ -278,13 +285,13 @@ public class SupplBean {
             String name = completeName.substring(0, completeName.lastIndexOf("."));
             String[] parts = name.split("_");
             wrapper.setFileName(completeName);
-            try{
-            wrapper.setId(parts[0]);
-            wrapper.setSpeciesSet(ImageWrapper.SpeciesSet.byName(parts[1]));
-            wrapper.setType(parts[2]);
-            wrapper.setTool(parts[3]);
-            wrapper.setFileType(extension);
-            }catch (ArrayIndexOutOfBoundsException ex){
+            try {
+                wrapper.setId(parts[0]);
+                wrapper.setSpeciesSet(ImageWrapper.SpeciesSet.byName(parts[1]));
+                wrapper.setType(parts[2]);
+                wrapper.setTool(parts[3]);
+                wrapper.setFileType(extension);
+            } catch (ArrayIndexOutOfBoundsException ex) {
                 System.out.println("can not split " + completeName);
             }
             imageWrappers.add(wrapper);
