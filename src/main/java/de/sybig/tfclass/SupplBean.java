@@ -1,5 +1,6 @@
 package de.sybig.tfclass;
 
+import de.sybig.tfclass.ImageWrapper.SpeciesSet;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 public class SupplBean {
 
+    private List<ImageWrapper> imageWrappers = new ArrayList<ImageWrapper>();
     private Map<String, String> protLogoPlotMap;
     private Map<String, String> fastaMap;
     private Map<String, String> dbdFastaMap;
@@ -33,10 +35,10 @@ public class SupplBean {
     private Map<String, String> proteinSlimWebprankMap;
     private Map<String, String> proteinSlimPhyMLMap;
 
-    
-    public SupplBean(){
+    public SupplBean() {
         readSupplDir();
     }
+
     public String getFasta(String id) {
 
         return getFastaMap().get(id);
@@ -48,17 +50,18 @@ public class SupplBean {
     }
 
     public List<ImageWrapper> getDBDSVGs(String id) {
+
         
         List<ImageWrapper> out = new ArrayList<ImageWrapper>();
         if (getDBDPhyMLMap().containsKey(id)) {
 
-            out.add(new ImageWrapper(ImageType.DBD, getDBDPhyMLMap().get(id)));
+            out.add(new ImageWrapper("dbd", getDBDPhyMLMap().get(id)));
         }
         if (getDBDWebprankMap().containsKey(id)) {
-            out.add(new ImageWrapper(ImageType.DBD, getDBDWebprankMap().get(id)));
+            out.add(new ImageWrapper("dbd", getDBDWebprankMap().get(id)));
         }
         if (getDBDPhyML2Map().containsKey(id)) {
-            out.add(new ImageWrapper(ImageType.DBD, getDBDPhyML2Map().get(id)));
+            out.add(new ImageWrapper("dbd", getDBDPhyML2Map().get(id)));
         }
         return out;
     }
@@ -111,7 +114,28 @@ public class SupplBean {
         }
         return out;
     }
-
+    public List<ImageWrapper> getModuleSVGs(String id){
+        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, "dbd-module" );
+            System.out.println("images " + images.size());
+        return images;
+    }
+    private List<ImageWrapper> filter(String id, SpeciesSet speciesSet, String type){
+        ArrayList<ImageWrapper> out = new ArrayList<ImageWrapper>();
+        for (ImageWrapper iw : imageWrappers){
+              if (! speciesSet.equals(iw.getSpeciesSet())){
+                continue;
+            }
+            if (! id.equals(iw.getId())){
+                continue;
+            }
+            if (! type.equals(iw.getType())){
+                continue;
+            }
+            out.add(iw);
+        }
+        return out;
+    }
+    
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
             fastaMap = getFileMap("_mammalia.fasta");
@@ -240,9 +264,6 @@ public class SupplBean {
     }
 
     private void readSupplDir() {
-        if (true){
-            return;
-        }
         String dir = System.getenv("static_suppl_dir");
         if (dir == null) {
             dir = System.getProperty("static_suppl_dir");
@@ -253,34 +274,24 @@ public class SupplBean {
         for (File f : files) {
             ImageWrapper wrapper = new ImageWrapper();
             String completeName = f.getName();
-            completeName = completeName.replace(".logoplot", "_logoplot");
-            String extension = completeName.substring(completeName.lastIndexOf(".")+1) ;
-            String name = completeName.substring(0,completeName.lastIndexOf("."));
+            String extension = completeName.substring(completeName.lastIndexOf(".") + 1);
+            String name = completeName.substring(0, completeName.lastIndexOf("."));
             String[] parts = name.split("_");
-            
+            wrapper.setFileName(completeName);
+            try{
             wrapper.setId(parts[0]);
             wrapper.setSpeciesSet(ImageWrapper.SpeciesSet.byName(parts[1]));
-           
+            wrapper.setType(parts[2]);
+            wrapper.setTool(parts[3]);
             wrapper.setFileType(extension);
-            if (parts.length < 3){
-                continue;
+            }catch (ArrayIndexOutOfBoundsException ex){
+                System.out.println("can not split " + completeName);
             }
-            if ("dbd".equals(parts[3])){
-               // wrapper.setPortion(parts[3]);
-            }
-            System.out.println("3 " + parts[2]);
-            if (parts.length < 3){
-                System.out.println("--- " + completeName);
-                continue;
-            }
-            //System.out.println(wrapper.getSpeciesSet());
-           
-            
-           
-            //System.out.println("2x. " + parts[1]);
-//            if (name.endsWith(pattern)) {
-//                fileMap.put(name.substring(0, name.indexOf("_")), name);
-//            }
+            imageWrappers.add(wrapper);
+
+//zmv '(*)mammalia_slim_dbd_logoplot(*)' '$1mammalia-slim_dbd_logoplot$2'
+//zmv  '(*)_mammalia.fasta' '$1_mammalia_prot.fasta'
+//zmv  '(*).fasta' '$1_fasta.fasta' 
         }
     }
 }

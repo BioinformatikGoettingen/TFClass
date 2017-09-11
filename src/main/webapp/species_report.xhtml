@@ -6,29 +6,33 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
-    <p><h:outputLink value="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=#{taxon}" target="_blank">
-            <f:param name="lin" value="s" />
-            <h:outputText value="Synonyms: #{speciesBean.getGenBankName(taxon)}" title="Genbank common name"/>
-            <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" />
-        </h:outputLink></p>
+    <p:outputPanel style="float:left">
+        <p><h:outputLink value="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=#{taxon}" target="_blank">
+                <f:param name="lin" value="s" />
+                <h:outputText value="Synonyms: #{speciesBean.getGenBankName(taxon)}" title="Genbank common name"/>
+                <h:outputText value=", #{speciesBean.getCommonName(taxon)}" rendered="#{not empty speciesBean.getCommonName(taxon)}" title="Common name" />
+            </h:outputLink></p>
 
-    <p:panel  rendered="#{not empty classificationBean.getUniProt(taxon)}" style="float:right; width:60%">
-        <h:outputText value="Isoforms and DNA binding domain" class="bold"/>
-        <a href="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}"
-           target="blank">
-            <img src="/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}" width="100%"/>
-        </a>
-    </p:panel>
-    <p:panel>
-        <h:outputText value="Outlinks" class="bold"/>
-        <p:dataList value="#{classificationBean.getXref(taxon)}" var="link">
-            <h:outputText value="#{link.get(0)}: " />
-            <h:outputLink value="#{link.get(1)}" target="_blank" >#{link.get(2)}</h:outputLink>
-        </p:dataList>
-    </p:panel>
-    <p:outputPanel rendered="#{taxon == 9606}">nur mensch
-    <h:outputText value="Protein expression pattern: " rendered="#{not empty classificationBean.expressionTable}"/>
-                        <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
-                                       rendered="#{not empty classificationBean.expressionTable}" />
+
+        <p:panel>
+            <h:outputText value="Outlinks" class="bold"/>
+            <p:dataList value="#{classificationBean.getXref(taxon)}" var="link">
+                <h:outputText value="#{link.get(0)}: " />
+                <h:outputLink value="#{link.get(1)}" target="_blank" >#{link.get(2)}</h:outputLink>
+            </p:dataList>
+        </p:panel>
+        <p:outputPanel rendered="#{taxon == 9606}">
+            <h:outputText value="Protein expression pattern:" rendered="#{not empty classificationBean.expressionTable}"/>
+            <p:commandLink value="Show table" onsuccess="expressionDialog.show();" update="expressionPanel"
+                           rendered="#{not empty classificationBean.expressionTable}" />
+        </p:outputPanel>
     </p:outputPanel>
+    <p:outputPanel  rendered="#{not empty classificationBean.getUniProt(taxon)}" style="float:right; width:50%; top-margin:-50px">
+        <h:outputText value="Isoforms and DNA binding domain" class="bold"/>
+        <a href="http://localhost:7080/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}"
+           target="blank">
+            <img src="http://localhost:7080/uniprot/isoforms/svg/#{classificationBean.getUniProt(taxon)}#{classificationBean.getDBDSequence(taxon)}" width="100%"/>
+        </a>
+    </p:outputPanel>
+    <div style="clear: both" />
 </ui:composition>

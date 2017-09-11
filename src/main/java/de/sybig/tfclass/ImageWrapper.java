@@ -10,11 +10,12 @@ public class ImageWrapper {
     String fileName;
     SpeciesSet speciesSet;
     String fileType;
-    ImageType type;
+    String type;
+    String tool;
     String label;
     String legend;
 
-    ImageWrapper(ImageType imageType, String url) {
+    ImageWrapper(String imageType, String url) {
         super();
         type = imageType;
         this.fileName = url;
@@ -56,20 +57,44 @@ public class ImageWrapper {
         this.fileType = fileType;
     }
 
-    public ImageType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(ImageType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
+    public String getTool() {
+        return tool;
+    }
+
+    public void setTool(String tool) {
+        this.tool = tool;
+    }
+
     public String getLabel() {
+        if (label == null) {
+            return String.format("%s", getToolName(tool));
+        }
         return label;
     }
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    private static String getToolName(String tool) {
+        if ("webprank-itol".equalsIgnoreCase(tool)) {
+            return "webPRANK and iTOL";
+        }
+        if ("phyml-itol".equalsIgnoreCase(tool)) {
+            return "Online PhyML and iTOL";
+        }
+        if ("phyml2-itol".equalsIgnoreCase(tool)) {
+            return "PhyML and iTOL";
+        }
+        return "";
     }
 
     public String getLegend() {
@@ -80,14 +105,14 @@ public class ImageWrapper {
         this.legend = legend;
     }
 
-    public enum SpeciesSet{
+    public enum SpeciesSet {
         MAMMALIA, MAMMALIA_SLIM;
-        
-        public static SpeciesSet byName(String name){
-            if (MAMMALIA.toString().equalsIgnoreCase(name)){
+
+        public static SpeciesSet byName(String name) {
+            if (MAMMALIA.toString().equalsIgnoreCase(name)) {
                 return MAMMALIA;
             }
-            if (MAMMALIA_SLIM.toString().equalsIgnoreCase(name.replace("-", "_"))){
+            if (MAMMALIA_SLIM.toString().equalsIgnoreCase(name.replace("-", "_"))) {
                 return MAMMALIA_SLIM;
             }
             return null;

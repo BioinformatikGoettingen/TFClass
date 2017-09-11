@@ -64,7 +64,6 @@ public class ClassificationTree {
         Obo2DClassList paths = null;
         try {
             OboClass r = getConnector().getRoot();
-            System.out.println("connector " + getConnector().getBaseURI());
             paths = getConnector().xDownstreamOfY(searchedClass, root.getOc());
         } catch (UniformInterfaceException ex) {
             log.warn("An error occured while getting the path to root for {}, {}", searchedClass, ex);
@@ -78,7 +77,7 @@ public class ClassificationTree {
         }
         JsonClsList<JsonCls> path = paths.get(0);
         //System.out.println("path the expand "+ path);
-        TreeNode lastExpanded = getRoot();
+        TreeNode lastExpanded = getRoot();       
         for (int i = path.getEntities().size() - 2; i > 0; i--) {
             JsonCls cls = path.getEntities().get(i);
             lastExpanded = expandChild(lastExpanded, cls);
@@ -87,7 +86,9 @@ public class ClassificationTree {
                 return null;
             }
         }
-        collapseTree(searchedClass);
+//        System.out.println("6");
+//        collapseTree(searchedClass);
+//        System.out.println("7");
         return searchChildForObo(lastExpanded, path.get(0));
 
     }
@@ -111,7 +112,9 @@ public class ClassificationTree {
     }
 
         private void collapseTree(OboClass oboClass) {
+            System.out.println("___1 " + System.currentTimeMillis());
         TreeNode treeNode = searchTreeNode(getRoot(), oboClass);
+        System.out.println("___2 " + System.currentTimeMillis());
         treeNode.setExpanded(false);
     }
     
