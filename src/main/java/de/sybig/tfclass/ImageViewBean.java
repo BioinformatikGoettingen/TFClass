@@ -23,51 +23,30 @@ public class ImageViewBean {
     private String id;
     private String fileName;
     private ImageWrapper image;
-    
-    public void init(){
+
+    public void init() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        setType(params.get("type"));
-        setId(params.get("class"));
+   
         setFileName(params.get("file"));
     }
+
     public ImageWrapper getImageWrapper() {
         if (image == null) {
-            switch(type){
-                case DBD:
-                    System.out.println("id " + id);
-                    image = supplBean.getDBDSVGs(id).get(0);
-                    break;
-            }
+            image = supplBean.getImage(fileName);
         }
         return image;
     }
-    
-   
-       
 
-    public ImageType getType() {
-        return type;
-    }
 
-    public void setType(ImageType type) {
-        this.type = type;
-    }
-
-    public void setType(String type) {
-        this.type = ImageType.DBD;
-    }
 
     public String getId() {
-        if (fileName == null){
+        if (fileName == null) {
             return null;
         }
         return fileName.split("_")[0];
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
+ 
     public String getFileName() {
         return fileName;
     }
@@ -75,7 +54,7 @@ public class ImageViewBean {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-
+    
     public SupplBean getSupplBean() {
         return supplBean;
     }

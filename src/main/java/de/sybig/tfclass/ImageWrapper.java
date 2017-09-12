@@ -1,21 +1,25 @@
 package de.sybig.tfclass;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author juergen.doenitz@bioinf.med.uni-goettingen.de
  */
 public class ImageWrapper {
 
+    private static final Logger logger = LoggerFactory.getLogger(ImageWrapper.class);
     String id;
     String fileName;
     SpeciesSet speciesSet;
     String fileType;
-    String type;
+    RegionType type;
     String tool;
     String label;
     String legend;
 
-    ImageWrapper(String imageType, String url) {
+    ImageWrapper(RegionType imageType, String url) {
         super();
         type = imageType;
         this.fileName = url;
@@ -57,11 +61,11 @@ public class ImageWrapper {
         this.fileType = fileType;
     }
 
-    public String getType() {
+    public RegionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(RegionType type) {
         this.type = type;
     }
 
@@ -116,6 +120,38 @@ public class ImageWrapper {
                 return MAMMALIA_SLIM;
             }
             return null;
+        }
+    }
+
+    public enum RegionType {
+        PROT, DBD, DBD_MODULE;
+        
+
+        public static RegionType byName(String name) {
+            if ("prot".equalsIgnoreCase(name)) {
+                return PROT;
+            }
+            if ("dbd".equalsIgnoreCase(name)) {
+                return DBD;
+            }
+            if ("dbd-module".equalsIgnoreCase(name)) {
+                return DBD_MODULE;
+            }
+            logger.error("No region type matched for {}" , name);
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case PROT:
+                    return "whole protein";
+                case DBD:
+                    return "DNA binding domain";
+                case DBD_MODULE:
+                    return "modules of the DNA binding domain";
+            }
+            return "no hit";
         }
     }
 }

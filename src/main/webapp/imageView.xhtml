@@ -21,6 +21,7 @@
         <!--        <script src="jquery.mousewheel.js"></script>-->
     </h:head>
     <h:body>
+        <h1>Phylogenetic analysis for: #{imageViewBean.imageWrapper.id}</h1>
         <section>
             <div class="parent">
                 <div class="panzoom">
@@ -45,6 +46,7 @@
                 })();
             </script>
         </section>
+        #{imageViewBean.imageWrapper.label} for #{imageViewBean.imageWrapper.type.toString()}<br/>
         <h:link value="Return to classification" outcome="index">
             <f:param name="tfclass" value="#{imageViewBean.id}" />
         </h:link>

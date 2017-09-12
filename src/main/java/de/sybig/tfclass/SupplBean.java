@@ -1,5 +1,6 @@
 package de.sybig.tfclass;
 
+import de.sybig.tfclass.ImageWrapper.RegionType;
 import de.sybig.tfclass.ImageWrapper.SpeciesSet;
 import java.io.File;
 import java.util.ArrayList;
@@ -49,20 +50,24 @@ public class SupplBean {
         return getDBDFastaMap().get(id);
     }
 
-    public List<ImageWrapper> getDBDSVGs(String id) {
-
-        List<ImageWrapper> out = new ArrayList<ImageWrapper>();
-        if (getDBDPhyMLMap().containsKey(id)) {
-
-            out.add(new ImageWrapper("dbd", getDBDPhyMLMap().get(id)));
-        }
-        if (getDBDWebprankMap().containsKey(id)) {
-            out.add(new ImageWrapper("dbd", getDBDWebprankMap().get(id)));
-        }
-        if (getDBDPhyML2Map().containsKey(id)) {
-            out.add(new ImageWrapper("dbd", getDBDPhyML2Map().get(id)));
-        }
-        return out;
+//    public List<ImageWrapper> getDBDSVGs(String id) {
+//
+//        List<ImageWrapper> out = new ArrayList<ImageWrapper>();
+//        if (getDBDPhyMLMap().containsKey(id)) {
+//
+//            out.add(new ImageWrapper("dbd", getDBDPhyMLMap().get(id)));
+//        }
+//        if (getDBDWebprankMap().containsKey(id)) {
+//            out.add(new ImageWrapper("dbd", getDBDWebprankMap().get(id)));
+//        }
+//        if (getDBDPhyML2Map().containsKey(id)) {
+//            out.add(new ImageWrapper("dbd", getDBDPhyML2Map().get(id)));
+//        }
+//        return out; 
+//    }
+     public List<ImageWrapper> getDBDSVGs(String id) {
+        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, RegionType.DBD);
+        return images;
     }
 
     public List<String> getProteinSVGs(String id) {
@@ -115,18 +120,25 @@ public class SupplBean {
     }
 
     public List<ImageWrapper> getModuleSVGs(String id) {
-        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, "dbd-module");
-        System.out.println("images " + images.size());
+        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, RegionType.DBD_MODULE);
         return images;
     }
 
     public List<ImageWrapper> getModuleSlimSVGs(String id) {
-        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA_SLIM, "dbd-module");
-        System.out.println("images " + images.size());
+        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA_SLIM, RegionType.DBD_MODULE);
         return images;
     }
 
-    private List<ImageWrapper> filter(String id, SpeciesSet speciesSet, String type) {
+    public ImageWrapper getImage(String fileName) {
+        for (ImageWrapper iw : imageWrappers) {
+            if (iw.getFileName().equalsIgnoreCase(fileName)) {
+                return iw;
+            }
+        }
+        return null;
+    }
+
+    private List<ImageWrapper> filter(String id, SpeciesSet speciesSet, RegionType type) {
         ArrayList<ImageWrapper> out = new ArrayList<ImageWrapper>();
         for (ImageWrapper iw : imageWrappers) {
             if (!speciesSet.equals(iw.getSpeciesSet())) {
@@ -288,7 +300,7 @@ public class SupplBean {
             try {
                 wrapper.setId(parts[0]);
                 wrapper.setSpeciesSet(ImageWrapper.SpeciesSet.byName(parts[1]));
-                wrapper.setType(parts[2]);
+                wrapper.setType(ImageWrapper.RegionType.byName(parts[2]));
                 wrapper.setTool(parts[3]);
                 wrapper.setFileType(extension);
             } catch (ArrayIndexOutOfBoundsException ex) {
@@ -301,4 +313,5 @@ public class SupplBean {
 //zmv  '(*).fasta' '$1_fasta.fasta' 
         }
     }
+
 }
