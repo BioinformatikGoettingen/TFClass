@@ -407,9 +407,6 @@ public class ClassificationBean {
         InputStream fis = null;
 
         String species = speciesBean.getScientificName(taxon);
-//        if (!HUMAN.equals(taxon)) {
-//            return null;
-//        }
         String out = "";
         String parentId = ((OboClass) selectedNode.getParent().getData()).getName();
         String nodeLabel = ((OboClass) selectedNode.getData()).getLabel();
@@ -422,14 +419,20 @@ public class ClassificationBean {
         if (dir == null) {
             dir = System.getProperty("static_suppl_dir");
         }
+        String factor = nodeLabel.toLowerCase().replaceAll("-", "");
+        if (factor.contains("(")){
+            factor = factor.substring(0, factor.indexOf("(")).trim();
+        }
+        System.out.println(species.toLowerCase().replaceAll(" ", "_") +" --- "+ factor);
         String line;
         try {
             fis = new FileInputStream(dir + "/" + fastaFileName);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
             while ((line = br.readLine()) != null) {
+                System.out.println(line);
                 line = line.toLowerCase().replaceAll("-", "");
-                if (line.startsWith(String.format(">%s_%s", species.toLowerCase().replaceAll(" ", "_"), nodeLabel.toLowerCase().replaceAll("-", "")))) {
+                if (line.startsWith(String.format(">%s_%s", species.toLowerCase().replaceAll(" ", "_"), factor))) {
                     out = "/" + br.readLine();//+"?color="+colorForSuperClass(((OboClass)selectedNode.getData()).getName());
                 }
             }

@@ -28,12 +28,10 @@ public class SupplBean {
     }
 
     public String getFasta(String id) {
-
         return getFastaMap().get(id);
     }
 
     public String getDBDFasta(String id) {
-
         return getDBDFastaMap().get(id);
     }
 
@@ -120,14 +118,14 @@ public class SupplBean {
 
     private Map<String, String> getFastaMap() {
         if (fastaMap == null) {
-            fastaMap = getFileMap("_mammalia.fasta");
+            fastaMap = getFileMap("_mammalia_prot_fasta.fasta");
         }
         return fastaMap;
     }
 
     private Map<String, String> getDBDFastaMap() {
         if (dbdFastaMap == null) {
-            dbdFastaMap = getFileMap("mammalia_dbd.fasta");
+            dbdFastaMap = getFileMap("mammalia_dbd_fasta.fasta");
         }
         return dbdFastaMap;
     }
