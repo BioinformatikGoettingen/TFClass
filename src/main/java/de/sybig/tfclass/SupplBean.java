@@ -5,7 +5,6 @@ import de.sybig.tfclass.ImageWrapper.SpeciesSet;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.faces.bean.ApplicationScoped;
@@ -23,18 +22,6 @@ public class SupplBean {
     private Map<String, String> protLogoPlotMap;
     private Map<String, String> fastaMap;
     private Map<String, String> dbdFastaMap;
-    private Map<String, String> dbdPhyMLMap;
-    private Map<String, String> dbdWebprankMap;
-    private Map<String, String> dbdPhyML2Map;
-    private Map<String, String> proteinPhyMLMap;
-    private Map<String, String> proteinWebprankMap;
-    private Map<String, String> proteinPhyML2Map;
-    private Map<String, String> dbdSlimPhyML2Map;
-    private Map<String, String> dbdSlimWebprankMap;
-    private Map<String, String> dbdSlimPhyMLMap;
-    private Map<String, String> proteinSlimPhyML2Map;
-    private Map<String, String> proteinSlimWebprankMap;
-    private Map<String, String> proteinSlimPhyMLMap;
 
     public SupplBean() {
         readSupplDir();
@@ -66,66 +53,36 @@ public class SupplBean {
 //        return out; 
 //    }
      public List<ImageWrapper> getDBDSVGs(String id) {
-        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, RegionType.DBD);
+        List<ImageWrapper> images = filteriTol(id, SpeciesSet.MAMMALIA, RegionType.DBD);
         return images;
     }
 
-    public List<String> getProteinSVGs(String id) {
-
-        List<String> out = new LinkedList<String>();
-        if (getProteinPhyMLMap().containsKey(id)) {
-            out.add(getProteinPhyMLMap().get(id));
-        }
-        if (getProteinWebprankMap().containsKey(id)) {
-            out.add(getProteinWebprankMap().get(id));
-        }
-        if (getProteinPhyML2Map().containsKey(id)) {
-            out.add(getProteinPhyML2Map().get(id));
-        }
-        return out;
+    public List<ImageWrapper> getProteinSVGs(String id) {
+        
+        return filteriTol(id, SpeciesSet.MAMMALIA, RegionType.PROT);
     }
 
-    public List<String> getDBDSlimSVGs(String id) {
+    public List<ImageWrapper> getDBDSlimSVGs(String id) {
 
-        List<String> out = new LinkedList<String>();
-        if (getDBDSlimPhyMLMap().containsKey(id)) {
-            out.add(getDBDSlimPhyMLMap().get(id));
-        }
-        if (getDBDSlimWebprankMap().containsKey(id)) {
-            out.add(getDBDSlimWebprankMap().get(id));
-        }
-        if (getDBDSlimPhyML2Map().containsKey(id)) {
-            out.add(getDBDSlimPhyML2Map().get(id));
-        }
-        return out;
+         return filteriTol(id, SpeciesSet.MAMMALIA_SLIM, RegionType.DBD);
+       
     }
 
     public String getProtLogoPlot(String id) {
         return getProtLogoPlotMap().get(id);
     }
 
-    public List<String> getProteinSlimSVGs(String id) {
-
-        List<String> out = new LinkedList<String>();
-        if (getProteinPhyMLslimMap().containsKey(id)) {
-            out.add(getProteinPhyMLslimMap().get(id));
-        }
-        if (getProteinWebprankslimMap().containsKey(id)) {
-            out.add(getProteinWebprankslimMap().get(id));
-        }
-        if (getProteinPhyML2slimMap().containsKey(id)) {
-            out.add(getProteinPhyML2slimMap().get(id));
-        }
-        return out;
+    public List<ImageWrapper> getProteinSlimSVGs(String id) {
+          return filteriTol(id, SpeciesSet.MAMMALIA_SLIM, RegionType.PROT);
     }
 
     public List<ImageWrapper> getModuleSVGs(String id) {
-        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA, RegionType.DBD_MODULE);
+        List<ImageWrapper> images = filteriTol(id, SpeciesSet.MAMMALIA, RegionType.DBD_MODULE);
         return images;
     }
 
     public List<ImageWrapper> getModuleSlimSVGs(String id) {
-        List<ImageWrapper> images = filter(id, SpeciesSet.MAMMALIA_SLIM, RegionType.DBD_MODULE);
+        List<ImageWrapper> images = filteriTol(id, SpeciesSet.MAMMALIA_SLIM, RegionType.DBD_MODULE);
         return images;
     }
 
@@ -138,7 +95,7 @@ public class SupplBean {
         return null;
     }
 
-    private List<ImageWrapper> filter(String id, SpeciesSet speciesSet, RegionType type) {
+    private List<ImageWrapper> filteriTol(String id, SpeciesSet speciesSet, RegionType type) {
         ArrayList<ImageWrapper> out = new ArrayList<ImageWrapper>();
         for (ImageWrapper iw : imageWrappers) {
             if (!speciesSet.equals(iw.getSpeciesSet())) {
@@ -148,6 +105,12 @@ public class SupplBean {
                 continue;
             }
             if (!type.equals(iw.getType())) {
+                continue;
+            }
+            if ("logoplot".equalsIgnoreCase(iw.getTool())){
+                continue;
+            }
+             if ("fasta".equalsIgnoreCase(iw.getTool())){
                 continue;
             }
             out.add(iw);
@@ -167,92 +130,6 @@ public class SupplBean {
             dbdFastaMap = getFileMap("mammalia_dbd.fasta");
         }
         return dbdFastaMap;
-    }
-    /// DBD
-
-    private Map<String, String> getDBDPhyMLMap() {
-        if (dbdPhyMLMap == null) {
-            dbdPhyMLMap = getFileMap("_mammalia_dbd_PhyML-iTOL.svg");
-        }
-        return dbdPhyMLMap;
-    }
-
-    private Map<String, String> getDBDWebprankMap() {
-        if (dbdWebprankMap == null) {
-            dbdWebprankMap = getFileMap("_mammalia_dbd_webprank-iTOL.svg");
-        }
-        return dbdWebprankMap;
-    }
-
-    private Map<String, String> getDBDPhyML2Map() {
-        if (dbdPhyML2Map == null) {
-            dbdPhyML2Map = getFileMap("_mammalia_dbd_PhyML2-iTOL.svg");
-        }
-        return dbdPhyML2Map;
-    }
-
-    private Map<String, String> getProteinPhyMLMap() {
-        if (proteinPhyMLMap == null) {
-            proteinPhyMLMap = getFileMap("_mammalia_prot_PhyML-iTOL.svg");
-        }
-        return proteinPhyMLMap;
-    }
-
-    private Map<String, String> getProteinWebprankMap() {
-        if (proteinWebprankMap == null) {
-            proteinWebprankMap = getFileMap("_mammalia_prot_webprank-iTOL.svg");
-        }
-        return proteinWebprankMap;
-    }
-
-    private Map<String, String> getProteinPhyML2Map() {
-        if (proteinPhyML2Map == null) {
-            proteinPhyML2Map = getFileMap("_mammalia_prot_PhyML2-iTOL.svg");
-        }
-        return proteinPhyML2Map;
-    }
-
-    /// DBD slim
-    private Map<String, String> getDBDSlimPhyMLMap() {
-        if (dbdSlimPhyMLMap == null) {
-            dbdSlimPhyMLMap = getFileMap("_mammalia-slim_dbd_PhyML-iTOL.svg");
-        }
-        return dbdSlimPhyMLMap;
-    }
-
-    private Map<String, String> getDBDSlimWebprankMap() {
-        if (dbdSlimWebprankMap == null) {
-            dbdSlimWebprankMap = getFileMap("_mammalia-slim_dbd_webprank-iTOL.svg");
-        }
-        return dbdSlimWebprankMap;
-    }
-
-    private Map<String, String> getDBDSlimPhyML2Map() {
-        if (dbdSlimPhyML2Map == null) {
-            dbdSlimPhyML2Map = getFileMap("_mammalia-slim_dbd_PhyML2-iTOL.svg");
-        }
-        return dbdSlimPhyML2Map;
-    }
-
-    private Map<String, String> getProteinPhyMLslimMap() {
-        if (proteinSlimPhyMLMap == null) {
-            proteinSlimPhyMLMap = getFileMap("_mammalia-slim_prot_PhyML-iTOL.svg");
-        }
-        return proteinSlimPhyMLMap;
-    }
-
-    private Map<String, String> getProteinWebprankslimMap() {
-        if (proteinSlimWebprankMap == null) {
-            proteinSlimWebprankMap = getFileMap("_mammalia-slim_prot_webprank-iTOL.svg");
-        }
-        return proteinSlimWebprankMap;
-    }
-
-    private Map<String, String> getProteinPhyML2slimMap() {
-        if (proteinSlimPhyML2Map == null) {
-            proteinSlimPhyML2Map = getFileMap("_mammalia-slim_prot_PhyML2-iTOL.svg");
-        }
-        return proteinSlimPhyML2Map;
     }
 
     private Map<String, String> getProtLogoPlotMap() {

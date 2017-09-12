@@ -172,38 +172,39 @@
                                                           rendered="#{not empty supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" >FASTA file</h:outputLink></td>
                         </tr>
                         <p:outputPanel rendered="#{not empty supplBean.getDBDSVGs(classificationBean.selectedNode.data.name) and not empty supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" >
-                        <tr>
-                            <th>Phylogenetic tree<br/>Mammalia
-                        <p:button value="?" title="Info" onclick="return false" id="mammaliaPhyloHelpButton" styleClass="helpBtn"/>
-                        <p:tooltip for="mammaliaPhyloHelpButton"
-                                   value="These trees (or cladograms, since distances were ignored) were
-                                   generated with a local installation of PhyML 3.0 (Guindon et al., 
-                                   Systematic Biology, 59(3):307-21, 2010.), by webPRANK at EBI
-                                   (http://www.ebi.ac.uk/goldman-srv/webprank/), or by the web version of
-                                   PhyML 3.0 (http://phylogeny.lirmm.fr). The resulting trees were
-                                   visualized with iTOL v3 (http://itol.embl.de/)."
-                                   styleClass="helpTooltip" showEvent="click"  />
-                        </th>
-                        <td>
-                        <p:dataList value="#{supplBean.getDBDSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
-                            <div style="position:relative; width: 200px; height: 150px;">
-                                <h:link outcome="imageView" >
-                                    <f:param name="file" value="#{svg.fileName}" />
-                                    <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                </h:link>
-                            </div>
-                        </p:dataList>
-                        </td>
-                        <td>
-                        <p:dataList value="#{supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
-                            <div style="position:relative; width: 200px; height: 150px;">
-                                <h:link outcome="imageView" >
-                                    <f:param name="file" value="#{svg}" />
-                                    <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                </h:link></div>
-                        </p:dataList>
-                        </td>
-                        </tr>
+                            <tr>
+                                <th>Phylogenetic tree<br/>Mammalia
+                            <p:button value="?" title="Info" onclick="return false" id="mammaliaPhyloHelpButton" styleClass="helpBtn"/>
+                            <p:tooltip for="mammaliaPhyloHelpButton"
+                                       value="These trees (or cladograms, since distances were ignored) were
+                                       generated with a local installation of PhyML 3.0 (Guindon et al., 
+                                       Systematic Biology, 59(3):307-21, 2010.), by webPRANK at EBI
+                                       (http://www.ebi.ac.uk/goldman-srv/webprank/), or by the web version of
+                                       PhyML 3.0 (http://phylogeny.lirmm.fr). The resulting trees were
+                                       visualized with iTOL v3 (http://itol.embl.de/)."
+                                       styleClass="helpTooltip" showEvent="click"  />
+                            </th>
+                            <td>
+                            <p:dataList value="#{supplBean.getDBDSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
+                                <div style="position:relative; width: 200px; height: 150px;">
+                                    <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg.fileName}" />
+                                        <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,35px);" alt="Phylogenetic tree"/>
+                                    </h:link>
+                                </div>
+                                <h:outputText value="#{svg.label}" class="legend"/>
+                            </p:dataList>
+                            </td>
+                            <td>
+                            <p:dataList value="#{supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
+                                <div style="position:relative; width: 200px; height: 150px;">
+                                    <h:link outcome="imageView" >
+                                        <f:param name="file" value="#{svg.fileName}" />
+                                        <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:link></div><h:outputText value="#{svg.label}" class="legend"/>
+                            </p:dataList>
+                            </td>
+                            </tr>
                         </p:outputPanel>
                         <p:outputPanel rendered="#{not empty supplBean.getModuleSVGs(classificationBean.selectedNode.data.name)}">
                             <tr>
@@ -215,9 +216,8 @@
                                         <f:param name="file" value="#{svg.fileName}" />
                                         <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
                                     </h:link>
-
                                 </div>
-                                #{svg.label}
+                                <h:outputText value="#{svg.label}" class="legend"/>
                             </p:dataList>
                             </td>
                             <td></td>  
@@ -238,23 +238,23 @@
                             <p:dataList value="#{supplBean.getDBDSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:link outcome="imageView" >
-                                        <f:param name="file" value="#{svg}" />
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                    </h:link></div>
+                                        <f:param name="file" value="#{svg.fileName}" />
+                                        <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:link></div><h:outputText value="#{svg.label}" class="legend"/>
                             </p:dataList>
                             </td>
                             <td>
                             <p:dataList value="#{supplBean.getProteinSlimSVGs(classificationBean.selectedNode.data.name)}" var="svg" styleClass="inlineList">
                                 <div style="position:relative; width: 200px; height: 150px;">
                                     <h:link outcome="imageView" >
-                                        <f:param name="file" value="#{svg}" />
-                                        <img src="/suppl/#{svg}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
-                                    </h:link></div>
+                                        <f:param name="file" value="#{svg.fileName}" />
+                                        <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
+                                    </h:link></div><h:outputText value="#{svg.label}" class="legend"/>
                             </p:dataList>
                             </td>
                             </tr>
                         </p:outputPanel>
-                         <p:outputPanel rendered="#{not empty supplBean.getModuleSlimSVGs(classificationBean.selectedNode.data.name)}">
+                        <p:outputPanel rendered="#{not empty supplBean.getModuleSlimSVGs(classificationBean.selectedNode.data.name)}">
                             <tr>
                                 <th>Modules of the binding domain<br/>(slim selection)</th>
                                 <td>
@@ -264,9 +264,8 @@
                                         <f:param name="file" value="#{svg.fileName}" />
                                         <img src="/suppl/#{svg.fileName}" style="position: absolute; clip:rect(5px,10000px,10000px,50px);" alt="Phylogenetic tree"/>
                                     </h:link>
-
                                 </div>
-                                #{svg.label}
+                                <h:outputText value="#{svg.label}" class="legend"/>
                             </p:dataList>
                             </td>
                             <td></td>  
