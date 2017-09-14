@@ -21,7 +21,9 @@ import java.net.ConnectException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -268,9 +270,9 @@ public class ClassificationBean {
         this.selectedNode = selectedNode;
     }
 
-    public List<NormalTissueCytomer> getExpressionTable(){
+    public List<NormalTissueCytomer> getExpressionTable() {
         Map<String, List<OboClass>> downstream = getDownstreamOfSelected();
-       
+
         if (downstream == null) {
             return null;
         }
@@ -285,7 +287,7 @@ public class ClassificationBean {
                 if (a.getName().equals("xref") && a.getValue().startsWith("ENSEMBL")) {
                     Pattern regex = Pattern.compile("ENSEMBL_GeneID:(ENSG\\d{11})[^\\w]*\"?([\\w\\s]*).*$");
                     Matcher matcher = regex.matcher(a.getValue());
-                    String ensid = matcher.replaceAll("$1");              
+                    String ensid = matcher.replaceAll("$1");
                     if (!tissueMap.containsKey(ensid)) {
                         tissueMap.put(ensid, ntf.getWithEnsemblId(ensid));
                     }
@@ -327,7 +329,7 @@ public class ClassificationBean {
     }
 
     /// species specific
-    public String getSingleAnnotationForSpecies(String taxon, String annotation){
+    public String getSingleAnnotationForSpecies(String taxon, String annotation) {
         if (!selectedNode.getType().equals("Genus")) {
             return null;
         }
@@ -375,6 +377,8 @@ public class ClassificationBean {
                 }
             }
         }
+        links.sort(new LinkListComparator());
+        links = removeDuplicates(links);
         return links;
     }
 
@@ -420,17 +424,15 @@ public class ClassificationBean {
             dir = System.getProperty("static_suppl_dir");
         }
         String factor = nodeLabel.toLowerCase().replaceAll("-", "");
-        if (factor.contains("(")){
+        if (factor.contains("(")) {
             factor = factor.substring(0, factor.indexOf("(")).trim();
         }
-        System.out.println(species.toLowerCase().replaceAll(" ", "_") +" --- "+ factor);
         String line;
         try {
             fis = new FileInputStream(dir + "/" + fastaFileName);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
                 line = line.toLowerCase().replaceAll("-", "");
                 if (line.startsWith(String.format(">%s_%s", species.toLowerCase().replaceAll(" ", "_"), factor))) {
                     out = "/" + br.readLine();//+"?color="+colorForSuperClass(((OboClass)selectedNode.getData()).getName());
@@ -570,4 +572,47 @@ public class ClassificationBean {
         this.supplBean = supplBean;
     }
 
+    private List<List<String>> removeDuplicates(List<List<String>> links) {
+        Iterator<List<String>> outerIt = links.iterator();
+        int index = 0;
+        while (outerIt.hasNext()) {
+            List<String> link = outerIt.next();
+            index++;
+            for (int i = index; i < links.size(); i++) {
+                if (areLinksSame(link, links.get(i))) {
+                    outerIt.remove();
+                    index--;
+                }
+            }
+        }
+        return links;
+    }
+
+    private boolean areLinksSame(List<String> l1, List<String> l2) {
+        if (l1.size() != l2.size()) {
+            return false;
+        }
+        for (int i = 0; i < l1.size(); i++) {
+            if (!l1.get(i).equals(l2.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public class LinkListComparator implements Comparator<List<String>> {
+
+        @Override
+        public int compare(List<String> o1, List<String> o2) {
+
+            if (o1 == null || o1.size() < 1 || o1.get(0) == null) {
+                return 1;
+            }
+            if (o2 == null || o2.size() < 1 || o2.get(0) == null) {
+                return -1;
+            }
+            return o1.get(0).compareTo(o2.get(0));
+        }
+
+    }
 }

@@ -56,7 +56,6 @@ public class SupplBean {
     }
 
     public List<ImageWrapper> getProteinSVGs(String id) {
-        
         return filteriTol(id, SpeciesSet.MAMMALIA, RegionType.PROT);
     }
 

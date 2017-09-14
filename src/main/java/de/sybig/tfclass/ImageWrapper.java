@@ -93,7 +93,7 @@ public class ImageWrapper {
             return "webPRANK and iTOL";
         }
         if ("phyml-itol".equalsIgnoreCase(tool)) {
-            return "Online PhyML and iTOL";
+            return "Phylogeny.fr and iTOL";
         }
         if ("phyml2-itol".equalsIgnoreCase(tool)) {
             return "PhyML and iTOL";

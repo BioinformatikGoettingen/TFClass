@@ -153,7 +153,10 @@
                 </p:outputPanel>
                 <p:outputPanel rendered="#{not empty supplBean.getProtLogoPlot(classificationBean.selectedNode.data.name)}">
                     <h:outputText value="LOGO plot of the DNA binding domain" class="bold"/>
-                    <img src="/suppl/#{supplBean.getProtLogoPlot(classificationBean.selectedNode.data.name)}"  width="100%"/>
+                    <h:link outcome="imageView" >
+                        <f:param name="file" value="#{supplBean.getProtLogoPlot(classificationBean.selectedNode.data.name)}" />
+                        <img src="/suppl/#{supplBean.getProtLogoPlot(classificationBean.selectedNode.data.name)}" width="100%"/>
+                    </h:link>
                 </p:outputPanel>
                 <p:outputPanel rendered="#{(not empty classificationBean.selectedNode) and (classificationBean.selectedNode.type != 'Superclass') and (classificationBean.selectedNode.type != 'Genus')}">
                     <table id="fastaTable">
@@ -168,10 +171,10 @@
                                 <td align="center">
                         <h:outputLink value="/suppl/#{supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" 
                                       rendered="#{not empty supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" >FASTA file</h:outputLink></td>
-                        <td align="center"> <h:outputLink value="/suppl/#{supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}"
-                                                          rendered="#{not empty supplBean.getDBDFasta(classificationBean.selectedNode.data.name)}" >FASTA file</h:outputLink></td>
+                        <td align="center"> <h:outputLink value="/suppl/#{supplBean.getFasta(classificationBean.selectedNode.data.name)}"
+                                                          rendered="#{not empty supplBean.getFasta(classificationBean.selectedNode.data.name)}" >FASTA file</h:outputLink></td>
                         </tr>
-                        <p:outputPanel rendered="#{not empty supplBean.getDBDSVGs(classificationBean.selectedNode.data.name) and not empty supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" >
+                        <p:outputPanel rendered="#{not empty supplBean.getDBDSVGs(classificationBean.selectedNode.data.name) or not empty supplBean.getProteinSVGs(classificationBean.selectedNode.data.name)}" >
                             <tr>
                                 <th>Phylogenetic tree<br/>Mammalia
                             <p:button value="?" title="Info" onclick="return false" id="mammaliaPhyloHelpButton" styleClass="helpBtn"/>
@@ -223,7 +226,7 @@
                             <td></td>  
                             </tr>
                         </p:outputPanel>
-                        <p:outputPanel rendered="#{not empty supplBean.getDBDSlimSVGs(classificationBean.selectedNode.data.name) and not empty supplBean.getProteinSlimSVGs(classificationBean.selectedNode.data.name) }">
+                        <p:outputPanel rendered="#{not empty supplBean.getDBDSlimSVGs(classificationBean.selectedNode.data.name) or not empty supplBean.getProteinSlimSVGs(classificationBean.selectedNode.data.name) }">
                             <tr>
                                 <th>Phylogenetic tree Mammalia<br/>(slim selection)
                             <p:button value="?" title="Info" onclick="return false" id="mammaliaSlimPhyloHelpButton" styleClass="helpBtn"/>
