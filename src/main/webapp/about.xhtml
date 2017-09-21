@@ -10,9 +10,9 @@
         <h:outputStylesheet name="css/screen.css"/>
     </h:head>
     <body>
-        
-            <h1>Classification of Transcription Factors in Mammalia</h1>
-            <h2><a href="index.jsf">Back to TFClass</a></h2>
+
+        <h1>Classification of Transcription Factors in Mammalia</h1>
+        <h2><a href="index.jsf">Back to TFClass</a></h2>
         <div style="width:75%; margin-left: 12.5%">
             <p>
                 <b>Transcription factors</b>, in a somewhat simplified definition, are
@@ -21,7 +21,7 @@
             </p>
             <p>
                 <b>TFClass</b> is a classification of eukaryotic transcription factors
-                based on the characteristics of their DNA-binding domains. It comprises
+                based on the characteristics of their DNA-binding domains (DBDs). It comprises
                 four general levels (superclass, class, family, subfamily) and two
                 levels of instantiation (genus and molecular species). Two of them
                 (subfamily and factor species) are optional. More detailed explanations
@@ -31,47 +31,70 @@
             </p>
             <p>
                 So far, TFClass comprises human transcription factors (TFs) and their
-                rodent orthologs. The full classification of human TFs in its latest draft
-                version as html document can also be obtained
+                mammalia orthologs. An earlier version of the full classification of human 
+                TFs as html  document can also be obtained
                 <a href="http://www.edgar-wingender.de/huTF_classification.html" target="_blank">here</a>,
                 that of their mouse orthologs
                 <a href="http://www.edgar-wingender.de/muTF_classification-1.html" target="_blank">here</a>.
             </p>
             <h2>About the interface:</h2>
             <p>
-                The active ontology is shown in the central part (default: human), it can
-                be <span class="function_ref">switched</span> with the one on the right-hand side (default: mouse). To
-                browse the classification, an individual taxon can be opened by clicking
-                on the arrow head in front of it; clicking again closes all taxa that may
-                have been opened. The classification of orthologs on the right-hand side
-                opens correspondingly.
+                The ontology is shown in the left part of the interface. To browse 
+                the classification, an individual taxon can be opened by clicking 
+                on the arrow head in front of it; clicking again closes all taxa 
+                that have been opened. On top of the tree, there is a search window 
+                with an auto-complete function for the factor names. The link 
+                underneath directs to the freely accessible TRANSFAC&reg; FACTOR table.
             </p><p>
-                On the left-hand side, further <span class="function_ref">search and browse functions</span> as well
-                as <span class="function_ref">additional information</span> for the highlighted taxon in the central
-                part are provided. The <span class="function_ref">search field</span> is equipped with an autocomplete
-                function to facilitate finding the right term among all the conceivable
-                spelling variations. <span class="function_ref">Expand / collapse all:</span> expands the full tree in
-                the center or collapses all parts of the tree that have been opened.
-                <span class="function_ref">Expand to:</span> The whole classification in the center will be opened
-                down to the selected level.
+                In the right (main) part of the interface, additional information 
+                about the selected node is provided. For a 
+                <span class="function_ref">Superclass (node with a one-digit identifier)</span>, 
+                a general definition is given as well as the numbers of biological 
+                species which have known TFs within this superclass and the number 
+                of genera defined within this superclass.
             </p><p>
-                The additional information is rank- and organism-specific and
-                changes with the selection made.
+                For a <span class="function_ref">Class (node with a two-digits identifier)</span>, 
+                a definition is also provided, followed by the number of species 
+                and TF genera subsumed here. A sequence logo illustrates the 
+                most-conserved residues in the corresponding type of DBD. The table 
+                underneath gives links to the FASTA files with all sequences of 
+                the TFs of this node, on the left for the DBDs, on the right for 
+                the full-length proteins. Underneath are thumbnails of the 
+                corresponding phylogenetic trees of the whole sequence set (top) 
+                or for a “slim selection” of only four species, usually human, 
+                mouse, cow and <i>Monodelphis</i>.
             </p><p>
-                <span class="function_ref">Show binding sites:</span> Linked to (sub)family entities, if present.
-                Clicking this option will open a selection list of all matrices
-                that are connected with any of the TFs in this (sub)family.
-                Chosing one of them will open the complete list of potential
-                binding sites that (a) are located in the 1kb upstream region of
-                human genes, (b) are conserved among human, mouse, dog and cow,
-                and (c) have a minimum threshold as selected. Most database
-                cross-references: Linked to TF genus entries (rank 5); links to
-                external databases go straight to their entries. Links to 
-                <a href="http://www.uniprot.org/" target="_blank">UniProt</a>
-                isoforms and TRANSFAC proteins are also given for individual
-                factor species.
+                A <span class="function_ref">Family</span> (or 
+                <span class="function_ref">Subfamily; three- or four-digit identifiers, resp.</span>) 
+                node has a similar structure as a Class entry (see above), except 
+                that instead of a definition, an (idealized) consensus DNA 
+                sequence may be given to which TFs of this family preferably bind, 
+                followed by a link to the list of predicted binding sites in the 
+                human, mouse, cow or dog genome (see below). 
             </p><p>
-                Protein expression (human only): Displayed in a separate overlay. 
+                A <span class="function_ref">Genus node (five-digit identifier)</span>
+                has as “General” information only the number of biological species 
+                that have a known TF of this group. Underneath, all these species 
+                are listed along with the available links to external databases 
+                and a sketch visualizing the position of the DBD within the 
+                canonical molecule and its splice variants as defined by UniProt. 
+                On top of this list, links are given to jump straight to the human, 
+                murine or rat entry. The order or entries in the list can be 
+                customized and will be preserved throughout the active session.
+
+
+            </p>    <p>
+                <span class="function_ref">Show predicted binding sites ("Seed sites"):</span>
+               Linked to (sub)family entities, if present. Clicking this option 
+               will open a selection list of all positional weight matrices that 
+               are connected with any of the TFs in this (sub)family. Choosing 
+               one of them will open the complete list of potential binding sites 
+               that (a) are located in the 1kb upstream region of human genes, 
+               (b) are conserved among human, mouse, dog and cow, and (c) belong 
+               to the x% best scoring sites (x to be chosen by the user, default 
+               is 5%; score is the Match score, as described in Kel et al., 2003). 
+            </p><p>
+                <span class="function_ref">Protein expression (human only)</span>: Displayed in a separate overlay. 
                 Based on the information provided by the 
                 <a href="http://www.proteinatlas.org/" target="_blank">Human Protein Atlas</a>,
                 expression sources (organs, tissues) have been linked to the
@@ -103,6 +126,6 @@
 
             </p>
         </div>
-            <h2><a href="index.jsf">Back to TFClass</a></h2>
+        <h2><a href="index.jsf">Back to TFClass</a></h2>
     </body>
 </html>
