@@ -93,7 +93,8 @@ public class ClassificationBean {
                 ext = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uniprot");
             }
             if (ext != null) {
-                OboClassList resultList = ObaProvider.getInstance().getConnectorHuman().searchCls(ext);
+                TFClassConnector c = ObaProvider.getInstance().getConnector3();
+                OboClassList resultList = c.searchCls(ext);
                 if (resultList == null || resultList.size() != 1) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
                     return "";
@@ -103,11 +104,10 @@ public class ClassificationBean {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No valid result could be found for parameter " + ext, null));
                     return "";
                 }
-                searchedClass = cls;
+                searchedClass = convertSpeciesNodesToGenus(resultList).get(0);
                 selectSearched();
                 log.info("navigate to class {} specified in the url wiht ext parameter {}", cls, ext);
                 return "";
-
             }
         } catch (NumberFormatException e) {
             log.error("The id '{}' parsed from the URL for the detail view is not valid");
@@ -148,18 +148,23 @@ public class ClassificationBean {
             if (searchResult == null || searchResult.getEntities() == null) {
                 return null;
             }
-            Set<OboClass> resultSet = new HashSet<OboClass>();
-            for (OboClass resultCls : searchResult.getEntities()) {
-                resultSet.add(getClassificationClass(resultCls));
-//                resultSet.add(resultCls);
-            }
-            ArrayList<OboClass> resultList = new ArrayList<OboClass>(resultSet);
-            Collections.sort(resultList);
-            return resultList;
+
+            return convertSpeciesNodesToGenus(searchResult);
         } catch (Exception ex) {
             log.warn("An error occured while searching in the ontology ", ex);
             return null;
         }
+    }
+
+    private ArrayList<OboClass> convertSpeciesNodesToGenus(OboClassList searchResult) throws ConnectException {
+        Set<OboClass> resultSet = new HashSet<OboClass>();
+        for (OboClass resultCls : searchResult.getEntities()) {
+            resultSet.add(getClassificationClass(resultCls));
+//                resultSet.add(resultCls);
+        }
+        ArrayList<OboClass> resultList = new ArrayList<OboClass>(resultSet);
+        Collections.sort(resultList);
+        return resultList;
     }
 
     private OboClass getClassificationClass(OboClass origCls) throws ConnectException {

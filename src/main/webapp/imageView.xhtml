@@ -11,27 +11,30 @@
         <title>TFClass</title>
         <style type="text/css">
             body { background: #F5FCFF; color: #333666; }
-            section { text-align: center; margin: 50px 0; }
+            section { text-align: center; margin: 0px 0; }
             .panzoom-parent { border: 2px solid #333; }
             .panzoom-parent .panzoom { border: 2px dashed #666; }
             .buttons { margin: 40px 0 0; }
         </style>
         <script src="jquery.js"></script>
-        <script src="jquery.panzoom.min.js"></script>
-        <!--        <script src="jquery.mousewheel.js"></script>-->
+        <script src="jquery.panzoom.js"></script>
+                <script src="jquery.mousewheel.js"></script>
     </h:head>
     <h:body>
         <h1>Phylogenetic analysis for: #{imageViewBean.imageWrapper.id}</h1>
+        <h:link value="Return to classification" outcome="index">
+            <f:param name="tfclass" value="#{imageViewBean.id}" />
+        </h:link>
         <section>
             <div class="parent">
                 <div class="panzoom">
-                    <img src="/suppl/#{imageViewBean.fileName}" width="100%" height="90%"/>
+                    <img src="/suppl/#{imageViewBean.fileName}" width="100%" height="80%"/>
                 </div>
             </div>
             <div class="buttons">
+                 <button class="zoom-out">Zoom Out</button>
                 <button class="zoom-in">Zoom In</button>
-                <button class="zoom-out">Zoom Out</button>
-                <input type="range" class="zoom-range" />
+                <input type="range" class="zoom-range" step="0.05" min="0.3" max="6" />
                 <button class="reset">Reset</button>
             </div>
             <script>
@@ -47,9 +50,7 @@
             </script>
         </section>
         #{imageViewBean.imageWrapper.label} for #{imageViewBean.imageWrapper.type.toString()}<br/>
-        <h:link value="Return to classification" outcome="index">
-            <f:param name="tfclass" value="#{imageViewBean.id}" />
-        </h:link>
+        
     </h:body>
 </html>
 

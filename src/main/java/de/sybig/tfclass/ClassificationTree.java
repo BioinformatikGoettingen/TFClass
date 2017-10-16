@@ -63,7 +63,6 @@ public class ClassificationTree {
         }
         Obo2DClassList paths = null;
         try {
-            OboClass r = getConnector().getRoot();
             paths = getConnector().xDownstreamOfY(searchedClass, root.getOc());
         } catch (UniformInterfaceException ex) {
             log.warn("An error occured while getting the path to root for {}, {}", searchedClass, ex);
