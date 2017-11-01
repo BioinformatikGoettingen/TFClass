@@ -134,8 +134,12 @@
 
 
                 <p:outputPanel rendered="#{not empty classificationBean.getAnnotationValueOfSelectedNode('seed')}">
-                    <h:outputText value="Predicted binding sites" styleClass="bold" />                      
-                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}">Seed sites</h:outputLink>
+                    <h:outputText value="Predicted binding sites" styleClass="bold" />
+                    For: 
+                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}&amp;species=HUMAN">human</h:outputLink>,
+                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}&amp;species=MOUSE">mouse</h:outputLink>,
+                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}&amp;species=COW">cow</h:outputLink>,
+                    <h:outputLink value="#{classificationBean.getAnnotationValueOfSelectedNode('seed')}&amp;species=DOG">dog</h:outputLink>
                 </p:outputPanel>
                 <p:outputPanel rendered="#{not empty classificationBean.selectedNode}">
                     <h:outputText value="Species within this #{ontologySupportBean.getLevel(classificationBean.selectedNode)}:"
@@ -156,7 +160,9 @@
                     <h:link outcome="imageView" >
                         <f:param name="file" value="#{supplBean.getProtLogoPlot(classificationBean.selectedNode.data.name)}" />
                         <img src="/suppl/#{supplBean.getProtLogoPlot(classificationBean.selectedNode.data.name)}" width="100%"/>
-                    </h:link>
+                    </h:link><br />
+                    <h:outputLink value="/logoplot_fastas/#{classificationBean.selectedNode.data.name}_mammalia_dbd_logoplot.fasta.txt">
+                        FASTA file of the LogoPlot</h:outputLink>
                 </p:outputPanel>
                 <p:outputPanel rendered="#{(not empty classificationBean.selectedNode) and (classificationBean.selectedNode.type != 'Superclass') and (classificationBean.selectedNode.type != 'Genus')}">
                     <table id="fastaTable">
