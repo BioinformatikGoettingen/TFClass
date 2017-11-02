@@ -13,7 +13,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
  *
  * @author juergen.doenitz@bioinf.med.uni-goettingen.de
  */
-public class SmokeTests {
+public class SmokeTest {
 
     private WebDriver driver;
     private StartPage page;
