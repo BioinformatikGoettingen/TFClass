@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  *
@@ -19,10 +21,16 @@ public class StartPage extends Base {
 
     By lastNodeLocator = By.xpath("//*[@id=\"classificationForm:cfTree:9\"]/span/span[3]");
     By mousePanelLocator = By.xpath("//*[@id=\"classificationForm:s10090_header\"]/span/../..");
+    By humanPanelLocator = By.xpath("//*[@id=\"classificationForm:s9606_header\"]/span/../..");
 
     public StartPage(WebDriver driver) {
         super(driver);
         visit("/");
+    }
+
+    public StartPage(WebDriver driver, String queryparam) {
+        super(driver);
+        visit("/?" + queryparam);
     }
 
     public Boolean lastClassNodePresent() {
@@ -30,7 +38,7 @@ public class StartPage extends Base {
     }
 
     public Boolean uniProtSketchPresent() {
-        visit("/?tfclass=1.1.1.1.2");
+
         WebElement mousePanel = find(mousePanelLocator);
         WebElement isoformsPanel = getIsoFormPanelInSpeciesPanel(mousePanel);
         WebElement image = isoformsPanel.findElement(By.tagName("img"));
@@ -51,14 +59,13 @@ public class StartPage extends Base {
         return false;
     }
 
-    public Boolean urlsInImgeForSketchIdentical(){
-          visit("/?tfclass=1.1.1.1.2");
+    public Boolean urlsInImgeForSketchIdentical() {
         WebElement mousePanel = find(mousePanelLocator);
         WebElement isoformsPanel = getIsoFormPanelInSpeciesPanel(mousePanel);
         WebElement image = isoformsPanel.findElement(By.tagName("img"));
         return compareSourcesOfLinkWithImage(isoformsPanel.findElement(By.tagName("a")));
     }
-    
+
     private Boolean compareSourcesOfLinkWithImage(WebElement link) {
         String hrefSource = link.getAttribute("href");
         WebElement image = link.findElement(By.tagName("img"));
@@ -68,5 +75,33 @@ public class StartPage extends Base {
 
     private WebElement getIsoFormPanelInSpeciesPanel(WebElement parent) {
         return parent.findElement(By.cssSelector("span[style*=\"float:right\"]"));
+    }
+
+    private WebElement getLinkPanelInSpeciesPanel(WebElement parent) {
+        return parent.findElement(By.cssSelector("span[style*=\"float:left\"]"));
+    }
+
+    public boolean expressionTableIsFilled() {
+
+        WebElement humanPanel = find(humanPanelLocator);
+        WebElement linkPanel = getLinkPanelInSpeciesPanel(humanPanel);
+        WebElement link = linkPanel.findElement(By.cssSelector("span > a"));
+        By expressionTableDlgTitle = By.id("classificationForm:expressionTableDlg_title");
+
+        WebElement dialogTitel = driver.findElement(expressionTableDlgTitle);
+        if (dialogTitel.isDisplayed()) {
+            return false;
+        }
+        link.click();
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(expressionTableDlgTitle));
+        } catch (org.openqa.selenium.TimeoutException ex) {
+            return false;
+        }
+        By firstCell = By.cssSelector("#classificationForm\\3a expressionTable_data > tr:nth-child(1) > td:nth-child(1)");
+        return find(firstCell).isDisplayed();
+//        return true;
     }
 }
