@@ -45,7 +45,7 @@ public class SmokeTest {
     }
 
     @Test
-//    @Category(SmokeTestGroup.class)
+    @Category(SmokeTestGroup.class)
     public void testDBDSketchForJunB() {
         StartPage page = new StartPage(driver, "tfclass=1.1.1.1.2");
         assertTrue("Image for DBD sketch could not be loaded", page.uniProtSketchPresent());
@@ -63,6 +63,13 @@ public class SmokeTest {
     public void testProteinExpressionTable() {
         StartPage page = new StartPage(driver, "tfclass=5.1.1.1.3");
         assertTrue("Expression table is not displayed after click or before click.", page.expressionTableIsFilled());
+    }
+    
+    @Test
+    @Category(SmokeTestGroup.class)
+    public void testSeedLink(){
+        StartPage page = new StartPage(driver, "tfclass=7.2.1");
+        assertTrue("Human seed link is broken", page.getTitleOfLinkedSeedPage().endsWith("factors"));
     }
 
 }

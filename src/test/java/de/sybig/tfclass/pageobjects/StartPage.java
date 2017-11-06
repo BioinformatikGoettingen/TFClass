@@ -22,6 +22,7 @@ public class StartPage extends Base {
     By lastNodeLocator = By.xpath("//*[@id=\"classificationForm:cfTree:9\"]/span/span[3]");
     By mousePanelLocator = By.xpath("//*[@id=\"classificationForm:s10090_header\"]/span/../..");
     By humanPanelLocator = By.xpath("//*[@id=\"classificationForm:s9606_header\"]/span/../..");
+    By humanSeedLinkLocator = By.xpath("//*[@id=\"classificationForm:seedLinkPanel\"]/a[1]");
 
     public StartPage(WebDriver driver) {
         super(driver);
@@ -65,23 +66,7 @@ public class StartPage extends Base {
         WebElement image = isoformsPanel.findElement(By.tagName("img"));
         return compareSourcesOfLinkWithImage(isoformsPanel.findElement(By.tagName("a")));
     }
-
-    private Boolean compareSourcesOfLinkWithImage(WebElement link) {
-        String hrefSource = link.getAttribute("href");
-        WebElement image = link.findElement(By.tagName("img"));
-        String source = image.getAttribute("src");
-        return source.equals(hrefSource);
-    }
-
-    private WebElement getIsoFormPanelInSpeciesPanel(WebElement parent) {
-        return parent.findElement(By.cssSelector("span[style*=\"float:right\"]"));
-    }
-
-    private WebElement getLinkPanelInSpeciesPanel(WebElement parent) {
-        return parent.findElement(By.cssSelector("span[style*=\"float:left\"]"));
-    }
-
-    public boolean expressionTableIsFilled() {
+ public boolean expressionTableIsFilled() {
 
         WebElement humanPanel = find(humanPanelLocator);
         WebElement linkPanel = getLinkPanelInSpeciesPanel(humanPanel);
@@ -102,6 +87,30 @@ public class StartPage extends Base {
         }
         By firstCell = By.cssSelector("#classificationForm\\3a expressionTable_data > tr:nth-child(1) > td:nth-child(1)");
         return find(firstCell).isDisplayed();
-//        return true;
     }
+ 
+    public String getTitleOfLinkedSeedPage(){
+        String link = find(humanSeedLinkLocator).getAttribute("href");
+        visit(link);
+        WebElement header = find(By.cssSelector("body > table > tbody > tr > td > h3"));
+        return header.getText();
+    }
+    
+    
+    private Boolean compareSourcesOfLinkWithImage(WebElement link) {
+        String hrefSource = link.getAttribute("href");
+        WebElement image = link.findElement(By.tagName("img"));
+        String source = image.getAttribute("src");
+        return source.equals(hrefSource);
+    }
+
+    private WebElement getIsoFormPanelInSpeciesPanel(WebElement parent) {
+        return parent.findElement(By.cssSelector("span[style*=\"float:right\"]"));
+    }
+
+    private WebElement getLinkPanelInSpeciesPanel(WebElement parent) {
+        return parent.findElement(By.cssSelector("span[style*=\"float:left\"]"));
+    }
+
+   
 }
