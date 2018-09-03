@@ -30,8 +30,12 @@
               draggable="false" closable="false">
         Please wait ...
     </p:dialog>
-
+ 
     <h1>Classification of Transcription Factors in Mammalia</h1>
+    <div style="margin-left:20%; font-size: 130%">
+        Please help us to get funded and to develop TFClass further by completing our
+        <a href="https://survey2.gwdg.de/index.php?r=survey/index&amp;sid=352824&amp;lang=en" target="_blank">survey</a>. Thank you!
+    </div>
     <div style="float:right">
         <h2><a href="about.jsf">About TFClass</a></h2> 
     </div>
@@ -119,6 +123,14 @@
                         (subfamily and factor species) are optional. More detailed explanations
                         about the classification scheme and its criteria are given
                         <a href="http://www.edgar-wingender.de/TFClass_schema.html" target="_blank">here.</a>.
+                    </p>
+                    <p>
+                        For further information about the latest version, kindly refer to 
+                        Wingender, E., Schoeps, T., Haubrock, M., Krull, M. and Dönitz, J.: 
+                        TFClass: expanding the classification of human transcription factors 
+                        to their mammalian orthologs. 
+                        <a href="https://academic.oup.com/nar/article/46/D1/D343/4566021" target="_blank">
+                            Nucleic Acids Res. 46, D343-D347 (2018).</a>
                     </p>
                 </p:outputPanel>
 
@@ -345,6 +357,13 @@
                 </p:dataTable>
 
             </p:outputPanel>
+        </p:dialog>
+        <p:dialog header="TFClass Survey" widgetVar="survey" minHeight="100" visible="#{classificationBean.showPopup()}">
+            <p>Please help us to get funded and to develop TFClass further by completing our
+            <a href="https://survey2.gwdg.de/index.php?r=survey/index&amp;sid=352824&amp;lang=en" target="_blank">survey</a>.<br/>
+            Thank you!</p>
+            <p:commandLink action="#{classificationBean.setSurveyCookie()}" value="OK, do not show again"  onclick="survey.hide()"/>
+             
         </p:dialog>
     </h:form>
 

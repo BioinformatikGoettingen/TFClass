@@ -32,8 +32,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.Cookie;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
@@ -72,6 +74,29 @@ public class ClassificationBean {
         this.connector = ObaProvider.getInstance().getConnector3();
     }
 
+    public boolean showPopup(){
+       FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get("surveypopup");
+        if (cookie != null){
+            return false;
+        }
+      
+        
+//String value = URLDecoder.decode(cookie.getValue(), "UTF-8");
+        return true;
+    }
+    public void setSurveyCookie(){
+        Cookie c = new Cookie("surveypopup", "shown");
+        c.setMaxAge(31536000);
+          HashMap<String, Object> cookieParams = new HashMap<String, Object>();
+        cookieParams.put("maxAge", 7884000);
+        cookieParams.put("httpOnly", true);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        externalContext.addResponseCookie("surveypopup", "shown", cookieParams);
+    }
+    
     public String init() {
         // used on the top of the page to init the bean
 
